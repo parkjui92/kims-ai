@@ -1305,11 +1305,31 @@ thead th b{color:#fff}
           <tr><td class="em">통계·경제</td><td>KOSIS · ECOS · DART · 공공데이터포털</td><td>국가통계 · 경제지표 · 기업공시 · 조달</td><td>즉시 발급</td></tr>
           <tr><td class="em">해외 R&amp;D</td><td>NSF Award · CORDIS(EU) · OECD Stat</td><td>미국 과제 · EU 과제 · 과학기술지표</td><td>대부분 <b>키 없음</b></td></tr>
           <tr><td class="em">산업·무역</td><td>관세청 무역통계 · UN Comtrade</td><td>품목별 수출입 — <b>공급망 분석의 원료</b></td><td>즉시 / 무키</td></tr>
+          <tr><td class="em">웹 검색</td><td>Serper · SerpAPI (SERP)</td><td>검색 결과를 데이터로 — <b>국가·언어 지정</b></td><td>무료 한도 후 유료</td></tr>
         </tbody>
       </table>
       <ul class="bullets">
         <li>제 조사관들은 이 창구를 <b>직접 호출</b>한다 — 학습된 기억이 아니라 오늘자 원천</li>
+        <li>해외 동향은 <b>그 나라 말로 물어야</b> 나온다 — 일본은 일본어로, 독일은 독일어로 찾아 온다</li>
       </ul>
+    </section>
+
+    <section class="slide" data-sid="r8-2">
+      <div class="eyebrow">연구실 · 경계</div>
+      <h2>밖으로 나가면 안 되는 자료는? — 내 컴퓨터 안의 모델</h2>
+      <div class="rule"></div>
+      <p class="lead">연구자료 중에는 <b>API로 올리면 안 되는 것</b>이 있다 — 그래서 <em>로컬 모델을 한 대 띄워 뒀다</em></p>
+      <table>
+        <thead><tr><th style="width:18%">항목</th><th>구성</th></tr></thead>
+        <tbody>
+          <tr><td class="em">실행 엔진</td><td><b>Ollama 0.32.5</b> — 맥 앱으로 설치, 명령 한 줄로 모델 내려받기</td></tr>
+          <tr><td class="em">모델</td><td><b>gemma3:12b</b> — 8.1GB, 구글이 공개한 <b>오픈 가중치</b> 모델</td></tr>
+          <tr><td class="em">주소</td><td><span class="cmd">localhost:11434</span> — <b>127.0.0.1 전용</b>으로 묶어 외부에서 접근 불가</td></tr>
+          <tr><td class="em">자동 시작</td><td>LaunchAgent 등록 — 재부팅해도 알아서 뜬다</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">핵심은 성능이 아니라 <b>경계</b>다 — 대외비 초안·미공개 데이터·개인정보가 섞인 자료를 <b>밖으로 내보내지 않고</b> 1차 처리할 수 있다</div>
+      <div class="src"><b>오픈 가중치(open-weight) 모델</b> · 모델 파일을 직접 내려받아 내 기기에서 돌리는 모델 — 대화가 회사 서버로 가지 않는다. 설치는 앱 하나 + <span class="cmd">ollama pull gemma3:12b</span> 한 줄</div>
     </section>
 
     <section class="slide" data-sid="r7-4">
