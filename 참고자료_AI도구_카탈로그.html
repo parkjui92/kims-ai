@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>소재혁신 업무 AI 도구 총정리 — API · MCP 카탈로그</title>
+<style>
+:root{
+  --bg:#ffffff; --bg2:#f5f8fc; --panel:#ffffff;
+  --navy:#0A2540; --navy-soft:#1B3A5C; --blue:#1F6FE0; --blue-deep:#1559C0;
+  --blue-tint:#EAF2FD; --blue-tint2:#D6E6FB; --coral:#D2553F; --coral-tint:#FBEBE7;
+  --ink:#0A2540; --body-c:#26405E; --muted:#69788F; --line:#DBE3EF; --line2:#EAEFF6;
+  --ok:#1B7F4B; --ok-tint:#E6F4EC; --warn:#B45309; --warn-tint:#FDF3E4;
+  --radius:14px;
+  --mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+}
+html[data-theme="dark"]{
+  --bg:#0b1526; --bg2:#122036; --panel:#0f1d33;
+  --navy:#e8eefb; --navy-soft:#c9d6ee; --blue:#5b96f2; --blue-deep:#82b1f7;
+  --blue-tint:#16294a; --blue-tint2:#22375a; --coral:#f08a74; --coral-tint:#3a1f18;
+  --ink:#e8eefb; --body-c:#c3d2e8; --muted:#8fa1bd; --line:#22375a; --line2:#1b2c49;
+  --ok:#5FD39B; --ok-tint:#12301F; --warn:#E9A23B; --warn-tint:#33240D;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--body-c);
+  font-family:"Pretendard","Apple SD Gothic Neo",-apple-system,BlinkMacSystemFont,"Malgun Gothic","Noto Sans KR",sans-serif;
+  word-break:keep-all; overflow-wrap:break-word; line-height:1.62;
+  -webkit-font-smoothing:antialiased; font-size:15.5px;
+}
+a{color:var(--blue-deep);text-decoration:none;border-bottom:1px solid transparent}
+a:hover{border-bottom-color:var(--blue)}
+code{font-family:var(--mono);font-size:.86em;color:var(--navy);background:var(--bg2);
+  border:1px solid var(--line);border-radius:6px;padding:.08em .42em;word-break:break-all}
+b,strong{color:var(--navy);font-weight:700}
+em{font-style:normal;color:var(--blue-deep);font-weight:700}
+
+#wrap{display:grid;grid-template-columns:250px minmax(0,1fr);max-width:1360px;margin:0 auto;gap:0}
+#toc{position:sticky;top:0;height:100vh;overflow-y:auto;padding:26px 18px 40px;
+  border-right:1px solid var(--line);background:var(--bg2)}
+#toc .brand{font-size:13px;font-weight:800;color:var(--navy);letter-spacing:-.01em;line-height:1.4;margin-bottom:4px}
+#toc .brandsub{font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.06em;margin-bottom:16px}
+#toc a{display:block;font-size:13.2px;color:var(--body-c);padding:5px 9px;border-radius:7px;border:0;line-height:1.4}
+#toc a:hover{background:var(--blue-tint);color:var(--blue-deep)}
+#toc a.grp{font-weight:800;color:var(--navy);margin-top:12px;font-size:13.5px}
+#toc .cnt{float:right;font-family:var(--mono);font-size:10px;color:var(--muted)}
+main{padding:38px 46px 90px;min-width:0}
+
+.hero{border-bottom:3px solid var(--navy);padding-bottom:22px;margin-bottom:30px}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--blue);font-weight:700;margin-bottom:9px}
+h1{font-size:31px;font-weight:800;line-height:1.24;letter-spacing:-.025em;color:var(--navy);margin-bottom:10px}
+.hero .lead{font-size:17px;color:var(--navy-soft);font-weight:600;line-height:1.5}
+.meta{margin-top:14px;font-size:12.8px;color:var(--muted);font-family:var(--mono)}
+
+h2{font-size:22px;font-weight:800;color:var(--navy);letter-spacing:-.02em;
+  margin:44px 0 6px;padding-top:14px;scroll-margin-top:14px}
+h2 .num{font-family:var(--mono);font-size:14px;color:var(--blue);margin-right:9px;font-weight:700}
+h2+.secsub{font-size:14.5px;color:var(--muted);margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+h3{font-size:16.5px;font-weight:800;color:var(--navy);margin:26px 0 10px}
+
+p{margin-bottom:12px}
+ul,ol{margin:0 0 14px 20px}
+li{margin-bottom:6px}
+
+#search{position:sticky;top:0;z-index:20;background:var(--bg);padding:10px 0 12px;margin-bottom:6px;
+  border-bottom:1px solid var(--line2);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+#q{flex:1;min-width:200px;font:inherit;font-size:14px;padding:9px 13px;border:1.5px solid var(--line);
+  border-radius:9px;background:var(--panel);color:var(--ink)}
+#q:focus{outline:0;border-color:var(--blue)}
+.btn{font:inherit;font-size:12.5px;font-weight:700;padding:8px 13px;border:1.5px solid var(--line);
+  border-radius:9px;background:var(--panel);color:var(--body-c);cursor:pointer}
+.btn:hover{border-color:var(--blue);color:var(--blue-deep)}
+#hits{font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+.card{border:1.5px solid var(--line);border-radius:var(--radius);padding:17px 19px;margin-bottom:14px;
+  background:var(--panel);break-inside:avoid}
+.card.hide{display:none}
+.card>header{display:flex;align-items:flex-start;gap:11px;flex-wrap:wrap;margin-bottom:11px}
+.card h4{font-size:17px;font-weight:800;color:var(--navy);letter-spacing:-.015em;flex:1;min-width:180px}
+.card h4 .org{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-top:2px;letter-spacing:0}
+.badge{font-family:var(--mono);font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:20px;white-space:nowrap;
+  border:1px solid transparent;letter-spacing:.02em}
+.badge.ok{background:var(--ok-tint);color:var(--ok);border-color:var(--ok)}
+.badge.doc{background:var(--blue-tint);color:var(--blue-deep);border-color:var(--blue)}
+.badge.warn{background:var(--warn-tint);color:var(--warn);border-color:var(--warn)}
+.badge.star{background:var(--bg2);color:var(--muted);border-color:var(--line)}
+
+dl{display:grid;grid-template-columns:96px minmax(0,1fr);gap:5px 14px;font-size:14.2px}
+dt{font-size:11.5px;font-weight:800;color:var(--muted);letter-spacing:.02em;padding-top:3px;text-align:right}
+dd{color:var(--body-c);min-width:0}
+dd.prompt{background:var(--blue-tint);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
+  padding:8px 12px;font-size:13.6px;color:var(--navy-soft);font-weight:600}
+dd.prompt+dd.prompt{margin-top:5px}
+dd.note{color:var(--warn);font-size:13.4px}
+
+.tbl-wrap{overflow-x:auto;margin-bottom:18px;border:1.5px solid var(--line);border-radius:var(--radius)}
+table{border-collapse:collapse;width:100%;font-size:13.8px;min-width:560px}
+th,td{padding:10px 13px;text-align:left;border-bottom:1px solid var(--line2);vertical-align:top}
+th{background:var(--bg2);font-size:11.8px;font-weight:800;color:var(--navy);
+  letter-spacing:.03em;white-space:nowrap;border-bottom:1.5px solid var(--line)}
+tr:last-child td{border-bottom:0}
+td b{font-weight:700}
+
+.box{border-left:4px solid var(--blue);background:var(--blue-tint);padding:14px 17px;
+  border-radius:0 10px 10px 0;margin:16px 0;font-size:14.2px}
+.box.warn{border-left-color:var(--coral);background:var(--coral-tint)}
+.box.ok{border-left-color:var(--ok);background:var(--ok-tint)}
+.box .t{font-weight:800;color:var(--navy);display:block;margin-bottom:5px;font-size:13px;letter-spacing:.02em}
+.box.warn .t{color:var(--coral)}
+
+pre{background:var(--bg2);border:1.5px solid var(--line);border-radius:10px;padding:13px 15px;
+  overflow-x:auto;margin:10px 0 16px;font-family:var(--mono);font-size:12.8px;line-height:1.6;color:var(--navy)}
+pre .c{color:var(--muted)}
+
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 4px}
+.legend .item{border:1.5px solid var(--line);border-radius:10px;padding:10px 14px;font-size:13.2px;flex:1;min-width:210px}
+.legend .item b{display:block;margin-bottom:3px}
+
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);
+  font-size:12.6px;color:var(--muted);line-height:1.7}
+
+#top{position:fixed;right:22px;bottom:22px;width:42px;height:42px;border-radius:50%;
+  border:1.5px solid var(--line);background:var(--panel);color:var(--body-c);cursor:pointer;
+  font-size:17px;box-shadow:0 6px 20px rgba(10,37,64,.14)}
+#top:hover{border-color:var(--blue);color:var(--blue)}
+
+@media (max-width:940px){
+  #wrap{grid-template-columns:1fr}
+  #toc{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}
+  main{padding:26px 20px 70px}
+  dl{grid-template-columns:1fr;gap:2px}
+  dt{text-align:left;padding-top:8px}
+}
+@media print{
+  #toc,#search,#top,.noprint{display:none!important}
+  #wrap{grid-template-columns:1fr;max-width:none}
+  main{padding:0}
+  body{font-size:9.6pt;line-height:1.45}
+  h1{font-size:19pt} h2{font-size:13pt;margin:16pt 0 4pt;page-break-after:avoid}
+  h3{font-size:11pt;page-break-after:avoid}
+  .card{page-break-inside:avoid;border-width:1px;padding:8pt 10pt;margin-bottom:7pt}
+  .card h4{font-size:11pt}
+  dl{font-size:9pt;grid-template-columns:70px minmax(0,1fr);gap:2px 8px}
+  table{font-size:8.6pt} th,td{padding:4pt 6pt}
+  pre{font-size:8pt;padding:6pt}
+  a{color:inherit}
+  .tbl-wrap{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div id="wrap">
+
+<nav id="toc">
+  <div class="brand">소재혁신 업무<br>AI 도구 총정리</div>
+  <div class="brandsub">API · MCP CATALOG</div>
+  <a href="#s0" class="grp">0 · 이 자료 쓰는 법</a>
+  <a href="#s1" class="grp">1 · 한 장 지도</a>
+  <a href="#secA" class="grp">A · R&amp;D 과제·성과<span class="cnt">3</span></a>
+  <a href="#secB" class="grp">B · 논문·학술<span class="cnt">6</span></a>
+  <a href="#secC" class="grp">C · 특허<span class="cnt">1</span></a>
+  <a href="#secD" class="grp">D · 산업·기업·통계<span class="cnt">5</span></a>
+  <a href="#secE" class="grp">E · 법령·국회<span class="cnt">2</span></a>
+  <a href="#secF" class="grp">F · 해외 R&amp;D·국제비교<span class="cnt">5</span></a>
+  <a href="#secG" class="grp">G · 한국 특화 MCP<span class="cnt">7</span></a>
+  <a href="#secH" class="grp">H · 범용 MCP<span class="cnt">6</span></a>
+  <a href="#s10" class="grp">10 · 키 발급·설치 실무</a>
+  <a href="#s11" class="grp">11 · 보안·경계</a>
+  <a href="#s12" class="grp">12 · 프롬프트 카드</a>
+  <a href="#apx1" class="grp">부록 · 점검 체크리스트</a>
+  <a href="#apx2" class="grp">부록 · 검증 원본 기록</a>
+</nav>
+
+<main>
+
+<div class="hero">
+  <div class="eyebrow">한국재료연구원 소재혁신선도본부 · AI 특강 2차 참고자료</div>
+  <h1>소재혁신 업무 AI 도구 총정리<br>— API · MCP 카탈로그</h1>
+  <p class="lead">동향조사 · 소부장 브리핑 · 우수성과 평가 · R&amp;D 투자-성과 분석 · 논문·특허 분석에 바로 꽂히는 공개 데이터 창구와 AI 연결 도구를 한 곳에 모았습니다. 모든 항목은 실제로 호출해 보고 상태를 표기했습니다.</p>
+  <div class="meta">검증 실시일 2026-08-05 · 국내 API 12종 · 해외 API 9종 · MCP 13종 · 작성 박주이</div>
+</div>
+
+<h2 id="s0"><span class="num">0</span>이 자료 쓰는 법</h2>
+<p class="secsub">읽는 순서와 표기 규칙 — 3분이면 충분합니다</p>
+
+<p>이 자료는 처음부터 끝까지 읽는 문서가 아닙니다. <b>책상에 두고 필요할 때 펼치는 참조표</b>입니다. 세 가지 방법으로 쓰십시오.</p>
+
+<div class="tbl-wrap"><table>
+<thead><tr><th style="width:34%">상황</th><th>이렇게 쓴다</th></tr></thead>
+<tbody>
+<tr><td><b>지금 하려는 일이 있다</b></td><td><a href="#s1">1 · 한 장 지도</a>에서 업무를 찾아 부를 도구를 확인 → 해당 카드로 이동</td></tr>
+<tr><td><b>도구 이름은 아는데 쓰는 법을 모른다</b></td><td>화면 위 검색창에 이름을 입력(예: NTIS, 법령, hwp, 논문) — 카드가 즉시 걸러집니다</td></tr>
+<tr><td><b>일단 오늘 하나 붙여 보고 싶다</b></td><td><a href="#s10">10 · 키 발급·설치 실무</a>의 3단계를 그대로 따라 하십시오</td></tr>
+</tbody>
+</table></div>
+
+<h3>검증 표기 — 무엇을 어디까지 확인했는가</h3>
+<p>공개 자료를 그대로 옮겨 적으면 이미 없어진 주소가 섞여 들어옵니다. 그래서 이 카탈로그의 모든 항목은 <b>2026년 8월 5일에 실제로 호출해</b> 응답을 받아 보고 아래 세 등급으로 표기했습니다.</p>
+
+<div class="legend">
+  <div class="item"><b>✅ 실호출 확인</b>엔드포인트를 실제로 호출해 응답을 받음. 키가 필요한 API는 "인증키가 없습니다"류 오류 응답을 받은 것을 생존 근거로 삼음(주소가 죽었으면 이 응답조차 오지 않음)</div>
+  <div class="item"><b>◐ 문서·발급처 확인</b>공식 안내 페이지와 키 발급 창구가 살아 있음을 확인. 호출 규격은 문서 기준</div>
+  <div class="item"><b>⚠ 확인 실패·유의</b>접속 불가, 요율 제한, 또는 널리 알려진 정보와 실제가 다른 항목. 추정으로 채우지 않고 그대로 표기</div>
+</div>
+
+<div class="box warn"><span class="t">⚠ 이 자료 자체에 적용되는 원칙</span>
+검증일 기준입니다. 공공 API는 주소·서비스명·응답 규격이 예고 없이 바뀝니다. 실제 분석에 쓰기 전 한 번 호출해 확인하십시오 — 그 확인 작업 자체를 AI에게 시킬 수 있습니다("이 주소 살아 있는지 확인해줘"). 이 문서가 최신이라고 가정하고 수치를 인용하지 마십시오.</div>
+
+<h2 id="s1"><span class="num">1</span>한 장 지도 — 무슨 일을 할 때 무엇을 부르는가</h2>
+<p class="secsub">업무 → 도구 매핑. 이 표만 인쇄해 붙여 두어도 됩니다</p>
+
+<div class="tbl-wrap"><table>
+<thead><tr><th style="width:30%">하려는 일</th><th style="width:38%">부르는 것</th><th>비고</th></tr></thead>
+<tbody>
+<tr><td><b>국내외 기술·정책 동향 조사</b></td><td><a href="#c-openalex">OpenAlex</a> · <a href="#c-arxiv">arXiv</a> · <a href="#c-fetch">fetch(범용 MCP)</a></td><td>학술 신호 + 공식 발표 원문 — <b>키 없이 시작 가능</b></td></tr>
+<tr><td><b>소부장 브리핑 제작·재활용</b></td><td>스크랩 엑셀 + <a href="#c-kordoc">kordoc</a> · <a href="#c-excel">excel-mcp</a></td><td>기존 호 .hwp 파싱 → 원고 재활용</td></tr>
+<tr><td><b>정부 R&amp;D 과제·투자 분석</b></td><td><a href="#c-ntis">NTIS</a> · <a href="#c-datago">공공데이터포털</a></td><td>과제·연구비·수행기관·성과</td></tr>
+<tr><td><b>논문 성과 분석 · JCR 미매칭 조사</b></td><td><a href="#c-openalex">OpenAlex</a> · <a href="#c-crossref">Crossref</a> (+기관 구독 JCR)</td><td>ISSN·저널 변천 추적의 공개 근거</td></tr>
+<tr><td><b>특허 동향·경쟁력 분석</b></td><td><a href="#c-kipris">KIPRIS Plus</a></td><td>출원인·연도별·기술별 동향</td></tr>
+<tr><td><b>소재 기업동향·산업 데이터</b></td><td><a href="#c-dart">DART</a> · <a href="#c-kosis">KOSIS</a> · <a href="#c-unipass">UNI-PASS</a></td><td>기업 재무 · 산업통계 · 소재 수출입</td></tr>
+<tr><td><b>법령·제도 확인 (소부장특별법 등)</b></td><td><a href="#c-law">국가법령정보</a> · <a href="#c-lawmcp">korean-law-mcp</a></td><td><b>키 없이 즉시 시연 가능</b></td></tr>
+<tr><td><b>국회 의안·회의록 동향</b></td><td><a href="#c-assembly">열린국회정보</a></td><td>소부장·R&amp;D 관련 입법 추적</td></tr>
+<tr><td><b>해외 R&amp;D 사업 벤치마킹</b></td><td><a href="#c-nsf">NSF</a> · <a href="#c-cordis">CORDIS</a> · <a href="#c-oecd">OECD</a></td><td>미국 과제 · EU 과제 · 과학기술지표 — <b>대부분 키 없음</b></td></tr>
+<tr><td><b>회의 녹취 → 회의록</b></td><td><a href="#c-tiro">Tiro</a> + 회의록 스킬(실습키트)</td><td>전사는 Tiro, 구조화는 스킬</td></tr>
+<tr><td><b>한글(.hwp/.hwpx) 문서 읽기·쓰기</b></td><td><a href="#c-kordoc">kordoc</a> · <a href="#c-hwpx">python-hwpx-automation</a></td><td>읽기는 kordoc, 쓰기는 hwpx-automation</td></tr>
+<tr><td><b>조달·연구장비 계약 확인</b></td><td><a href="#c-g2b">나라장터</a></td><td>용역·장비 입찰·낙찰 실적</td></tr>
+<tr><td><b>보고서 초안 교열·용어 점검</b></td><td><a href="#c-spell">mcp-korean-spell</a> · <a href="#c-stdict">ko-stdict-mcp</a></td><td>맞춤법 · 표준국어대사전</td></tr>
+</tbody>
+</table></div>
+
+<div class="box ok"><span class="t">✅ 오늘 당장 해 볼 것 하나만 고른다면</span>
+<b><a href="#c-law">국가법령정보 API</a></b>입니다. <b>키 발급 없이</b> <code>OC=test</code>로 즉시 조회됩니다 — 「소재부품장비」로 검색하면 특별법이 바로 나옵니다(아래 카드에 오늘 실제 성공한 명령이 있습니다). 5초 만에 "AI가 법령 원문을 읽는다"를 눈으로 확인할 수 있습니다.</div>
+
+<div id="search" class="noprint">
+  <input id="q" type="search" placeholder="🔎  도구·기관·용도로 검색 (예: NTIS, 법령, hwp, 논문, 특허)" autocomplete="off">
+  <button class="btn" id="clear">초기화</button>
+  <button class="btn" id="theme">🌓 테마</button>
+  <button class="btn" onclick="window.print()">🖨 인쇄</button>
+  <span id="hits"></span>
+</div>
+
+<!-- ══════════ A ══════════ -->
+<h2 id="secA"><span class="num">A</span>R&amp;D 과제·성과 데이터</h2>
+<p class="secsub">투자 현황 분석과 우수성과 평가의 1차 원료 — 과제·연구비·성과</p>
+
+<div class="card" id="c-ntis" data-k="ntis 과제 연구비 성과 국가R&D kisti">
+<header><h4>NTIS 국가과학기술지식정보서비스 OpenAPI<span class="org">과학기술정보통신부 · KISTI</span></h4><span class="badge ok">✅ 실호출 확인</span></header>
+<dl>
+<dt>무엇이 나오나</dt><dd>국가 R&amp;D 과제 정보(과제명·연구비·수행기관·기간·연구책임자), 연구성과(논문·특허·기술이전), 연구시설·장비</dd>
+<dt>엔드포인트</dt><dd><code>https://www.ntis.go.kr/rndopen/openApi/public_project?apprvKey={키}</code></dd>
+<dt>키 발급</dt><dd>ntis.go.kr 회원가입 후 Open API 신청 (승인형) — 웹 화면의 엑셀 다운로드는 키 없이도 가능</dd>
+<dt>재료연 용례</dt><dd>소재 분야 사업별 투자 규모·수행 주체·지역·연구단계 비교 · 우수성과 평가의 과제 원데이터 대사 · 신규 기획의 유사·중복 과제 점검</dd>
+<dt>이렇게 시킨다</dt><dd class="prompt">"NTIS에서 최근 3년 '이차전지 소재' 과제 받아서 부처별 과제 수와 총 연구비를 표로 정리하고, 유사 과제명이 여러 부처에 걸친 건 따로 표시해줘."</dd>
+<dt>검증 근거</dt><dd>무키 호출 → <code>&lt;error&gt;인증키 정보가 없습니다.&lt;/error&gt;</code> (2026-08-05, 엔드포인트 생존)</dd>
+</dl>
+</div>
+
+<div class="card" id="c-datago" data-k="공공데이터포털 data.go.kr 키발급">
+<header><h4>공공데이터포털<span class="org">행정안전부 · NIA</span></h4><span class="badge ok">✅ 실호출 확인</span></header>
+<dl>
+<dt>무엇이 나오나</dt><dd>범정부 공공데이터 통합 검색·신청 창구. 부처·공공기관 API 수만 종의 키 발급이 여기 한 곳에서 이루어집니다 (나라장터 조달 등 포함)</dd>
+<dt>주소</dt><dd><code>data.go.kr</code> · 표준 형식 <code>https://apis.data.go.kr/{기관코드}/{서비스}?serviceKey={키}&amp;type=json</code></dd>
+<dt>재료연 용례</dt><dd>소재·부품 관련 부처 API 탐색 — 검색창에 업무 키워드를 넣고 쓸 만한 API를 AI에게 추리게 하는 입구</dd>
+<dt>이렇게 시킨다</dt><dd class="prompt">"공공데이터포털에서 '소재부품' 관련 API 목록 찾아서, 동향 분석에 쓸 만한 것 3개 추려 신청 절차와 함께 알려줘."</dd>
+<dt>실무 팁</dt><dd>대부분의 부처 API는 자동 승인이라 신청 즉시 쓸 수 있습니다. "활용 목적"란은 업무 분석용으로 간단히 적으면 됩니다.</dd>
+</dl>
+</div>
+
+<div class="card" id="c-nkis" data-k="nkis 정책연구 국책연구 보고서 경제인문사회연구회">
+<header><h4>NKIS 국가정책연구포털<span class="org">경제·인문사회연구회</span></h4><span class="badge doc">◐ 포털 확인</span></header>
+<dl>
+<dt>무엇이 나오나</dt><dd>26개 국책연구기관의 정책연구보고서 원문 — STEPI·KISTEP·산업연구원 등 소재·산업 정책의 선행연구가 모여 있는 곳</dd>
+<dt>주소</dt><dd><code>nkis.re.kr</code> (2026-08-05 HTTP 200 확인) — Open API는 포털 안내 메뉴에서 신청</dd>
+<dt>재료연 용례</dt><dd>기획보고서의 선행연구 확인 — 같은 주제를 국책연이 이미 다뤘는지 착수 전에 조회 · 정책 근거 인용</dd>
+<dt>이렇게 시킨다</dt><dd class="prompt">"NKIS에서 '소재부품장비 정책' 관련 최근 2년 보고서를 찾아 기관·연도·핵심 결론을 표로 정리해줘. 원문 링크도 붙여줘."</dd>
+</dl>
+</div>
+
+<!-- ══════════ B ══════════ -->
+<h2 id="secB"><span class="num">B</span>논문·학술 데이터</h2>
+<p class="secsub">동향 분석·성과 분석·JCR 매칭의 공개 근거 — 대부분 키 없이 시작됩니다</p>
+
+<div class="box ok"><span class="t">✅ 가장 진입장벽이 낮은 구간</span>
+OpenAlex·Crossref·arXiv는 <b>인증키가 아예 필요 없습니다</b>. 아래 명령을 그대로 붙여넣으면 실제 데이터가 나옵니다 — 미니실습 ①이 바로 이것입니다.</div>
+
+<div class="card" id="c-openalex" data-k="openalex 논문 인용 기관 무료 오픈알렉스">
+<header><h4>OpenAlex API<span class="org">OurResearch (비영리)</span></h4><span class="badge ok">✅ 실데이터 수신 · 키 불필요</span></header>
+<dl>
+<dt>무엇이 나오나</dt><dd>전 세계 논문 2.4억+ 건 — 제목·저자·기관·인용수·주제 분류·오픈액세스 여부. 기관·국가·연도별 집계 내장</dd>
+<dt>엔드포인트</dt><dd><code>https://api.openalex.org/works?search={키워드}&amp;filter=from_publication_date:2025-01-01</code></dd>
+<dt>재료연 용례</dt><dd>특정 소재 기술 주제의 연구 동향·주요 기관·국가별 점유 분석 · JCR 미매칭 저널의 실존·발행 이력 확인 · 유망·공백 영역 신호 탐지</dd>
+<dt>이렇게 시킨다</dt><dd class="prompt">"OpenAlex에서 2023년 이후 '고체 전해질' 논문의 국가별·기관별 편수를 집계하고, 한국 기관 상위 10곳을 표로 정리해줘. 조회 쿼리도 같이 남겨줘."</dd>
+<dt>검증 근거</dt><dd>실데이터 수신 — solid state battery 검색, 2025년 이후 28,148건 반환 (2026-08-05)</dd>
+</dl>
+</div>
+
+<div class="card" id="c-crossref" data-k="crossref doi 서지 메타데이터">
+<header><h4>Crossref REST API<span class="org">Crossref (비영리)</span></h4><span class="badge ok">✅ 실데이터 수신 · 키 불필요</span></header>
+<dl>
+<dt>무엇이 나오나</dt><dd>DOI 기반 서지 메타데이터 1.6억+ 건 — 논문·저널·출판사 정보, ISSN별 저널 조회</dd>
+<dt>엔드포인트</dt><dd><code>https://api.crossref.org/works?query={키워드}</code> · 저널 조회 <code>https://api.crossref.org/journals/{ISSN}</code></dd>
+<dt>재료연 용례</dt><dd><b>JCR 미매칭 조사의 핵심 창구</b> — ISSN으로 저널 실존·현재 발행사·제호를 확인 · DOI 실존 검증(가짜 인용 차단)</dd>
+<dt>이렇게 시킨다</dt><dd class="prompt">"이 ISSN 목록을 Crossref journals API로 조회해서 각 저널의 현재 제호·발행사를 확인하고, 조회 안 되는 건은 '미확인'으로 표시해줘."</dd>
+<dt>검증 근거</dt><dd>실데이터 수신 — works 검색 967,156건 반환 (2026-08-05)</dd>
+</dl>
+</div>
+
+<div class="card" id="c-arxiv" data-k="arxiv 프리프린트 물리 재료">
+<header><h4>arXiv API<span class="org">Cornell University</span></h4><span class="badge ok">✅ 실데이터 수신 · 키 불필요</span></header>
+<dl>
+<dt>무엇이 나오나</dt><dd>물리·재료(cond-mat)·AI 등 프리프린트 250만+ 건 — 게재 전 최신 연구 신호</dd>
+<dt>엔드포인트</dt><dd><code>http://export.arxiv.org/api/query?search_query=all:{키워드}&amp;max_results=20</code></dd>
+<dt>재료연 용례</dt><dd>부상 기술의 <b>가장 이른 신호</b> 탐지 — 저널 게재 6개월~1년 전 동향 · AI for Materials 같은 신흥 주제 추적</dd>
+<dt>이렇게 시킨다</dt><dd class="prompt">"arXiv cond-mat에서 최근 3개월 'machine learning interatomic potential' 논문을 모아 주제별로 묶고 한 줄씩 요약해줘."</dd>
+<dt>검증 근거</dt><dd>실데이터 수신 — Atom 피드 정상 반환 (2026-08-05)</dd>
+</dl>
+</div>
+
+<div class="card" id="c-s2" data-k="semantic scholar 인용 그래프">
+<header><h4>Semantic Scholar API<span class="org">Allen Institute for AI</span></h4><span class="badge warn">⚠ 생존 · 무키 요율 제한</span></header>
+<dl>
+<dt>무엇이 나오나</dt><dd>논문 2억+ 건의 인용 그래프 — 영향력 지표, 인용 맥락, 추천 논문</dd>
+<dt>엔드포인트</dt><dd><code>https://api.semanticscholar.org/graph/v1/paper/search?query={키워드}</code></dd>
+<dt>검증 결과</dt><dd>무키 호출 시 429 Too Many Requests (2026-08-05) — 서비스는 정상이나 <b>무키 요율이 낮습니다</b>. 지속 사용은 무료 키 신청 후.</dd>
+<dt>재료연 용례</dt><dd>핵심 논문의 인용 네트워크 추적 — 어떤 연구가 어디로 이어졌는지</dd>
+</dl>
+</div>
+
+<div class="card" id="c-kci" data-k="kci 한국학술지인용색인 국내논문">
+<header><h4>KCI 한국학술지인용색인 OpenAPI<span class="org">한국연구재단</span></h4><span class="badge warn">⚠ 접근 제한 확인</span></header>
+<dl>
+<dt>무엇이 나오나</dt><dd>국내 학술지·논문·인용 정보 — 국내 학술 성과 분석의 표준 원천</dd>
+<dt>검증 결과</dt><dd>OpenAPI 안내 페이지 자동 접근이 차단됨(2026-08-05, 접속 제한 응답) — <b>브라우저로 kci.go.kr 접속 → Open API 메뉴에서 신청</b>하는 정상 경로를 쓰십시오</dd>
+<dt>재료연 용례</dt><dd>국내 소재 분야 학술지 동향 · 국내 성과의 인용 분석 (해외 DB가 못 잡는 국문 성과)</dd>
+</dl>
+</div>
+
+<div class="card" id="c-jcr" data-k="jcr impact factor 저널 등급 clarivate">
+<header><h4>JCR (Journal Citation Reports)<span class="org">Clarivate · 기관 구독</span></h4><span class="badge doc">◐ 구독 서비스 — API 아님</span></header>
+<dl>
+<dt>무엇인가</dt><dd>저널 영향력지수(IF)·분야 순위의 표준 — 우수성과 평가의 논문 등급 기준. <b>공개 API가 아니라 기관 구독 데이터</b>입니다</dd>
+<dt>실무 방식</dt><dd>기관 구독 계정에서 연도별 JCR 데이터를 내려받아(현행 방식 유지) ISSN 매칭 → <b>미매칭 건만</b> OpenAlex·Crossref·발행사 공지로 변천 이력을 조사(실습키트 심화C 프로토콜)</dd>
+<dt>주의</dt><dd class="note">JCR 수치 자체를 웹 검색으로 추정하지 않습니다 — 등급 판정은 반드시 구독 원본 데이터 기준.</dd>
+</dl>
+</div>
+
+<!-- ══════════ C ══════════ -->
+<h2 id="secC"><span class="num">C</span>특허 데이터</h2>
+<p class="secsub">기술 경쟁력·공백 영역 분석의 정량 근거</p>
+
+<div class="card" id="c-kipris" data-k="kipris 특허 실용신안 출원인 지식재산">
+<header><h4>KIPRIS Plus OpenAPI<span class="org">지식재산처 · 한국특허정보원</span></h4><span class="badge ok">✅ 실호출 확인</span></header>
+<dl>
+<dt>무엇이 나오나</dt><dd>특허·실용신안·디자인·상표 서지와 원문, 인용문헌, 출원인·발명자, 법적 상태 — 11종 데이터 API + Bulk Data</dd>
+<dt>주소</dt><dd><code>plus.kipris.or.kr</code> (포털 HTTP 200 확인) — API 신청 후 서비스별 엔드포인트 발급</dd>
+<dt>키 발급</dt><dd>KIPRIS Plus 회원가입 → 활용 신청 (무료 쿼터 제공)</dd>
+<dt>재료연 용례</dt><dd>소재 기술 분야 출원 동향·주요 출원인 분석 · 우수성과 특허 데이터 검증 · 기술 공백 영역 탐지(출원 적은 세부 분야)</dd>
+<dt>이렇게 시킨다</dt><dd class="prompt">"KIPRIS에서 '전고체 전지' 최근 5년 출원 동향을 연도별·출원인별로 집계하고, 상위 출원인 10곳의 국적 분포를 표로 만들어줘."</dd>
+<dt>검증 근거</dt><dd>API 엔드포인트 호출 → INVALID_REQUEST_PARAMETER 응답(생존) · 포털 200 (2026-08-05)</dd>
+</dl>
+</div>
+
+<!-- ══════════ D ══════════ -->
+<h2 id="secD"><span class="num">D</span>산업·기업·통계</h2>
+<p class="secsub">소재 기업동향과 산업 지표 — 브리핑·분석의 정량 축</p>
+
+<div class="card" id="c-kosis" data-k="kosis 국가통계 통계청 산업 광업제조업">
+<header><h4>KOSIS 국가통계포털 OpenAPI<span class="org">통계청</span></h4><span class="badge ok">✅ 실호출 확인</span></header>
+<dl>
+<dt>무엇이 나오나</dt><dd>1,000여 종 국가승인통계 — 광업제조업조사, 기업활동조사, 연구개발활동조사, 고용, 지역 통계 전 분야 시계열</dd>
+<dt>엔드포인트</dt><dd><code>https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&amp;apiKey={키}&amp;format=json</code></dd>
+<dt>키 발급</dt><dd>kosis.kr/openapi 회원가입 후 <b>즉시</b> 발급</dd>
+<dt>재료연 용례</dt><dd>소재 산업 생산·고용 추이 · 지역별 산업 구조(수행 주체·지역 분석의 모집단) · 연구개발활동조사로 민간 R&amp;D 대비</dd>
+<dt>이렇게 시킨다</dt><dd class="prompt">"KOSIS에서 1차금속·화학물질 제조업의 최근 5년 생산액·종사자 수를 받아 추이표를 만들고, 출처·기준연도·조회일시를 표 아래 적어줘."</dd>
+<dt>검증 근거</dt><dd>무키 호출 → <code>{err:"10", errMsg:"인증 KEY값이 누락되었습니다."}</code> (2026-08-05)</dd>
+</dl>
+</div>
+
+<div class="card" id="c-ecos" data-k="ecos 한국은행 환율 금리 경제">
+<header><h4>ECOS 한국은행 경제통계 OpenAPI<span class="org">한국은행</span></h4><span class="badge ok">✅ 실호출 확인</span></header>
+<dl>
+<dt>무엇이 나오나</dt><dd>환율·금리·국민계정(GDP)·생산자물가·산업별 지표 — 거시 전제의 표준 원천</dd>
+<dt>엔드포인트</dt><dd><code>https://ecos.bok.or.kr/api/StatisticSearch/{키}/json/kr/1/100/{통계표코드}/{주기}/{시작}/{종료}</code></dd>
+<dt>키 발급</dt><dd>ecos.bok.or.kr/api 신청 후 <b>즉시</b> 발급</dd>
+<dt>재료연 용례</dt><dd>소재 수입 단가 분석의 환율 전제 · 산업 동향 보고서의 거시 지표 인용(출처·기준일 병기)</dd>
+<dt>검증 근거</dt><dd>무키 호출 → <code>INFO-100 인증키가 유효하지 않습니다</code> (2026-08-05)</dd>
+</dl>
+</div>
+
+<div class="card" id="c-dart" data-k="dart 전자공시 기업 재무 소재기업">
+<header><h4>DART 전자공시 OpenAPI<span class="org">금융감독원</span></h4><span class="badge ok">✅ 실호출 확인</span></header>
+<dl>
+<dt>무엇이 나오나</dt><dd>상장·외감 기업 공시 원문, 재무제표(XBRL), 사업보고서, 지분 — 83종 API</dd>
+<dt>엔드포인트</dt><dd><code>https://opendart.fss.or.kr/api/list.json?crtfc_key={키}</code></dd>
+<dt>키 발급</dt><dd>opendart.fss.or.kr 회원가입 후 <b>즉시</b> 발급 (일 20,000건)</dd>
+<dt>재료연 용례</dt><dd>소부장 브리핑의 기업동향 심화 — 기사에 나온 기업의 실제 투자·실적을 공시로 확인 · 소재 기업 R&amp;D 투자 규모 추적(사업보고서)</dd>
+<dt>이렇게 시킨다</dt><dd class="prompt">"DART에서 이 소재 기업 5곳의 최근 3년 연구개발비를 사업보고서에서 뽑아 매출 대비 비율 표로 만들어줘."</dd>
+<dt>검증 근거</dt><dd>무키 호출 → <code>{"status":"100","message":"인증키가 누락되었습니다."}</code> (2026-08-05)</dd>
+</dl>
+</div>
+
+<div class="card" id="c-unipass" data-k="관세청 unipass 수출입 무역 공급망">
+<header><h4>관세청 UNI-PASS OpenAPI<span class="org">관세청</span></h4><span class="badge ok">✅ 실호출 확인</span></header>
+<dl>
+<dt>무엇이 나오나</dt><dd>품목(HS코드)별 수출입 무역통계, 관세율, 과세환율</dd>
+<dt>엔드포인트</dt><dd><code>https://unipass.customs.go.kr:38010/ext/rest/{서비스}/{오퍼레이션}?crkyCn={키}</code></dd>
+<dt>재료연 용례</dt><dd><b>소부장 공급망 분석의 핵심</b> — 핵심 소재 품목의 수입 의존도·대일/대중 편중·수출 추이를 HS코드로 추적</dd>
+<dt>이렇게 시킨다</dt><dd class="prompt">"불화수소 관련 HS코드의 최근 3년 국가별 수입액을 받아 의존도 추이표를 만들어줘. 기준: 수입액 비중."</dd>
+<dt>검증 근거</dt><dd>무키 호출 → <code>인증키(crkyCn)는 필수입력입니다</code> (2026-08-05)</dd>
+</dl>
+</div>
+
+<div class="card" id="c-g2b" data-k="나라장터 조달 입찰 계약 연구장비">
+<header><h4>나라장터 공공조달 OpenAPI<span class="org">조달청</span></h4><span class="badge ok">✅ 실호출 확인</span></header>
+<dl>
+<dt>무엇이 나오나</dt><dd>입찰공고, 계약 현황, 낙찰 정보, 수의계약 내역</dd>
+<dt>엔드포인트</dt><dd><code>https://apis.data.go.kr/1230000/{서비스}/{오퍼레이션}?serviceKey={키}&amp;type=json</code> — 키는 공공데이터포털에서</dd>
+<dt>재료연 용례</dt><dd>연구용역·연구장비 조달 시세 확인 · 타 기관의 유사 용역 발주 이력 조사(기획 참고)</dd>
+<dt>검증 근거</dt><dd>무키 호출 → HTTP 401 <code>SERVICE_KEY_IS_NULL</code> (2026-08-05, 엔드포인트 생존)</dd>
+</dl>
+</div>
+
+<!-- ══════════ E ══════════ -->
+<h2 id="secE"><span class="num">E</span>법령·국회</h2>
+<p class="secsub">소부장특별법·과학기술기본법 등 제도 근거 확인</p>
+
+<div class="card" id="c-law" data-k="법제처 국가법령정보 법령 조문 소부장특별법">
+<header><h4>국가법령정보 OpenAPI<span class="org">법제처</span></h4><span class="badge ok">✅ 실호출 확인 — 키 없이 조회 성공</span></header>
+<dl>
+<dt>무엇이 나오나</dt><dd>법률·시행령·시행규칙 조문 전문, 제·개정 이력, 신구조문 대비표, 행정규칙, 판례</dd>
+<dt>엔드포인트</dt><dd><code>https://www.law.go.kr/DRF/lawSearch.do?OC={ID}&amp;target=law&amp;type=XML&amp;query={법령명}</code></dd>
+<dt>키 발급</dt><dd>open.law.go.kr에서 OC(이메일 ID 앞부분) 신청 — 무료·즉시. 다만 <code>OC=test</code>로도 조회됩니다</dd>
+<dt>재료연 용례</dt><dd>소부장특별법·시행령의 현행 조문 확인 · 특화선도기업/으뜸기업 지원 근거 조항 인용 · 보고서 인용 조문의 실재 검증</dd>
+<dt>실습 명령</dt><dd>지금 터미널에 붙여넣어 보십시오 — 키 없이 즉시 응답합니다.</dd>
+</dl>
+<pre>curl -s "https://www.law.go.kr/DRF/lawSearch.do?OC=test&amp;target=law&amp;type=XML&amp;query=소재부품장비"</pre>
+<dl>
+<dt>검증 결과</dt><dd><b>실데이터 수신 성공</b> — resultCode 00 / success, 「소재부품장비」 검색 3건(특별조치법 계열) 반환, 공포일자·소관부처 포함 (2026-08-05)</dd>
+</dl>
+</div>
+
+<div class="card" id="c-assembly" data-k="열린국회정보 의안 회의록 국회">
+<header><h4>열린국회정보 OpenAPI<span class="org">국회사무처</span></h4><span class="badge ok">✅ 실호출 확인</span></header>
+<dl>
+<dt>무엇이 나오나</dt><dd>의안 정보와 심사경과, 본회의·상임위 회의록, 표결, 의사일정 — 270여 종</dd>
+<dt>엔드포인트</dt><dd><code>https://open.assembly.go.kr/portal/openapi/{서비스명}?KEY={키}&amp;Type=json</code></dd>
+<dt>키 발급</dt><dd>open.assembly.go.kr 회원가입 후 무료 발급</dd>
+<dt>재료연 용례</dt><dd>소부장·국가전략기술 관련 계류 의안 추적 · 과방위·산자위 회의록에서 소재 R&amp;D 논의 발췌(정책 동향 브리핑 원료)</dd>
+<dt>⚠ 중요</dt><dd class="note">브라우저 User-Agent가 없으면 400으로 막힙니다. 또 일부 문서의 KEY=sample은 동작하지 않습니다(예정처 검증에서 확인) — 키를 발급받으십시오.</dd>
+</dl>
+</div>
+
+<!-- ══════════ F ══════════ -->
+<h2 id="secF"><span class="num">F</span>해외 R&amp;D · 국제비교</h2>
+<p class="secsub">해외 사업 벤치마킹과 국내외 위치 판단 — 대부분 키 없이 즉시</p>
+
+<div class="card" id="c-nsf" data-k="nsf 미국 과제 어워드 해외">
+<header><h4>NSF Award Search API<span class="org">미국 국립과학재단</span></h4><span class="badge ok">✅ 실데이터 수신 · 키 불필요</span></header>
+<dl>
+<dt>무엇이 나오나</dt><dd>NSF 지원 과제(어워드) 전체 — 과제명·기관·금액·초록·프로그램. 미국판 NTIS</dd>
+<dt>엔드포인트</dt><dd><code>https://www.research.gov/awardapi-service/v1/awards.json?keyword={키워드}</code></dd>
+<dt>재료연 용례</dt><dd>미국의 소재 분야 투자 동향 — 프로그램별 규모·신규 주제 · 해외 유사사업 벤치마킹(1차 교육의 R&amp;D 라이프사이클 횡단 기능)</dd>
+<dt>이렇게 시킨다</dt><dd class="prompt">"NSF API에서 'quantum materials' 최근 2년 과제를 받아 프로그램별 건수·총액을 정리하고, 우리 나노소재기술개발사업과 주제 겹침을 비교해줘."</dd>
+<dt>검증 근거</dt><dd>실데이터 수신 — materials 검색 어워드 JSON 반환 (2026-08-05)</dd>
+</dl>
+</div>
+
+<div class="card" id="c-cordis" data-k="cordis eu 유럽 과제 horizon">
+<header><h4>CORDIS API<span class="org">유럽연합 집행위원회</span></h4><span class="badge ok">✅ 실데이터 수신 · 키 불필요</span></header>
+<dl>
+<dt>무엇이 나오나</dt><dd>EU 프레임워크(Horizon Europe 등) 과제·성과·참여기관 — EU R&amp;D의 공식 DB</dd>
+<dt>엔드포인트</dt><dd><code>https://cordis.europa.eu/search?q={검색식}&amp;format=json</code></dd>
+<dt>재료연 용례</dt><dd>Horizon Europe의 첨단소재 투자 동향 · EU 소재 파트너십(2ZERO·Batt4EU 등) 과제 구성 벤치마킹</dd>
+<dt>검증 근거</dt><dd>실데이터 수신 — 'advanced materials' 검색 JSON 반환 (2026-08-05)</dd>
+</dl>
+</div>
+
+<div class="card" id="c-oecd" data-k="oecd msti 과학기술지표 국제비교 sdmx">
+<header><h4>OECD Data Explorer API (SDMX)<span class="org">OECD</span></h4><span class="badge ok">✅ 실호출 확인 · 키 불필요</span></header>
+<dl>
+<dt>무엇이 나오나</dt><dd>회원국 과학기술 지표 — <b>MSTI</b>(연구개발비·연구인력 국제비교), 특허, 산업 통계</dd>
+<dt>엔드포인트</dt><dd><code>https://sdmx.oecd.org/public/rest/data/{데이터셋ID}?format=jsondata</code></dd>
+<dt>재료연 용례</dt><dd>GERD/GDP·연구원 수 국제비교 — "우리는 어디에 있나"(L3 분석)의 표준 근거</dd>
+<dt>주의</dt><dd class="note">SDMX 데이터셋 ID가 복잡합니다 — Data Explorer 웹에서 쿼리를 만들어 URL을 복사하는 편이 빠릅니다. 구 주소 stats.oecd.org는 폐기됐습니다.</dd>
+<dt>검증 근거</dt><dd>STI dataflow 조회 HTTP 200 (2026-08-05)</dd>
+</dl>
+</div>
+
+<div class="card" id="c-wb" data-k="world bank 세계은행 R&D 지출 국제비교">
+<header><h4>World Bank Open Data API<span class="org">World Bank</span></h4><span class="badge ok">✅ 실데이터 수신 · 키 불필요</span></header>
+<dl>
+<dt>무엇이 나오나</dt><dd>200여 개국 지표 시계열 — <b>R&amp;D 지출/GDP(GB.XPD.RSDV.GD.ZS)</b>, 하이테크 수출 비중 등</dd>
+<dt>엔드포인트</dt><dd><code>https://api.worldbank.org/v2/country/KOR/indicator/GB.XPD.RSDV.GD.ZS?format=json</code></dd>
+<dt>재료연 용례</dt><dd>한국 R&amp;D 투자 강도의 국제 위치 — 보고서 도입부의 표준 국제비교 근거</dd>
+<dt>검증 근거</dt><dd>실데이터 수신 — 한국 R&amp;D지출/GDP 시계열 4건 반환 (2026-08-05)</dd>
+</dl>
+</div>
+
+<div class="card" id="c-mp" data-k="materials project 재료 물성 데이터베이스">
+<header><h4>Materials Project API<span class="org">Lawrence Berkeley National Lab</span></h4><span class="badge ok">✅ 실호출 확인 · 키 필요(무료)</span></header>
+<dl>
+<dt>무엇이 나오나</dt><dd>15만+ 무기 소재의 계산 물성 데이터 — 구조·밴드갭·안정성. AI for Materials 흐름의 대표 공개 DB</dd>
+<dt>엔드포인트</dt><dd><code>https://api.materialsproject.org/materials/summary/?formula={화학식}</code> — 키는 materialsproject.org 가입 후 무료</dd>
+<dt>재료연 용례</dt><dd>정책 분석보다는 <b>기술 이해·데모용</b> — "데이터 기반 소재 탐색"이 실제로 어떤 데이터 위에서 도는지 보여줄 때. 연구 부서와의 대화 소재</dd>
+<dt>검증 근거</dt><dd>무키 호출 → 401 <code>No API key found in request</code> (2026-08-05, 엔드포인트 생존)</dd>
+</dl>
+</div>
+
+<!-- ══════════ G ══════════ -->
+<h2 id="secG"><span class="num">G</span>한국 특화 MCP 도구</h2>
+<p class="secsub">설치하면 AI가 곧바로 손에 쥐는 도구들 — 별표·갱신일은 2026-08-05 GitHub 조회 기준</p>
+
+<div class="box warn"><span class="t">⚠ 커뮤니티 MCP를 기관 업무에 쓸 때</span>
+아래 도구 대부분은 개인·커뮤니티가 만든 오픈소스입니다. 정부기관의 공식 산출물이 아니며, 유지보수가 멈출 수 있습니다. 세 가지를 확인하고 쓰십시오 — ① 최종 갱신일이 최근인가 ② 라이선스가 명시돼 있는가 ③ 어떤 데이터를 어디로 보내는가. 민감 자료를 다루는 작업에는 공식 API + 자체 래퍼가 안전합니다.</div>
+
+<h3>문서 처리 — 한글(.hwp/.hwpx) · PDF</h3>
+
+<div class="card" id="c-kordoc" data-k="kordoc 한글 hwp hwpx pdf 파싱 마크다운">
+<header><h4>kordoc<span class="org">chrisryugj · MIT</span></h4><span class="badge ok">✅ 저장소 확인</span><span class="badge star">★1,653 · 갱신 2026-08-04</span></header>
+<dl>
+<dt>무엇을 하나</dt><dd>.hwp·.hwpx·PDF·Office 문서를 Markdown으로 파싱. 표 추출, 문서 비교(신구대조), 양식 인식·자동 채우기·문서 생성</dd>
+<dt>설치</dt><dd><code>npx -y kordoc setup</code> (30초 마법사 — Claude Code 선택 후 재시작) · github.com/chrisryugj/kordoc</dd>
+<dt>재료연 용례</dt><dd>소부장 브리핑 기존 호 .hwp 파싱 → 원고 재활용 · 부처 보도자료 hwp 일괄 정리 · 우수성과 구축 자료 hwpx 읽기 — <b>미니실습 ②의 첫 도구</b></dd>
+<dt>이렇게 시킨다</dt><dd class="prompt">"이 폴더 hwp 파일 전부 마크다운으로 바꾸고, 기사 제목·기관·날짜만 뽑아 표로 합쳐줘."</dd>
+<dt>⚠ 중요 한계</dt><dd class="note">.hwp(구형) 추출은 표·그림이 평탄화될 수 있습니다(실측: 표 85개 원본 → 추출 4개). 추출본으로 "표가 비었다"고 판단하지 말고 원본과 대조하십시오.</dd>
+</dl>
+</div>
+
+<div class="card" id="c-hwpx" data-k="hwpx automation 한글 쓰기 편집 airmang">
+<header><h4>python-hwpx-automation (구 hwpx-mcp-server)<span class="org">airmang · Apache-2.0</span></h4><span class="badge ok">✅ 저장소 확인</span><span class="badge star">★65 · 갱신 2026-08-04</span></header>
+<dl>
+<dt>무엇을 하나</dt><dd>로컬 .hwpx 파일을 읽기·편집·검증. kordoc이 읽기 중심이라면 이쪽은 <b>쓰기</b>가 강점</dd>
+<dt>주의</dt><dd>저장소명이 hwpx-mcp-server에서 <b>python-hwpx-automation으로 변경</b>되었습니다(구 링크로 찾으면 없음) — github.com/airmang/python-hwpx-automation</dd>
+<dt>재료연 용례</dt><dd>기관 양식 hwpx에 분석 결과 채우기 · 표 서식 유지한 채 수치만 갱신</dd>
+</dl>
+</div>
+
+<h3>법령</h3>
+
+<div class="card" id="c-lawmcp" data-k="korean-law-mcp 법령 판례 인용검증 법제처">
+<header><h4>korean-law-mcp<span class="org">chrisryugj · MIT</span></h4><span class="badge ok">✅ 저장소 확인</span><span class="badge star">★2,369 · 갱신 2026-08-03</span></header>
+<dl>
+<dt>무엇을 하나</dt><dd>법제처 42개 API를 도구 10개로 — 법령·판례·행정규칙 검색, <b>인용 검증(실존+내용)</b>, 신구 대조, 현행성 가드</dd>
+<dt>설치</dt><dd>Claude Code에서 두 줄 (설치 중 법제처 OC 키를 물어봅니다):<br><code>/plugin marketplace add chrisryugj/korean-law-mcp</code><br><code>/plugin install korean-law@korean-law-marketplace</code></dd>
+<dt>재료연 용례</dt><dd>소부장특별법·전략기술 관련 조문 확인 · <b>보고서 초안의 법령 인용 실재 검증</b>(환각 차단) — 미니실습 ②의 둘째 도구</dd>
+<dt>이렇게 시킨다</dt><dd class="prompt">"이 초안에 인용된 법령 조항이 전부 실재하는지, 조 번호와 현행 여부까지 확인해서 틀린 것만 표로 알려줘."</dd>
+<dt>⚠ 참고</dt><dd class="note">같은 이름의 SeoNaRu/korean-law-mcp가 검색되는 경우가 있으나, 널리 쓰이고 유지되는 것은 chrisryugj 쪽입니다(★2,369 vs ★67 — 예정처 카탈로그 검증에서 확인). 설치 중 SSH 오류가 뜨면 <code>git config --global url."https://github.com/".insteadOf "git@github.com:"</code> 실행 후 재시도.</dd>
+</dl>
+</div>
+
+<h3>회의록 · 언어</h3>
+
+<div class="card" id="c-tiro" data-k="tiro 티로 회의록 녹취 전사">
+<header><h4>Tiro<span class="org">상용 서비스</span></h4><span class="badge doc">◐ 서비스 확인</span></header>
+<dl>
+<dt>무엇을 하나</dt><dd>회의 음성 → 화자별 회의록·요약 자동 생성. MCP로 연결하면 AI가 회의록을 직접 검색·인용</dd>
+<dt>재료연 용례</dt><dd><b>이미 쓰고 계신 그 도구</b> — 기획회의·전문가 자문회의 녹취를 전사하고, 전사 텍스트를 회의록 스킬(실습키트 심화A)에 넣어 7항목 회의록으로 구조화</dd>
+<dt>주의</dt><dd class="note">외부 상용 서비스입니다. 비공개 회의 음성 업로드는 기관 보안 규정을 먼저 확인하십시오.</dd>
+</dl>
+</div>
+
+<div class="card" id="c-spell" data-k="맞춤법 교정 korean spell">
+<header><h4>mcp-korean-spell<span class="org">winterjung · Apache-2.0</span></h4><span class="badge warn">⚠ 갱신 정체 주의</span><span class="badge star">★24 · 갱신 2025-04-15</span></header>
+<dl>
+<dt>무엇을 하나</dt><dd>한국어 맞춤법·문법 오류 교정</dd>
+<dt>주의</dt><dd class="note">최종 갱신이 1년 이상 지났습니다 — 동작 확인 후 사용. 간단한 교열은 Claude 자체 능력으로도 충분합니다.</dd>
+</dl>
+</div>
+
+<div class="card" id="c-stdict" data-k="표준국어대사전 사전 용어">
+<header><h4>ko-stdict-mcp<span class="org">dahlia · AGPL-3.0</span></h4><span class="badge ok">✅ 저장소 확인</span><span class="badge star">★26 · 갱신 2026-03-29</span></header>
+<dl>
+<dt>무엇을 하나</dt><dd>《표준국어대사전》 전체를 로컬 SQLite로 조회 — 표제어·뜻풀이·용례</dd>
+<dt>재료연 용례</dt><dd>보고서 용어 표준화 — 전문용어와 일상용어 혼용 점검</dd>
+<dt>주의</dt><dd class="note">AGPL-3.0 — 기관 내부 배포·개작 시 조건 확인.</dd>
+</dl>
+</div>
+
+<div class="card" id="c-awesome" data-k="awesome mcp korea 목록 큐레이션">
+<header><h4>awesome-mcp-korea — 한국 MCP 통합 목록<span class="org">darjeeling · CC0</span></h4><span class="badge ok">✅ 저장소 확인</span><span class="badge star">★223 · 갱신 2026-05-13</span></header>
+<dl>
+<dt>무엇을 하나</dt><dd>한국 특화 MCP 서버 큐레이션 — 법률·공공데이터·금융·지도·NLP 등 분야별</dd>
+<dt>왜 실었나</dt><dd><b>이 카탈로그가 낡았을 때 다음에 볼 곳</b>입니다. 새 MCP가 나오면 여기 먼저 등재됩니다.</dd>
+<dt>주의</dt><dd class="note">등재는 검증이 아닙니다 — 보안·신뢰성은 이용자가 판단합니다.</dd>
+</dl>
+</div>
+
+<!-- ══════════ H ══════════ -->
+<h2 id="secH"><span class="num">H</span>범용 MCP — 어떤 업무에나 깔리는 기본기</h2>
+<p class="secsub">특정 데이터원이 아니라 '일하는 방식'을 확장하는 도구</p>
+
+<div class="card" id="c-fetch" data-k="공식 레퍼런스 서버 fetch filesystem git memory">
+<header><h4>공식 레퍼런스 서버 (fetch · filesystem 등)<span class="org">MCP 공식</span></h4><span class="badge ok">✅ 저장소 확인</span><span class="badge star">★89,204 · 갱신 2026-08-04</span></header>
+<dl>
+<dt>구성</dt><dd>fetch(웹 페이지 조회) · filesystem(로컬 파일) · git · memory · time 등 — github.com/modelcontextprotocol/servers</dd>
+<dt>재료연 용례</dt><dd><b>fetch가 가장 중요</b> — 공식 MCP가 없는 공공 사이트(NKIS·부처 보도자료 등)를 읽는 만능 우회로. filesystem은 스크랩 자료를 폴더째 다루게 함</dd>
+<dt>이렇게 시킨다</dt><dd class="prompt">"이 폴더의 보도자료를 전부 읽고, 소재 관련 정책 발표만 골라 날짜순 표로 정리해줘."</dd>
+</dl>
+</div>
+
+<div class="card" id="c-excel" data-k="excel 엑셀 mcp 수식">
+<header><h4>excel-mcp-server<span class="org">haris-musa · MIT</span></h4><span class="badge ok">✅ 저장소 확인</span><span class="badge star">★4,091 · 갱신 2026-04-12</span></header>
+<dl>
+<dt>무엇을 하나</dt><dd>Excel 읽기·쓰기·수식·서식 조작</dd>
+<dt>재료연 용례</dt><dd>스크랩통계 엑셀 자동 처리 · 우수성과 산출 엑셀 검산 — 다만 <b>Claude Code에는 기본 xlsx 스킬이 내장</b>돼 있어 단순 작업은 설치 없이 됩니다</dd>
+</dl>
+</div>
+
+<div class="card" id="c-browser" data-k="playwright chrome devtools 브라우저 자동화">
+<header><h4>playwright-mcp · chrome-devtools-mcp<span class="org">Microsoft · Google</span></h4><span class="badge ok">✅ 저장소 확인</span><span class="badge star">★35,804 / ★48,521 · 갱신 2026-08</span></header>
+<dl>
+<dt>무엇을 하나</dt><dd>AI가 브라우저를 실제로 조작 — 클릭·입력·스크롤. 화면을 눌러야 나오는 자료 접근</dd>
+<dt>재료연 용례</dt><dd>AJAX로 로딩돼 fetch로 안 잡히는 통계 화면·검색 시스템 접근</dd>
+<dt>주의</dt><dd class="note">브라우저 자동화는 로그인 세션까지 접근합니다. 업무 계정이 열린 브라우저에 붙이지 마십시오.</dd>
+</dl>
+</div>
+
+<div class="card" id="c-github" data-k="github mcp 저장소">
+<header><h4>github-mcp-server<span class="org">GitHub 공식 · MIT</span></h4><span class="badge ok">✅ 저장소 확인</span><span class="badge star">★31,957 · 갱신 2026-08-04</span></header>
+<dl>
+<dt>무엇을 하나</dt><dd>GitHub 저장소·이슈 조회와 조작</dd>
+<dt>재료연 용례</dt><dd>공개 스킬·MCP를 설치 전에 내용부터 확인 — "이 저장소 뭐 하는 건지, 어떤 데이터를 밖으로 보내는지 읽어봐"</dd>
+</dl>
+</div>
+
+<div class="card" id="c-context7" data-k="context7 문서 라이브러리">
+<header><h4>context7<span class="org">Upstash · MIT</span></h4><span class="badge ok">✅ 저장소 확인</span><span class="badge star">★60,249 · 갱신 2026-08-04</span></header>
+<dl>
+<dt>무엇을 하나</dt><dd>라이브러리·도구의 최신 공식 문서를 AI에게 실시간 공급</dd>
+<dt>재료연 용례</dt><dd>분석 파이프라인을 직접 만들 때 최신 규격 참조 (모듈 5 단계)</dd>
+</dl>
+</div>
+
+<div class="card" id="c-builtin" data-k="claude code 내장 도구 스킬 xlsx docx">
+<header><h4>Claude Code 기본 내장 도구<span class="org">Anthropic</span></h4><span class="badge doc">◐ 환경 내장</span></header>
+<dl>
+<dt>구성</dt><dd>웹 검색·웹 조회 · 파일 읽기·쓰기 · 터미널 실행 · 문서 스킬(docx·xlsx·pptx·pdf) · 서브에이전트 · 예약 실행</dd>
+<dt>왜 먼저 보나</dt><dd><b>설치가 필요 없습니다.</b> MCP를 붙이기 전에 기본 도구로 되는 일인지 먼저 확인하십시오 — 상당수 업무가 여기서 끝납니다.</dd>
+<dt>이렇게 시킨다</dt><dd class="prompt">"이 스크랩 엑셀 읽고 분류별 건수를 세서 전월과 비교한 표를 Word 파일로 저장해줘."</dd>
+</dl>
+</div>
+
+<!-- ══════════ 10 ══════════ -->
+<h2 id="s10"><span class="num">10</span>키 발급 · 설치 실무</h2>
+<p class="secsub">오늘 하나만 붙여 본다면 이 순서대로</p>
+
+<h3>1단계 — 키가 필요 없는 것부터 (5분)</h3>
+<p>가장 먼저 성공 경험을 만드십시오. 아래 두 개는 발급 절차 없이 즉시 됩니다 (미니실습 ①과 동일).</p>
+<pre><span class="c"># ① 법제처 — 소부장 관련 법령 검색 (2026-08-05 실데이터 확인)</span>
+curl -s "https://www.law.go.kr/DRF/lawSearch.do?OC=test&amp;target=law&amp;type=XML&amp;query=소재부품장비"
+
+<span class="c"># ② OpenAlex — 전고체 전지 논문 검색 (키 자체가 없음)</span>
+curl -s "https://api.openalex.org/works?search=solid state battery&amp;filter=from_publication_date:2025-01-01"</pre>
+<p>이것을 AI에게 시킬 때는 명령을 외울 필요가 없습니다. <b>"법제처 API로 소부장특별법 조문 받아와 줘"</b>라고 말하면 됩니다.</p>
+
+<h3>2단계 — 키 발급 (기관당 5~10분)</h3>
+<div class="tbl-wrap"><table>
+<thead><tr><th>발급처</th><th style="width:16%">승인</th><th>대상</th></tr></thead>
+<tbody>
+<tr><td><b>공공데이터포털</b> data.go.kr</td><td>대부분 자동</td><td>나라장터 등 부처 API 다수 — 여기 하나로 가장 많이 해결</td></tr>
+<tr><td><b>NTIS</b> ntis.go.kr</td><td>신청 후</td><td>국가 R&amp;D 과제·성과</td></tr>
+<tr><td><b>KIPRIS Plus</b></td><td>신청 후</td><td>특허·지식재산</td></tr>
+<tr><td><b>KOSIS</b> kosis.kr</td><td>즉시</td><td>국가통계</td></tr>
+<tr><td><b>ECOS</b> ecos.bok.or.kr</td><td>즉시</td><td>한국은행 경제통계</td></tr>
+<tr><td><b>OpenDART</b></td><td>즉시</td><td>전자공시</td></tr>
+<tr><td><b>열린국회정보</b></td><td>회원가입 후</td><td>의안·회의록</td></tr>
+<tr><td><b>법제처</b> open.law.go.kr</td><td>즉시</td><td>법령 (OC = 이메일 ID 앞부분)</td></tr>
+</tbody>
+</table></div>
+<p>발급 절차 자체도 AI에게 물어 진행할 수 있습니다 — "공공데이터포털에서 나라장터 API 신청하려면 어떤 절차인지 정리해줘."</p>
+
+<h3>3단계 — MCP 설치</h3>
+<pre><span class="c"># 방법 A — 설치 마법사 (kordoc)</span>
+npx -y kordoc setup
+
+<span class="c"># 방법 B — Claude Code 플러그인 두 줄 (korean-law)</span>
+/plugin marketplace add chrisryugj/korean-law-mcp
+/plugin install korean-law@korean-law-marketplace
+
+<span class="c"># 방법 C — 자연어 (가장 쉬움)</span>
+"github.com/chrisryugj/kordoc MCP로 붙여줘"</pre>
+
+<div class="box warn"><span class="t">인증키 보관 규칙</span>
+키를 <b>대화창에 붙여넣지 마십시오</b> — 대화 기록에 그대로 남습니다. <code>.env</code> 파일이나 설정의 환경변수에 넣고, 그 파일은 공유 폴더·저장소에 올리지 않습니다. 노출됐다면 재발급하십시오.</div>
+
+<h3>도구가 안 붙을 때 — 4단계 점검</h3>
+<ol>
+<li><b>주소가 살아 있는가</b> — 키 없이 호출해 오류 메시지라도 오는지 확인(오면 주소는 생존)</li>
+<li><b>User-Agent 문제인가</b> — 열린국회정보 등은 브라우저 UA가 없으면 차단됩니다</li>
+<li><b>키 문제인가 서비스명 문제인가</b> — 오류코드를 읽으면 원인이 갈라집니다</li>
+<li><b>그래도 안 되면 우회</b> — fetch로 공개 페이지를 읽거나, 파일로 내려받아 kordoc·filesystem으로 처리</li>
+</ol>
+
+<!-- ══════════ 11 ══════════ -->
+<h2 id="s11"><span class="num">11</span>보안 · 경계</h2>
+<p class="secsub">무엇을 넣지 않을지부터 정합니다</p>
+
+<div class="box warn"><span class="t">⚠ 외부 AI 서비스에 넣지 않는 것</span>
+<ul style="margin:6px 0 0 18px">
+<li><b>미공개 과제·평가 자료</b> — 우수성과 평가 원시데이터, 심사 중 내부 검토자료</li>
+<li><b>연구자 개인정보가 포함된 원자료</b> — 이름·등록번호 등은 개인정보 제거 단계를 거친 뒤에</li>
+<li><b>비공개 회의 녹취</b> — 외부 전사 서비스(Tiro 포함) 이용 전 기관 규정 확인</li>
+<li><b>인증키·계정 정보</b> — 대화창에 붙여넣지 않습니다</li>
+<li><b>내부 시스템 전용 데이터</b> — 업무망 자료를 외부로 내보내지 않습니다</li>
+</ul></div>
+
+<div class="tbl-wrap"><table>
+<thead><tr><th style="width:22%">구분</th><th>판단 기준</th></tr></thead>
+<tbody>
+<tr><td><b>써도 되는 것</b></td><td>이미 공표된 자료 · 공개 API로 누구나 받을 수 있는 데이터 · 내가 쓴 초안의 문장 다듬기</td></tr>
+<tr><td><b>조건부</b></td><td>공개 예정이나 아직 미공표 — 공개 시점 이후로 미루거나 기관 승인 절차를 따름</td></tr>
+<tr><td><b>안 되는 것</b></td><td>위 경고 상자 항목 전부</td></tr>
+</tbody>
+</table></div>
+
+<div class="box"><span class="t">판단의 책임</span>
+도구가 아니라 <b>사용자의 판단</b>이 산출물의 책임을 집니다. AI가 만든 표·수치·인용은 전부 원자료와 대사한 뒤에 보고서에 실으십시오. 특히 위험한 것은 틀린 답이 아니라 <b>그럴듯하게 틀린 답</b>입니다 — 존재하지 않는 조문 번호, 미묘하게 어긋난 기준연도, 출처가 실재하지 않는 통계.</div>
+
+<h3>검증 3원칙</h3>
+<ol>
+<li><b>수치는 원자료와 대사한다</b> — API 원본과 보고서 표를 1:1로 맞춰 봅니다</li>
+<li><b>인용은 실재를 확인한다</b> — 법령 조항·통계표·논문은 실제로 열어 확인합니다(korean-law-mcp의 인용 검증 활용)</li>
+<li><b>확인 못 한 것은 확인 못 했다고 쓴다</b> — AI에게도 "확인 안 되면 '확인불가'로 두고 추정하지 마"라고 명시하십시오. 이 한 문장이 할루시네이션을 크게 줄입니다</li>
+</ol>
+
+<!-- ══════════ 12 ══════════ -->
+<h2 id="s12"><span class="num">12</span>프롬프트 카드 — 이렇게 시킨다</h2>
+<p class="secsub">그대로 복사해 쓰는 업무별 요청문. 굵은 부분이 품질을 만드는 장치입니다</p>
+
+<h3>국내외 동향 조사</h3>
+<div class="box">"OpenAlex와 arXiv에서 '□□ 소재' 최근 1년 동향을 조사해줘. <b>출처는 T1(정부·공식)/T2(학술)/T3(언론) 등급을 붙이고</b>, 같은 보도자료를 받아쓴 기사는 <b>출처 1개로 세어줘</b>. 사실과 해석을 구분해서 쓰고, <b>확인 안 되는 것은 '확인불가'로 두고 추정하지 마</b>."</div>
+
+<h3>소부장 브리핑 조판</h3>
+<div class="box">"스크랩 엑셀 '전체리스트' 시트를 읽고 ① 분류·연번·제목 목차표 ② 정책 기사를 기관별로 ③ R&amp;D·기업동향 기사를 분야별로 배치한 브리핑 초안을 만들어줘. <b>연번과 건수 통계는 데이터에서 다시 세어 넣고</b>, 원본 엑셀은 <b>절대 수정하지 마</b>."</div>
+
+<h3>JCR 미매칭 저널 조사</h3>
+<div class="box">"다음 미매칭 저널 목록(저널명·ISSN·eISSN)에 대해 각각 ① 현재도 발행되는가 ② 개명·통합·분리·폐간 여부와 시점 ③ 현재 저널명·ISSN ④ JCR 등재 후보를 조사해줘. <b>Crossref journals API와 발행사 공지를 근거로 쓰고, 근거 URL을 붙인 표</b>로 정리해줘. <b>확실하지 않으면 '미확인'으로 표시</b>하고, 최종 확정은 내가 한다."</div>
+
+<h3>R&amp;D 투자-성과 분석</h3>
+<div class="box">"NTIS에서 받은 이 과제 목록으로 사업별 투자 규모·수행 주체·지역 분포를 집계하고, OpenAlex 논문 데이터와 <b>과제번호·기관명으로 연계</b>해줘. 기관명은 <b>정규화 규칙(약칭↔정식명)을 만들어 로그로 남기고</b>, 연계 안 되는 건수도 보고해줘. <b>상관을 인과로 서술하지 마</b>."</div>
+
+<h3>초안 검증 (가장 중요)</h3>
+<div class="box">"이 초안을 <b>의심하는 사람의 눈으로</b> 검토해줘. ① 인용된 법령·통계·논문이 실재하는지 ② 수치가 본문·표·요약에서 서로 어긋나는 곳 ③ 출처 없이 단정한 문장 ④ 기준연도가 섞인 곳. <b>문제가 있는 것만 위치·문제·해결 형식으로</b> 알려줘. 잘된 점은 쓰지 마."</div>
+
+<div class="box ok"><span class="t">✅ 좋은 요청문의 공통점</span>
+① 범위를 좁힌다("최근 1년", "이 시트만") · ② 판정 기준을 숫자로 준다 · ③ 출처 병기를 요구한다 · ④ 모르면 모른다고 하라고 명시한다 · ⑤ 사람이 할 몫을 남긴다("최종 확정은 내가 한다").</div>
+
+<!-- ══════════ 부록 ══════════ -->
+<h2 id="apx1"><span class="num">부록</span>도입 점검 체크리스트</h2>
+<p class="secsub">새 도구를 업무에 붙이기 전 확인</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th style="width:6%">☐</th><th style="width:36%">점검 항목</th><th>확인 방법</th></tr></thead>
+<tbody>
+<tr><td>☐</td><td><b>주소가 살아 있는가</b></td><td>키 없이 호출해 오류 메시지라도 오는지 확인</td></tr>
+<tr><td>☐</td><td><b>최종 갱신이 최근인가</b></td><td>(MCP) GitHub 저장소의 최근 갱신일 — 1년 이상 정체면 주의</td></tr>
+<tr><td>☐</td><td><b>라이선스가 명시돼 있는가</b></td><td>(MCP) 미표기·AGPL 등은 기관 도입 전 확인</td></tr>
+<tr><td>☐</td><td><b>데이터가 어디로 가는가</b></td><td>로컬 처리인지 외부 서버 전송인지 — README와 코드 확인</td></tr>
+<tr><td>☐</td><td><b>공개 자료만 다루는가</b></td><td>11 · 보안 경계의 금지 항목에 걸리지 않는지</td></tr>
+<tr><td>☐</td><td><b>결과를 검산할 수 있는가</b></td><td>원자료와 1:1 대사가 가능한 형태로 산출되는지</td></tr>
+<tr><td>☐</td><td><b>실패했을 때 티가 나는가</b></td><td>조용히 빈 값을 채우지 않고 '확인불가'로 남기는지</td></tr>
+</tbody>
+</table></div>
+
+<h2 id="apx2"><span class="num">부록</span>검증 원본 기록</h2>
+<p class="secsub">2026-08-05 실시. 이 자료의 표기가 무엇에 근거했는지 그대로 남깁니다</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th style="width:26%">대상</th><th style="width:16%">결과</th><th>수신 응답</th></tr></thead>
+<tbody>
+<tr><td>국가법령정보(법제처)</td><td><b>실데이터</b></td><td>resultCode 00 / success — 「소재부품장비」 3건, 공포일자·소관부처 포함</td></tr>
+<tr><td>OpenAlex</td><td><b>실데이터</b></td><td>solid state battery 2025~ 28,148건 반환</td></tr>
+<tr><td>Crossref</td><td><b>실데이터</b></td><td>works 검색 967,156건 반환</td></tr>
+<tr><td>arXiv</td><td><b>실데이터</b></td><td>Atom 피드 정상 반환</td></tr>
+<tr><td>Semantic Scholar</td><td>요율 제한</td><td>429 Too Many Requests — 키 신청 안내 포함</td></tr>
+<tr><td>NTIS</td><td>생존</td><td>&lt;error&gt;인증키 정보가 없습니다.&lt;/error&gt;</td></tr>
+<tr><td>KIPRIS Plus</td><td>생존</td><td>INVALID_REQUEST_PARAMETER_ERROR (API) · 포털 200</td></tr>
+<tr><td>KOSIS</td><td>생존</td><td>{err:"10"} KEY 누락</td></tr>
+<tr><td>ECOS</td><td>생존</td><td>INFO-100 인증키 무효</td></tr>
+<tr><td>DART</td><td>생존</td><td>{"status":"100"} 인증키 누락</td></tr>
+<tr><td>나라장터</td><td>생존</td><td>HTTP 401 SERVICE_KEY_IS_NULL</td></tr>
+<tr><td>관세청 UNI-PASS</td><td>생존</td><td>인증키(crkyCn) 필수입력 안내</td></tr>
+<tr><td>열린국회정보</td><td>생존</td><td>예정처 검증(2026-07-26) 계승 — UA 필수 · sample 키 미작동</td></tr>
+<tr><td>NKIS</td><td>포털 200</td><td>HTTP 200 — API 규격은 포털 안내 기준</td></tr>
+<tr><td>KCI</td><td>접근 제한</td><td>OpenAPI 안내 페이지 자동 접근 차단 응답 — 브라우저 신청 경로 안내</td></tr>
+<tr><td>NSF Awards</td><td><b>실데이터</b></td><td>materials 검색 어워드 JSON 반환</td></tr>
+<tr><td>CORDIS</td><td><b>실데이터</b></td><td>'advanced materials' 검색 JSON 반환</td></tr>
+<tr><td>OECD SDMX</td><td>생존</td><td>STI dataflow HTTP 200</td></tr>
+<tr><td>World Bank</td><td><b>실데이터</b></td><td>한국 R&amp;D지출/GDP 시계열 반환 (lastupdated 2026-07-13)</td></tr>
+<tr><td>Materials Project</td><td>생존</td><td>401 No API key found</td></tr>
+<tr><td>MCP 저장소 12종</td><td>확인</td><td>GitHub API로 별표·최종 갱신일·라이선스 조회 (2026-08-05)</td></tr>
+</tbody>
+</table></div>
+
+<footer>
+<b>소재혁신 업무 AI 도구 총정리 — API · MCP 카탈로그</b><br>
+한국재료연구원 소재혁신선도본부 「AI 특강 2차」 교육 참고자료 · 작성 박주이<br>
+검증 실시일 2026-08-05 · 이 문서의 모든 상태 표기는 그 시점 기준입니다.<br><br>
+이 자료의 사용에 관하여 — 수록된 API·MCP는 공개 자료를 정리한 것으로, 각 도구의 이용 조건·라이선스·보안 책임은 이용자에게 있습니다. 커뮤니티 MCP는 정부기관의 공식 산출물이 아닙니다. 업무 도입 전 <a href="#apx1">도입 점검 체크리스트</a>와 기관 보안 규정을 확인하십시오.<br><br>
+이 문서가 낡았다고 느껴지면 — <a href="#c-awesome">awesome-mcp-korea</a>에서 새 도구를 확인하고, 각 API는 <a href="#s10">10 · 키 발급 실무</a>의 4단계 점검으로 직접 생존을 확인하십시오. 그 확인 작업 자체를 AI에게 시킬 수 있다는 것이 이 교육의 요지입니다.
+</footer>
+
+</main>
+</div>
+
+<button id="top" title="맨 위로">↑</button>
+
+<script>
+(function(){
+  var q=document.getElementById('q'), hits=document.getElementById('hits'),
+      cards=Array.prototype.slice.call(document.querySelectorAll('.card'));
+
+  function norm(s){return (s||'').toLowerCase().replace(/\s+/g,'');}
+  function filter(){
+    var v=norm(q.value);
+    if(!v){cards.forEach(function(c){c.classList.remove('hide')});hits.textContent='';return;}
+    var n=0;
+    cards.forEach(function(c){
+      var hay=norm(c.getAttribute('data-k')+' '+c.textContent);
+      var ok=hay.indexOf(v)>-1;
+      c.classList.toggle('hide',!ok);
+      if(ok)n++;
+    });
+    hits.textContent=n+'건';
+  }
+  q.addEventListener('input',filter);
+  document.getElementById('clear').addEventListener('click',function(){q.value='';filter();q.focus();});
+
+  document.getElementById('theme').addEventListener('click',function(){
+    var h=document.documentElement;
+    h.setAttribute('data-theme', h.getAttribute('data-theme')==='dark'?'light':'dark');
+  });
+  if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){
+    document.documentElement.setAttribute('data-theme','dark');
+  }
+
+  document.getElementById('top').addEventListener('click',function(){
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+
+  document.addEventListener('keydown',function(e){
+    if((e.metaKey||e.ctrlKey)&&e.key==='f'){e.preventDefault();q.focus();q.select();}
+  });
+})();
+</script>
+</body>
+</html>

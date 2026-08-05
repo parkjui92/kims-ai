@@ -1,0 +1,2737 @@
+<!doctype html>
+<html lang="ko" data-lle-runtime data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[재료연 2차] R&D 정책기획·조사분석 업무의 AI 에이전트 활용 실전</title>
+<!--
+  국회예산정책처 「생성형 AI를 활용한 보고서 작성법 교육」 교육 덱 (밀도형 v2)
+  강의일 2026-08-04(화) 13:30 · 박주이
+  1부 교육 3h (s03~s49) + 2부 실습 2h (s50~s63) + 부록 (s64)
+  조작: ← → Space 이동 · O 목차 · N 노트 · T 테마 · F 전체화면 · ? 도움말 · 숫자+Enter 점프
+-->
+<style>
+:root{
+  --bg:#f7f9fc; --bg2:#f1f4f9; --panel:#fcfdff;
+  --navy:#0b1f3a; --navy-soft:#263f62; --blue:#2457a7; --blue-deep:#173f82;
+  --blue-tint:#e8eff9; --blue-tint2:#cddbf0; --coral:#d8644a; --coral-tint:#fcece7;
+  --ink:#0A2540; --body-c:#26405E; --muted:#69788F; --line:#DBE3EF; --line2:#EAEFF6;
+  --accent:var(--blue); --accent-soft:var(--blue-tint); --warn:#B45309; --hi:#C0392B;
+  --shadow:0 28px 90px rgba(11,31,58,.20); --radius:14px;
+  --stage-w:1280px; --stage-h:720px;
+  --mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+}
+html[data-theme="dark"]{
+  --bg:#0b1526; --bg2:#122036; --panel:#0f1d33;
+  --navy:#e8eefb; --navy-soft:#c9d6ee; --blue:#5b96f2; --blue-deep:#82b1f7;
+  --blue-tint:#16294a; --blue-tint2:#22375a; --coral:#f08a74; --coral-tint:#3a1f18;
+  --ink:#e8eefb; --body-c:#c3d2e8; --muted:#8fa1bd; --line:#22375a; --line2:#1b2c49; --hi:#FF9B84;
+  --shadow:0 22px 60px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overscroll-behavior-x:none}
+body{
+  background:#dfe4ec; color:var(--ink); overflow:hidden;
+  font-family:"Pretendard","Apple SD Gothic Neo",-apple-system,BlinkMacSystemFont,"Malgun Gothic","Noto Sans KR",sans-serif;
+  word-break:keep-all; overflow-wrap:break-word; line-height:1.38;
+  display:flex; align-items:center; justify-content:center;
+  -webkit-font-smoothing:antialiased;
+}
+#viewport{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+#stage{position:relative;width:var(--stage-w);height:var(--stage-h);
+  background:var(--panel);box-shadow:var(--shadow);overflow:hidden;transform-origin:center center;border-radius:4px}
+
+/* ── 슬라이드 골격 ── */
+.slide{position:absolute;inset:0;padding:48px 76px 46px;display:none;flex-direction:column;gap:0;
+  justify-content:center;opacity:0;transition:opacity .22s ease;background:var(--panel)}
+.slide.active{display:flex;opacity:1}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--blue);font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.eyebrow::before{content:'';width:24px;height:2px;background:var(--coral);border-radius:2px}
+.slide>h2,.head h2{font-size:34px;font-weight:800;line-height:1.22;letter-spacing:-.02em;color:var(--navy);text-wrap:balance}
+.rule{height:1px;width:100%;background:var(--line);margin:15px 0 22px;position:relative;flex:0 0 auto}
+.rule::before{content:'';position:absolute;left:0;top:-1px;height:3px;width:72px;background:var(--blue);border-radius:2px}
+.lead{font-size:20.5px;color:var(--navy-soft);font-weight:650;line-height:1.34;margin-bottom:12px;text-wrap:pretty}
+.sub{font-size:17px;color:var(--muted)}
+.fill{flex:1}
+em{font-style:normal;color:var(--hi);font-weight:800}
+b,strong{color:var(--hi);font-weight:800}
+.x{color:var(--coral);font-weight:700;font-style:normal}
+code{font-family:var(--mono);font-size:.88em;color:var(--navy);background:var(--bg2);
+  border:1px solid var(--line);border-radius:6px;padding:.04em .4em}
+
+/* ── 불릿 ── */
+ul.bullets{list-style:none;display:flex;flex-direction:column;gap:8px}
+ul.bullets li{position:relative;padding-left:25px;font-size:18.5px;line-height:1.36;color:var(--body-c);text-wrap:pretty}
+ul.bullets li::before{content:'';position:absolute;left:0;top:.5em;width:9px;height:9px;background:var(--blue);border-radius:2px}
+ul.bullets li .note{display:block;font-size:15px;color:var(--muted);margin-top:3px}
+ul.bullets.tight{gap:6px}
+ul.bullets.tight li{font-size:17px;line-height:1.32}
+
+/* ── 카드·통계 ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:16px 19px;display:flex;flex-direction:column;gap:7px;box-shadow:0 5px 18px rgba(16,47,43,.045)}
+.card h3{font-size:20px;font-weight:800;color:var(--navy);letter-spacing:-.01em}
+.card p{font-size:15px;color:var(--body-c);line-height:1.36;text-wrap:pretty}
+.card p .eg,.card .eg{display:block;font-size:13px;color:var(--muted);margin-top:4px}
+.card.accent{border-color:var(--blue-tint2);background:var(--blue-tint)}
+.card.warn-c{border-color:#F0C9C0;background:var(--coral-tint)}
+.stat{display:flex;flex-direction:column;gap:1px}
+.stat .num{font-size:34px;font-weight:800;color:var(--blue);letter-spacing:-.02em}
+.stat .cap{font-size:14px;color:var(--muted);line-height:1.4}
+
+/* ── 표 ── */
+table{width:100%;border-collapse:collapse;font-size:17px}
+thead th{text-align:left;padding:9px 14px;color:var(--navy);font-weight:800;font-size:14.5px;
+  border-bottom:2.5px solid var(--navy);background:none}
+tbody td{padding:9px 14px;border-bottom:1px solid var(--line);line-height:1.32;color:var(--body-c);vertical-align:top}
+td.em,td.rowhead{font-weight:800;color:var(--navy);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td .eg{display:block;font-size:13.5px;color:var(--muted);margin-top:3px;white-space:normal}
+table.tight{font-size:15.5px}
+table.tight td,table.tight th{padding:8px 11px}
+
+/* ── 콜아웃·인터랙트 ── */
+.callout{margin-top:10px;padding:12px 18px;border-radius:10px;font-size:16.5px;line-height:1.36;
+  background:var(--blue-tint);border-left:5px solid var(--blue);color:var(--navy);position:relative;text-wrap:pretty}
+.callout::after{content:'INSIGHT';position:absolute;top:-9px;left:18px;font-family:var(--mono);font-size:9.5px;
+  letter-spacing:.18em;background:var(--blue);color:#fff;padding:2px 8px;border-radius:4px}
+.callout.warn{background:var(--coral-tint);border-color:var(--coral);color:#8C3325}
+.callout.warn::after{content:'! CAUTION';background:var(--coral)}
+.callout.warn::before{content:'!';position:absolute;left:-11px;top:50%;transform:translateY(-50%);
+  width:24px;height:24px;border-radius:50%;background:var(--coral);color:#fff;font-weight:900;font-size:16px;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(216,100,74,.35)}
+.keyq .qm{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;
+  background:var(--blue);color:#fff;font-weight:900;font-size:17px;margin-right:8px;vertical-align:-4px}
+.flow .step.gate b::first-letter{color:var(--coral);font-weight:900}
+.callout.plain::after{content:none}
+.interact{margin-top:12px;display:inline-flex;align-items:center;gap:9px;align-self:flex-start;
+  padding:8px 17px;border-radius:999px;font-size:16px;font-weight:700;color:var(--navy);
+  background:var(--panel);border:1.5px solid var(--navy)}
+.interact .ic{color:var(--blue)}
+.keyq{margin-top:16px;align-self:stretch;padding:14px 20px;border-radius:11px;font-size:19px;line-height:1.5;
+  background:color-mix(in srgb,var(--blue) 9%,transparent);border-left:4px solid var(--blue);color:var(--ink)}
+.keyq b{color:var(--blue-deep);font-weight:800}
+.keyq .note{display:inline-block;margin-left:10px;font-size:15px;color:var(--muted)}
+
+/* ── 흐름도 ── */
+.flow{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap}
+.flow .step{flex:1;min-width:110px;background:var(--bg2);border:1.5px solid var(--line);
+  border-radius:10px;padding:11px 12px;font-size:14.5px;line-height:1.4;color:var(--body-c)}
+.flow .step b{display:block;font-size:12.5px;color:var(--blue);margin-bottom:3px;font-family:var(--mono)}
+.flow .step .dim{color:var(--muted);font-size:12.5px;display:block;margin-top:2px}
+.flow .step.gate{border-color:#E7B3A6;background:var(--coral-tint)}
+.flow .step.gate b{color:var(--coral)}
+.flow .step.hi{background:var(--blue-tint);border-color:var(--blue-tint2)}
+.flow .arrow{color:var(--blue);font-size:17px;align-self:center;font-weight:700}
+
+/* ── 체크리스트 ── */
+.checks{display:flex;flex-direction:column;gap:14px}
+.check{display:flex;gap:13px;align-items:center;font-size:18.5px;line-height:1.4;color:var(--body-c)}
+.check .box{flex:0 0 auto;width:26px;height:26px;border-radius:7px;border:2px solid var(--coral);
+  display:flex;align-items:center;justify-content:center;color:var(--coral);font-weight:800;font-size:14px}
+.selfq .check{padding:9px 13px;border-radius:11px;background:var(--bg2);border:1px solid var(--line)}
+.selfq .box.no{border-color:var(--coral);background:var(--coral-tint)}
+
+/* ── 에이전트 해부도 (r4) ── */
+.anat2{position:relative;width:1060px;height:440px;flex:0 0 auto;margin:2px auto 0}
+.anat2-wire{position:absolute;inset:0;width:100%;height:100%}
+.anat2-wire .w1{fill:none;stroke:#8494ad;stroke-width:1.5}
+.anat2-wire .w2{fill:none;stroke:#1F6FE0;stroke-width:1.9}
+.anat2-frame{position:absolute;left:0;top:0;width:862px;height:430px;border:2px dashed var(--blue);
+  border-radius:18px;background:color-mix(in srgb,var(--bg2) 55%,transparent)}
+.anat2-tag{position:absolute;right:14px;bottom:-10px;background:var(--bg);padding:1px 9px;border-radius:20px;
+  font-family:var(--mono);font-size:9.5px;color:var(--blue-deep);border:1px solid var(--blue-tint2);white-space:nowrap}
+.anat2 .ab{position:absolute;border:1.5px solid var(--line);border-radius:13px;background:var(--panel);padding:11px 13px;
+  transition:transform .16s,box-shadow .16s,border-color .16s}
+.anat2 .ab b{display:block;font-size:14.5px;color:var(--navy);margin-bottom:5px}
+.anat2 .ab i{display:block;font-style:normal;font-size:12px;color:var(--body-c);line-height:1.6;
+  background:var(--bg2);border-radius:7px;padding:4px 9px;margin-top:5px;text-align:center;white-space:nowrap}
+.anat2 .ab:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(31,111,224,.16);border-color:var(--blue)}
+.anat2 .mem{left:24px;top:22px;width:272px}
+.anat2 .loop{left:24px;top:248px;width:272px}
+.anat2 .llm{left:378px;top:176px;width:180px;background:var(--navy);border-color:var(--navy);text-align:center;padding:13px}
+.anat2 .llm b{color:#fff;font-size:16.5px;margin-bottom:2px}
+.anat2 .llm i{background:transparent;color:#c9d6f2;font-size:12.5px;padding:0;margin:0}
+.anat2 .gate{left:598px;top:22px;width:244px}
+.anat2 .tool{left:598px;top:246px;width:244px;background:var(--blue-tint);border-color:var(--blue)}
+.anat2 .tool b{color:var(--blue-deep)}
+.anat2 .tool i{background:color-mix(in srgb,#fff 60%,transparent)}
+.anat2 .user{left:388px;top:326px;width:160px;text-align:center}
+.anat2 .user i{background:transparent;font-size:12.5px;margin-top:2px}
+.anat2 .ext{left:892px;width:168px;text-align:center;padding:13px 8px}
+.anat2 .ext b{margin-bottom:0;font-size:13.5px}
+.anat2 .e1{top:72px} .anat2 .e2{top:200px} .anat2 .e3{top:326px}
+.anat2 .al{position:absolute;font-size:11px;color:var(--muted);font-family:var(--mono);
+  background:var(--bg);padding:1px 5px;border-radius:5px;white-space:nowrap}
+
+/* ── 복사용 프롬프트 박스 ── */
+.prompt{position:relative;background:#eef3fa;border:1.5px solid #95acd0;border-left:6px solid var(--blue);
+  border-radius:12px;padding:14px 20px 12px;margin:5px 0 11px;font-size:14.8px;line-height:1.55;color:#142d51;
+  white-space:pre-wrap;cursor:copy;transition:box-shadow .15s;flex:0 1 auto}
+.prompt:hover{box-shadow:0 6px 18px rgba(36,87,167,.18)}
+.prompt::after{content:'실행 프롬프트 · 클릭하여 복사';position:absolute;top:-10px;right:14px;background:var(--blue);color:#fff;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;padding:2px 9px;border-radius:20px}
+.prompt.copied::after{content:'✓ 복사됨';background:var(--navy)}
+.prompt .w{color:#B45309;font-weight:800}
+.prompt .dim{color:#627796;font-size:.86em}
+.prompt .ok{color:#2457a7;font-weight:800}
+
+/* ── 토큰 스트립 (p1) ── */
+.tokstrip{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:4px 0 2px}
+.tokstrip .tk{font-family:var(--mono);font-size:14px;background:var(--bg2);border:1px solid var(--line);
+  border-radius:6px;padding:5px 10px;color:var(--body-c)}
+.tokstrip .tk.on{background:var(--blue-tint);border-color:var(--blue);color:var(--blue-deep);font-weight:800}
+.tokstrip .pct{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin-left:2px}
+.tokstrip .arrow2{color:var(--blue);font-weight:800;font-size:17px}
+/* ── 데스크 비유 막대 (p2) ── */
+.deskbar{display:flex;height:34px;border-radius:9px;overflow:hidden;border:1px solid var(--line);margin:2px 0 4px}
+.deskbar>div{display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:700}
+.deskbar .old{background:#e7ecf4;color:var(--muted);flex:2}
+.deskbar .mid{background:var(--blue-tint);color:var(--blue-deep);flex:3}
+.deskbar .new{background:var(--blue);color:#fff;flex:2}
+.deskbar .over{background:var(--coral-tint);color:var(--coral);flex:1.4;border-left:2px dashed var(--coral)}
+
+/* ── 위임/방식 미니 시각화 (o3) ── */
+.mini{margin:auto 0;padding-top:10px;display:flex;flex-direction:column;gap:9px}
+.mini-row{display:flex;align-items:center;gap:7px}
+.mini-row>span{flex:0 0 64px;font-size:12px;font-weight:800;text-align:center;border-radius:7px;padding:5px 0}
+.mini-row.ai>span{background:var(--blue-tint);color:var(--blue-deep)}
+.mini-row.hu>span{background:var(--coral-tint);color:var(--coral)}
+.mini-row>i{flex:1 1 0;font-style:normal;font-size:12.5px;text-align:center;background:var(--bg2);
+  border:1px solid var(--line);border-radius:7px;padding:5px 0;color:var(--body-c)}
+.mini-row.hu>i{border-style:dashed;border-color:#E7B3A6}
+.mini-flow{margin:auto 0;padding-top:10px;display:flex;align-items:center;gap:8px}
+.mini-flow>b{flex:1 1 0;text-align:center;font-size:13px;background:var(--bg2);border:1px solid var(--line);
+  border-radius:9px;padding:9px 4px;color:var(--navy)}
+.mini-flow>span{color:var(--blue);font-weight:700}
+
+.anat2 .stepno{position:absolute;left:-11px;top:-11px;width:26px;height:26px;border-radius:50%;
+  background:var(--blue);color:#fff;font:800 13px/26px var(--mono);text-align:center;
+  box-shadow:0 2px 6px rgba(31,111,224,.35)}
+.anat2 .gate .stepno{background:var(--coral)}
+.anat2 .user .stepno{background:var(--navy)}
+.anat2.ex .ab{overflow:visible}
+
+/* ── 직접 인용 카드 (h8) ── */
+.quotes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px}
+.qt{background:var(--bg2);border-left:4px solid var(--blue);border-radius:10px;padding:14px 18px}
+.qt p{font-size:18.5px;line-height:1.55;color:var(--navy);margin:0}
+.qt p::before{content:'"';display:none}
+.qt span{display:block;font-size:13.5px;color:var(--muted);margin-top:8px;line-height:1.45}
+
+/* ── 검증 노동 6종 (s19) ── */
+.hexa{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:2px 0 10px}
+.hx{background:var(--bg2);border:1px solid var(--line);border-left:3px solid var(--coral);
+  border-radius:9px;padding:10px 13px}
+.hx b{display:block;font-size:16.5px;color:var(--navy)}
+.hx span{display:block;font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.45}
+
+/* ── 파일 내용 표시(코드/문서) — 프롬프트와 구분 ── */
+.code{position:relative;background:#F4F6FA;border:1.5px solid var(--line);border-left:6px solid var(--muted);
+  border-radius:12px;padding:18px 22px 16px;margin:6px 0 14px;font-family:var(--mono);font-size:14px;
+  line-height:1.7;color:#2B3A4F;white-space:pre-wrap}
+.code::after{content:'파일 내용 · 읽기용';position:absolute;top:-10px;right:14px;background:var(--muted);color:#fff;
+  font-family:var(--mono);font-size:10px;letter-spacing:.04em;padding:3px 10px;border-radius:20px}
+.code .dim{color:#7B8AA0}
+.code .w{color:#A8480F;font-weight:700}
+.code .ok{color:#1F7A4C;font-weight:700}
+.code .p{color:#3159A8;font-weight:700}
+
+/* ── LLM 위키 흐름 (r9) ── */
+.wiki{display:grid;grid-template-columns:1.5fr 58px 1.1fr 58px 1.5fr;gap:8px 6px;align-items:center;margin-top:12px}
+.wk{border-radius:9px;padding:9px 12px;text-align:center;font-size:13px;line-height:1.45}
+.wk.head{background:var(--bg2);border:1.5px solid var(--line);padding:11px 12px}
+.wk.head b{display:block;font-size:14.5px;color:var(--navy)}
+.wk.head span{display:block;font-size:11.5px;color:var(--muted);margin-top:3px}
+.wk.head.mid{background:var(--navy);border-color:var(--navy)}
+.wk.head.mid b{color:#fff}.wk.head.mid span{color:#c9d6f2}
+.wk.head.end{background:var(--blue-tint);border-color:var(--blue)}
+.wk.head.end b{color:var(--blue-deep)}
+.wk.arr{color:var(--blue);font-weight:800;font-size:12px;font-family:var(--mono)}
+.wk.arr span{display:block;background:var(--blue-tint);border-radius:20px;padding:3px 0}
+.wk.arr.sm{font-size:15px}
+.wk.ex{background:#fff;border:1px dashed var(--line);color:var(--body-c);font-size:12.5px;text-align:left}
+.wk.ex.mid{background:#f2f6fc;border-style:solid;border-color:var(--blue-tint2);color:var(--blue-deep);
+  font-weight:700;text-align:center;font-family:var(--mono);font-size:12px}
+.wk.ex.end{background:var(--bg2);border-style:solid;color:var(--navy);font-weight:600}
+
+/* ── 연구실 구조도 (r1) — 층별 오피스 ── */
+.office{display:flex;flex-direction:column;gap:9px;margin-top:2px}
+.ofloor{position:relative;border:1.5px solid var(--line);border-radius:12px;background:var(--bg2);padding:20px 13px 11px}
+.ofl{position:absolute;top:-9px;left:14px;background:var(--navy);color:#fff;font-family:var(--mono);
+  font-size:10px;letter-spacing:.1em;padding:2px 10px;border-radius:20px}
+.orow{display:flex;gap:9px}
+.oteam,.oroom{flex:1 1 0;border:1.5px solid var(--line);border-radius:10px;background:var(--panel);padding:9px 10px;
+  text-align:center;transition:transform .15s,box-shadow .15s,border-color .15s}
+.oteam:hover,.oroom:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(31,111,224,.15);border-color:var(--blue)}
+.oteam b,.oroom b{display:block;font-size:14.5px;color:var(--navy);margin-bottom:5px}
+.oteam i{display:block;font-style:normal;font-size:11.5px;color:var(--body-c);background:var(--bg2);
+  border-radius:6px;padding:3px 6px;margin-top:4px;line-height:1.45}
+.oteam i:first-of-type{background:var(--coral-tint);color:var(--coral);font-weight:700}
+.oroom span{display:block;font-size:11.5px;color:var(--muted);line-height:1.45}
+.oteam.hi{background:var(--blue-tint);border-color:var(--blue)}
+.oteam.hi b{color:var(--blue-deep)}
+.oteam.mgmt{background:#f2f6fc}
+.oroom.me{background:var(--navy);border-color:var(--navy)}
+.oroom.me b{color:#fff}.oroom.me span{color:#c9d6f2}
+.oteam .pill{font-size:9.5px;padding:1px 7px;vertical-align:2px}
+
+/* ── 슬라이드를 꽉 채우는 배치 ── */
+/* 상단 정렬 — 제목부터 본문까지 위에서 아래로 자연 배치 */
+.slide:not(.divider):not(.cover){justify-content:flex-start}
+.slide:not(.divider):not(.cover)>.rule~*{flex:0 0 auto}
+.grid-2>.card,.grid-3>.card,.cols>.card{height:100%}
+.slide:not(.divider):not(.cover)>.term{flex:0 1 auto}
+
+/* ── 각주(foot) — 용어·출처 ── */
+.foot{margin-top:22px;padding-top:10px;border-top:1px solid var(--line2);display:flex;flex-direction:column;gap:4px;flex:0 0 auto}
+.foot .fi{display:flex;gap:8px;align-items:baseline;font-size:12.5px;line-height:1.45;color:var(--muted)}
+.foot .fm{font-family:var(--mono);font-size:9px;letter-spacing:.1em;font-weight:700;flex:0 0 auto;
+  border-radius:4px;padding:2px 6px;background:var(--bg2);color:var(--muted);border:1px solid var(--line)}
+.foot .fm.src{background:var(--blue-tint);color:var(--blue-deep);border-color:var(--blue-tint2)}
+.foot .fd b{color:var(--navy-soft)}
+.foot .fd .u{font-family:var(--mono);font-size:.9em;color:var(--blue)}
+
+/* ── 터미널·명령·트리 ── */
+.term{background:#0d1526;color:#c9d6f2;font-family:var(--mono);border-radius:11px;padding:14px 18px;
+  font-size:13.5px;line-height:1.68;overflow:hidden;border:1px solid #243150;white-space:pre-wrap}
+.term .p{color:#7c93ff}.term .ok{color:#2dd4bf}.term .dim{color:#8290ad}.term .w{color:#fbbf24}
+.cmd{font-family:var(--mono);background:var(--navy);color:#dce9fb;border-radius:9px;
+  padding:11px 16px;font-size:16.5px;line-height:1.6}
+.cmd .dim{color:#9fb6d4;font-size:13px}
+html[data-theme="dark"] .cmd{background:#1a2f52}
+.tree{font-family:var(--mono);font-size:13.5px;line-height:1.7;background:var(--bg2);
+  border:1px solid var(--line);border-radius:11px;padding:12px 18px;white-space:pre;color:var(--body-c)}
+.tree b{color:var(--blue);font-weight:700}
+.pill{display:inline-block;background:var(--blue-tint);color:var(--blue-deep);
+  border-radius:999px;padding:1px 9px;font-size:12px;font-weight:700;margin-right:5px}
+
+/* ── 표지·간지 ── */
+.slide.cover{justify-content:center;gap:14px;background:linear-gradient(150deg,var(--blue-tint) 0%,var(--panel) 58%)}
+.slide.cover h1{font-size:52px;font-weight:900;line-height:1.16;letter-spacing:-.03em;color:var(--navy);text-wrap:balance}
+.slide.cover h1 em{color:var(--blue)}
+.slide.cover .accent-bar{height:5px;width:90px;background:var(--blue);border-radius:3px;margin:4px 0}
+.slide.cover .meta{font-family:var(--mono);font-size:14px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;margin-top:8px}
+.slide.divider{justify-content:center;align-items:center;text-align:center;overflow:hidden}
+.slide.divider .wm{position:absolute;font-family:var(--mono);font-weight:700;font-size:380px;line-height:.8;
+  color:color-mix(in srgb,var(--navy) 4%,transparent);right:-16px;top:50%;transform:translateY(-50%);pointer-events:none}
+.slide.divider .modtag{font-family:var(--mono);font-size:14px;letter-spacing:.32em;color:var(--blue);font-weight:700;position:relative}
+.slide.divider h2{border:0;font-size:46px;font-weight:900;color:var(--navy);margin:14px 0 10px;position:relative;letter-spacing:-.02em}
+.slide.divider .sub{font-size:20px;color:var(--muted);position:relative}
+.src{font-size:12.5px;color:var(--muted);margin-top:auto;padding-top:8px}
+
+/* ── v3 밀도·가독 보정 ── */
+.slide{padding:56px 80px 46px}
+.slide>h2,.head h2{font-size:35px}
+.lead{font-size:22.5px}
+ul.bullets{gap:15px}
+ul.bullets li{font-size:21px}
+ul.bullets li .note{font-size:15.5px}
+ul.bullets.tight{gap:11px}
+ul.bullets.tight li{font-size:19px}
+table{font-size:18px}
+table.tight{font-size:16.5px}
+.card p{font-size:15.5px}
+.callout{font-size:18.5px}
+.foot .fi{font-size:13px}
+
+/* ── 그림(원본 덱 발췌) ── */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:stretch}
+.cols.w60{grid-template-columns:1.3fr 1fr}
+.fig{border:1px solid var(--line);border-radius:11px;background:#fff;padding:10px 10px 8px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+html[data-theme="dark"] .fig{background:#0f1a2e;border-color:var(--line)}
+.fig img{max-width:100%;object-fit:contain;display:block;border-radius:6px}
+.figcap{font-size:12.5px;color:var(--muted);margin-top:7px;text-align:center;line-height:1.4}
+.figcap b{color:var(--navy-soft)}
+/* 표·삽도와 설명 사이 숨 쉴 간격 (세로 마진 병합으로 인라인 값보다 커지게) */
+.flow{margin:8px 0 20px}
+.cols{margin-bottom:18px}
+table{margin-bottom:14px}
+.term,.tree{margin-bottom:16px}
+.cols + .callout, .cols + ul.bullets, .flow + ul.bullets, .flow + .callout,
+.fig + ul.bullets, table + .callout, .term + ul.bullets, .tree + ul.bullets{margin-top:20px}
+
+/* 에이전트 층위 사다리 */
+.ladder{display:flex;flex-direction:column;gap:7px}
+.rung{display:grid;grid-template-columns:150px 1fr 1fr;align-items:center;gap:16px;
+  padding:12px 20px;border-radius:9px;background:var(--bg2);border:1px solid var(--line)}
+.rung .rn{font-weight:800;font-size:18px;color:var(--navy)}
+.rung .rn small{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-top:1px}
+.rung .rw{font-size:16px;color:var(--body-c)}
+.rung .rf{font-size:15px;color:var(--muted)}
+.rung.l1{background:#EAF1FC}.rung.l2{background:#D9E7FB}
+.rung.l3{background:var(--blue);border-color:var(--blue)}
+.rung.l4{background:var(--navy);border-color:var(--navy)}
+.rung.l3 .rn,.rung.l3 .rw,.rung.l3 .rf,.rung.l4 .rn,.rung.l4 .rw,.rung.l4 .rf{color:#fff}
+.rung.l3 .rn small,.rung.l4 .rn small{color:rgba(255,255,255,.82)}
+.rung.l3 em,.rung.l4 em{color:#bcd8ff}
+
+/* ── 용어 사전 ── */
+.gloss{display:grid;grid-template-columns:1fr 1fr;gap:11px 16px}
+.gterm{border:1px solid var(--line);border-radius:11px;padding:11px 16px 12px;background:var(--bg2)}
+.gterm .gt{font-size:17.5px;font-weight:800;color:var(--navy)}
+.gterm .ge{font-family:var(--mono);font-size:11px;color:var(--blue);font-weight:600;margin-left:7px}
+.gterm .gd{font-size:14px;color:var(--body-c);line-height:1.45;margin-top:4px}
+.gterm .ga{font-size:12.5px;color:var(--muted);line-height:1.4;margin-top:5px;padding-left:10px;border-left:2px solid var(--blue-tint2)}
+.gterm .ga b{color:var(--navy-soft)}
+
+/* ── 크롬 ── */
+#bar{position:fixed;left:0;top:0;height:3px;background:var(--blue);width:0;transition:width .22s ease;z-index:40}
+#num{position:fixed;right:18px;bottom:14px;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;z-index:40}
+/* 슬라이드 내부 페이지 번호(우하단) — 캡처·인쇄에도 남는다 */
+.slide:not(.cover)::after{content:attr(data-pg);position:absolute;right:34px;bottom:22px;
+  font-family:var(--mono);font-size:13px;font-weight:700;color:var(--muted);
+  font-variant-numeric:tabular-nums;letter-spacing:.04em;opacity:.75;pointer-events:none}
+.slide.divider::after{color:rgba(10,37,64,.28)}
+#num.jumping{font-size:23px;font-weight:800;color:#fff;background:var(--blue);
+  padding:4px 15px;border-radius:9px;box-shadow:0 4px 16px rgba(37,99,235,.35)}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:34vh;overflow:auto;display:none;
+  background:var(--panel);border-top:1px solid var(--line);padding:18px 26px;
+  font-size:15.5px;color:var(--muted);box-shadow:0 -10px 30px rgba(0,0,0,.12);z-index:45}
+#notes.on{display:block}
+#notes b{color:var(--ink)}
+.notes{display:none}
+#overview{position:fixed;inset:0;background:color-mix(in srgb,var(--bg2) 96%,transparent);
+  backdrop-filter:blur(6px);display:none;flex-direction:column;padding:44px 8vw;z-index:60;overflow:auto}
+#overview.on{display:flex}
+#overview h4{font-size:14px;color:var(--muted);letter-spacing:.08em;margin-bottom:16px}
+#ovlist{display:flex;flex-direction:column;gap:3px}
+#ovlist button{display:flex;gap:14px;align-items:baseline;text-align:left;width:100%;
+  padding:8px 14px;border:0;background:none;border-radius:9px;cursor:pointer;font:inherit;font-size:16px;color:var(--ink)}
+#ovlist button:hover{background:var(--blue-tint)}
+#ovlist button.cur{background:var(--blue);color:#fff}
+#ovlist .n{font-size:13px;color:var(--muted);min-width:30px;font-variant-numeric:tabular-nums}
+#ovlist button.cur .n{color:rgba(255,255,255,.8)}
+#help{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(6,10,22,.62);z-index:70}
+#help.on{display:flex}
+#help div{background:var(--panel);border-radius:16px;padding:30px 36px;font-size:16px;
+  box-shadow:var(--shadow);display:flex;flex-direction:column;gap:9px}
+#help kbd{background:var(--bg2);border:1px solid var(--line);border-radius:6px;padding:2px 8px;font-size:14px;font-family:var(--mono)}
+
+
+/* ══════════════════════════════════════════════════
+   타이포그래피 — 강의장 뒷줄에서도 읽히는 크기 우선
+   ══════════════════════════════════════════════════ */
+.slide{padding:52px 76px 46px}
+.eyebrow{font-size:12.5px;letter-spacing:.15em;margin-bottom:9px}
+.eyebrow::before{width:22px;height:3px;background:var(--blue)}
+.slide>h2,.head h2{font-size:37px;line-height:1.24;letter-spacing:-.022em}
+.rule{height:3px;margin:15px 0 22px;background:var(--line2)}
+.rule::before{width:76px;height:3px;background:var(--blue)}
+.lead{font-size:24px;line-height:1.5;font-weight:650;margin-bottom:20px;color:var(--navy)}
+.lead b,.lead strong{color:var(--hi);font-weight:800}
+.lead em{color:var(--hi);font-style:normal;font-weight:800}
+.sub{font-size:17.5px;line-height:1.5}
+
+/* 본문 — 한글은 줄간 1.55가 기본 */
+ul.bullets{gap:13px}
+ul.bullets li{font-size:21.5px;line-height:1.55;padding-left:28px}
+ul.bullets li::before{width:8px;height:8px;top:.62em}
+ul.bullets li .note{font-size:17px;line-height:1.5;margin-top:4px}
+ul.bullets.tight{gap:9px}
+ul.bullets.tight li{font-size:19px;line-height:1.5}
+
+/* 카드 */
+.grid-2,.grid-3,.cols{gap:16px;margin-bottom:4px}
+.card{padding:18px 20px;border-radius:12px;gap:9px;box-shadow:none;border-top:3px solid #c8d4e5;background:#f7f9fc}
+.card.accent{border-top-color:var(--blue);background:var(--blue-tint)}
+.card.warn-c{border-top-color:var(--coral);background:var(--coral-tint)}
+.card h3{font-size:22.5px;line-height:1.35;margin-bottom:4px}
+.card p{font-size:17.5px;line-height:1.55}
+.card p .eg,.card .eg{font-size:14.5px;line-height:1.45;margin-top:5px}
+.card ul.bullets.tight li{font-size:16.5px;line-height:1.5}
+
+/* 표 */
+table{font-size:18px;margin-bottom:10px;border:1px solid var(--line);border-radius:10px;
+  border-collapse:separate;border-spacing:0;overflow:hidden}
+thead th{padding:11px 14px;background:var(--navy);color:#fff;border:0;font-size:14.5px;letter-spacing:.01em}
+tbody td{padding:11px 14px;line-height:1.5;background:rgba(255,255,255,.7)}
+tbody tr:nth-child(even) td{background:var(--bg2)}
+table.tight{font-size:16px}
+table.tight td,table.tight th{padding:9px 12px}
+
+/* 콜아웃 */
+.callout{font-size:19.5px;line-height:1.55;padding:15px 20px;margin-top:16px}
+
+/* 흐름도 */
+.flow{margin:4px 0 14px;gap:9px;align-items:stretch;flex-wrap:wrap}
+.flow .step{padding:13px 14px;border-radius:10px;font-size:15px;line-height:1.45}
+.flow .step b{font-size:13px;margin-bottom:5px}
+.flow .step .dim{font-size:13px}
+.flow .arrow{font-size:19px}
+
+/* 체크리스트 */
+.checks{gap:13px}
+.check{font-size:19px;line-height:1.5}
+.check>div{font-size:19px;line-height:1.5;color:var(--body-c)}
+.check .cnote{display:block;font-size:15px;color:var(--muted);margin-top:3px;font-weight:400}
+.check .box{width:28px;height:28px;font-size:15px}
+.selfq .check{padding:11px 15px}
+
+/* 프롬프트 — 초록 실행 카드 */
+.prompt{background:#0E2140;border:1.5px solid #1F3E6E;border-left:6px solid var(--blue);color:#E8F0FC;
+  font-size:17px;line-height:1.65;padding:18px 22px 16px;margin:6px 0 14px;border-radius:12px;
+  box-shadow:0 6px 18px rgba(10,33,64,.18)}
+.prompt:hover{box-shadow:0 10px 24px rgba(10,33,64,.28)}
+.prompt::after{content:'🖱 클릭하면 복사됩니다';background:var(--blue);color:#fff;font-size:11.5px;font-weight:700;
+  padding:4px 12px;letter-spacing:.02em;box-shadow:0 3px 8px rgba(31,111,224,.45)}
+.prompt::before{content:'📋';position:absolute;right:16px;bottom:12px;font-size:19px;opacity:.55;transition:opacity .15s,transform .15s}
+.prompt:hover::before{opacity:1;transform:scale(1.15)}
+.prompt.copied::before{content:'✅';opacity:1}
+.prompt.copied::after{content:'✓ 복사되었습니다';background:#2E9E63}
+.prompt .w{color:#FFC46B;font-weight:800}
+.prompt .ok{color:#5FE3B0;font-weight:800}
+.prompt .dim{color:#8AA3C4;font-size:.9em}
+.prompt b,.prompt strong{color:#fff}
+
+/* 터미널 — 예시 출력용 */
+.term{font-size:15px;line-height:1.6;padding:15px 18px;margin-bottom:12px}
+
+/* 블록 사이 리듬 */
+.grid-2+ul.bullets,.grid-3+ul.bullets,.cols+ul.bullets,table+ul.bullets,
+.term+ul.bullets,.prompt+ul.bullets,.flow+ul.bullets{margin-top:24px}
+ul.bullets+.callout,table+.callout,.grid-2+.callout,.grid-3+.callout,.cols+.callout{margin-top:26px}
+ul.bullets+table,.lead+table,.flow+table,.grid-2+table,.grid-3+table,.cols+table{margin-top:18px}
+.slide.compact ul.bullets+table,.slide.compact .lead+table{margin-top:12px}
+table+p.lead,table+.flow,table+.mini-flow{margin-top:22px}
+ul.bullets+.src,.callout+.src{margin-top:12px}
+.src{font-size:14px;line-height:1.5}
+.slide a{color:var(--blue);text-decoration:none;border-bottom:1.5px solid rgba(37,99,235,.35);font-weight:700}
+.slide a:hover{border-bottom-color:var(--blue)}
+.card a{color:var(--blue-deep)}
+.src a{color:inherit;font-weight:600;border-bottom-color:currentColor;opacity:.9}
+.foot .fi{font-size:14px;line-height:1.55}
+
+/* 고밀도 장 — 완만한 축소 2단 (읽히는 하한 유지) */
+.slide.compact{padding-top:44px;padding-bottom:38px}
+.wgraph{display:flex;justify-content:center;margin:4px 0 2px}
+.wgraph svg{width:100%;height:auto;max-width:760px}
+.wg-edge line{stroke:var(--blue-tint2);stroke-width:2.2}
+.wg-hub circle{fill:var(--navy);stroke:var(--navy);stroke-width:2}
+.wg-hub text{fill:#fff;font-size:17px;font-weight:800;text-anchor:middle}
+.wg-hub text.wg-sub{fill:#a9bfdd;font-size:12px;font-weight:600}
+.wg-base circle{fill:var(--blue-tint);stroke:var(--blue);stroke-width:2}
+.wg-base text{fill:var(--blue-deep);font-size:15px;font-weight:800;text-anchor:middle}
+.wg-note circle{fill:#fff;stroke:var(--blue);stroke-width:2.4}
+.wg-note text{fill:var(--navy-soft);font-size:14.5px;font-weight:700;text-anchor:middle}
+.wg-lone circle{fill:#fff;stroke:var(--muted);stroke-width:1.6;stroke-dasharray:5 4}
+.wg-lone text{fill:var(--muted);font-size:12px;font-weight:600;text-anchor:middle}
+.wg-tag text{font-size:13px;font-weight:800}
+.wg-tag .wg-note-tag{fill:var(--hi);text-anchor:start}
+.wg-tag .wg-lone-tag{fill:var(--muted);text-anchor:middle;font-weight:700}
+.slide.compact .wgraph svg{max-width:760px}
+.korch{display:flex;align-items:center;gap:12px;justify-content:center;margin:2px 0 12px}
+.korch .ktag{background:var(--navy);color:#fff;font-size:14px;font-weight:800;padding:7px 15px;border-radius:9px;white-space:nowrap}
+.korch .kcap{font-size:15.5px;color:var(--body-c);font-weight:600}
+.korch .kcap b{color:var(--blue)}
+.kflow{display:flex;align-items:stretch;justify-content:center;gap:6px;margin:0 0 16px}
+.kstep{flex:1;background:var(--panel);border:2px solid var(--line);border-radius:12px;padding:11px 7px;
+  text-align:center;display:flex;flex-direction:column;justify-content:center;gap:3px}
+.kstep .kl{font-size:12px;font-weight:800;color:var(--blue);letter-spacing:.02em}
+.kstep .kb{font-size:15px;font-weight:800;color:var(--navy);line-height:1.28}
+.kstep .ks{font-size:11.5px;color:var(--muted);font-family:var(--mono);line-height:1.35}
+.kstep.on{border-color:var(--blue)}
+.kstep.dk{border-color:var(--navy)}
+.kstep.chk{border:2px dashed #358f6a;background:#f2f9f5}
+.kstep.chk .kl{color:#2b7d5c}
+.kstep.user{border:2px dashed var(--coral);background:var(--coral-tint)}
+.kstep.user .kl,.kstep.user .kb{color:var(--coral)}
+.kflow .karr{align-self:center;color:var(--blue-tint2);font-size:19px;font-weight:800}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+.grid-4 .card{padding:13px 14px}
+.grid-4 .card h3{font-size:16.5px;margin-bottom:5px}
+.grid-4 .card p{font-size:14.5px;line-height:1.5}
+.slide.compact .kstep .kb{font-size:14px}
+.slide.compact .grid-4 .card p{font-size:13.5px}
+.vmap{display:grid;grid-template-columns:1fr 52px 1fr;row-gap:9px;align-items:center;margin:6px 0 14px}
+.vmap .vold{background:var(--coral-tint);color:var(--coral);text-align:right;padding:11px 18px;border-radius:9px;font-size:17.5px;font-weight:700}
+.vmap .var{text-align:center;color:var(--blue);font-size:19px;font-weight:800}
+.vmap .vnew{background:var(--blue-tint);color:var(--blue-deep);padding:11px 18px;border-radius:9px;font-size:17.5px;font-weight:700}
+.vmap .vnew .cmd{font-size:16px}
+.vclose{text-align:center;font-size:21px;font-weight:800;color:var(--navy);margin-top:14px}
+.slide.compact .vmap .vold,.slide.compact .vmap .vnew{font-size:16px;padding:9px 15px}
+.slide>h2 .hands{color:var(--hi)}
+.slide>h2 .demo{color:var(--blue)}
+.slide.compact>h2,.slide.ultra-compact>h2{font-size:37px}  /* 제목 크기는 전 슬라이드 고정 — 축소는 본문에서만 */
+.slide.compact .rule{margin:12px 0 16px}
+.slide.compact .lead{font-size:21.5px;line-height:1.45;margin-bottom:14px}
+.slide.compact ul.bullets{gap:10px}
+.slide.compact ul.bullets li{font-size:19.5px;line-height:1.48}
+.slide.compact .card p{font-size:15.5px;line-height:1.48}
+.slide.compact .card h3{font-size:20.5px}
+.slide.compact table{font-size:16px}
+.slide.compact thead th,.slide.compact tbody td{padding:8px 12px}
+.slide.compact .callout{font-size:17px;padding:12px 17px;margin-top:12px}
+.slide.compact .prompt{font-size:15.5px;line-height:1.55;padding:14px 18px}
+.slide.compact .check,.slide.compact .check>div{font-size:17px}
+.slide.ultra-compact{padding-top:40px;padding-bottom:34px}
+.slide.ultra-compact .lead{font-size:19.5px;margin-bottom:11px}
+.slide.ultra-compact ul.bullets{gap:8px}
+.slide.ultra-compact ul.bullets li{font-size:18px;line-height:1.42}
+.slide.ultra-compact .card p{font-size:14.5px;line-height:1.42}
+.slide.ultra-compact table{font-size:15px}
+.slide.ultra-compact thead th,.slide.ultra-compact tbody td{padding:7px 10px}
+.slide.ultra-compact .callout{font-size:15.5px;padding:11px 15px}
+.slide.ultra-compact .prompt{font-size:14.5px;line-height:1.5;padding:12px 16px}
+.slide.ultra-compact .check,.slide.ultra-compact .check>div{font-size:15.5px}
+
+
+/* 강조색 예외 — 라벨·제목·박스 내부는 기존 색 유지 */
+td.em,td.em b{color:var(--navy)}
+/* 카드·박스 안의 강조는 남색 계열 (붉은색은 본문·표·콜아웃에만) */
+.card b,.card strong,.card em,
+.oteam b,.oroom b,.wk b,.hx b,.anat2 .ab:not(.llm) b,
+.lab-base b,.lab-team b,.rung b{color:var(--navy-soft)}
+/* 어두운 배경 박스는 흰 글씨 유지 */
+.anat2 .llm b{color:#fff}
+.oroom.me b,.lab-boss b,.wk.head.mid b{color:#fff}
+.oteam.hi b,.wk.head.end b{color:var(--blue-deep)}
+.anat2 .tool b{color:var(--blue-deep)}
+.anat2 .gate b{color:var(--coral)}
+.card.accent b,.card.accent strong,.card.accent em{color:var(--blue-deep)}
+.card.warn-c b,.card.warn-c strong,.card.warn-c em{color:#8C3325}
+.card h3{color:var(--navy)}
+.card h3 b{color:inherit}
+.flow .step b,.mini-flow>b{color:var(--blue)}
+.flow .step.gate b{color:var(--coral)}
+.prompt b,.prompt strong{color:#fff}
+.term b,.code b{color:inherit}
+.callout b{color:var(--hi)}
+.callout.warn b{color:#8C3325}
+.check b,.selfq b{color:var(--hi)}
+thead th b{color:#fff}
+.lab-boss b,.oroom.me b{color:#fff}
+
+@media print{
+  body{overflow:visible;display:block;background:#fff}
+  #stage{transform:none!important;width:100%;height:auto;box-shadow:none;border-radius:0;counter-reset:pg}
+  .slide{position:relative;display:flex!important;opacity:1!important;page-break-after:always;height:190mm;border-bottom:1px solid #ddd;counter-increment:pg}
+  .slide::after{content:counter(pg);position:absolute;right:14mm;bottom:7mm;
+    font-size:11px;color:#8a94a6;font-variant-numeric:tabular-nums}
+  #bar,#num,#notes,#overview,#help{display:none!important}
+}
+/* 화면용 페이지 번호(우하단) — 커버에서도 보이게 */
+#num{background:color-mix(in srgb,var(--panel) 82%,transparent);padding:2px 8px;border-radius:8px}
+</style>
+</head>
+<body>
+<div id="viewport">
+  <main id="stage">
+
+    <!-- ══════════ 표지 · 여정 ══════════ -->
+
+    <section class="slide cover active" data-sid="s01">
+      <div class="eyebrow" style="position:absolute;top:52px;left:76px;margin:0">한국재료연구원 소재혁신선도본부 AI 특강</div>
+      <div class="fill"></div>
+      <h1>R&amp;D 정책기획·조사분석 업무의<br><em>AI 에이전트</em> 활용 실전</h1>
+      <div class="accent-bar"></div>
+      <p class="lead" style="max-width:1000px;margin-bottom:0">답만 하는 AI를 넘어 — 조사·집필·<b>검증</b>까지 하는 AI 팀을 내 업무에</p>
+      <div style="margin-top:18px">
+        <div style="font-size:27px;font-weight:800;color:var(--navy)">박 주 이</div>
+        <div class="sub" style="margin-top:4px">한양대학교 과학기술정책연구소 연구교수 · parkjui92@gmail.com</div>
+        <div class="sub" style="margin-top:12px">2026. 08. 06. (목) 13:00 ~ 17:00</div>
+      </div>
+      <div class="fill"></div>
+    </section>
+
+    <section class="slide" data-sid="o2">
+      <div class="eyebrow">오프닝 · 자가진단</div>
+      <h2>혹시 이렇게 쓰고 있지 않은가?</h2>
+      <div class="rule"></div>
+      <div class="checks selfq">
+        <div class="check"><span class="box no">✕</span><div><b>"완료했습니다"</b>라는 말을 그대로 믿고 쓴다</div></div>
+        <div class="check"><span class="box no">✕</span><div>오류가 나면 <b>"안 돼, 고쳐줘"</b>라고만 말한다</div></div>
+        <div class="check"><span class="box no">✕</span><div>잘 안 풀리면 <b>새 세션을 열고 처음부터</b> 다시 설명한다</div></div>
+        <div class="check"><span class="box no">✕</span><div>한 달 전에 한 작업을 <b>처음부터 다시</b> 설명한다</div></div>
+      </div>
+      <div class="checks selfq" style="margin-top:12px">
+        <div class="check"><span class="box no">✕</span><div>결과가 나빠지면 채팅창에서 같은 요구를 반복한다(고문한다) — 실제로는 <b>컨텍스트 윈도우가 소진돼 맥락을 잃은 상태</b></div></div>
+        <div class="check"><span class="box no">✕</span><div>단발 지시 한 번으로 산출물을 받는다 — 그럴듯하지만 알맹이 없는 <b>workslop</b></div></div>
+        <div class="check"><span class="box no">✕</span><div>에이전트를 몇 차례 시도한 뒤 <b>성능 부족으로 결론</b>내고 중단한다</div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-sid="o2-2">
+      <div class="eyebrow">오프닝 · 진단</div>
+      <h2>도구를 못 써서가 아니다 — 쓰는 방식이 그대로였기 때문이다</h2>
+      <div class="rule"></div>
+      <p class="lead">앞의 증상들은 <b>개인의 숙련 부족</b>이 아니다 — 도구는 좋아졌는데 <em>쓰는 방식은 그대로였기 때문</em>이다</p>
+      <div class="cols">
+        <div class="card warn-c"><h3>흔한 진단 — "아직 AI가 부족해서"</h3>
+          <ul class="bullets tight" style="margin-top:2px">
+            <li>더 좋은 모델이 나오면 해결될 것이다</li>
+            <li>프롬프트를 더 잘 쓰면 될 것이다</li>
+            <li>우리 업무는 특수해서 어려울 것이다</li>
+          </ul>
+          <p class="eg">→ 그래서 <b>기다리거나 포기</b>하게 된다</p></div>
+        <div class="card accent"><h3>실제 진단 — 방식이 그대로였다</h3>
+          <ul class="bullets tight" style="margin-top:2px">
+            <li>매번 <b>처음부터</b> 설명하고 있었다 — 규칙이 파일에 없으니</li>
+            <li>결과를 <b>그대로 믿고</b> 있었다 — 검증할 자리가 없으니</li>
+            <li>잘 된 것을 <b>버리고</b> 있었다 — 남길 곳이 없으니</li>
+          </ul>
+          <p class="eg">→ 도구가 아니라 <b>공정</b>의 문제였다</p></div>
+      </div>
+      <div class="callout">그렇다면 확인해 볼 것이 있다 — <b>정말 모델이 아직 부족한가?</b> 먼저 그것부터 보고 간다</div>
+    </section>
+
+    <section class="slide" data-sid="t1">
+      <div class="eyebrow">동향 · 모델</div>
+      <h2>최근 모델들 — 성능은 이미 충분히 좋다</h2>
+      <div class="rule"></div>
+      <p class="lead">벤치마크 점수보다 확실한 증거는 <b>표준화와 속도</b>다 — <em>병목은 더 이상 모델이 아니다</em></p>
+      <table>
+        <thead><tr><th style="width:14%">무엇이 달라졌나</th><th style="width:56%">지금 상태 (2026년 8월 기준)</th><th style="width:30%">우리에게 뜻하는 것</th></tr></thead>
+        <tbody>
+          <tr><td class="em">성능 수준</td><td>대학원 수준 과학 문제(GPQA)에서 최신 모델 <b>94~95%</b> — 같은 문제에서 인간 박사 전문가는 <b>69.7%</b>였다 <span class="note">4지선다(찍기 25%)이고 공학·재료 문항은 없다</span></td><td>흔히 말하는 <b>'박사급'</b>의 실체 — 수치는 사실이나 <b>범위가 좁다</b></td></tr>
+          <tr><td class="em">모델 교체 속도</td><td>3사 최상위가 <b>최근 두 달 사이 전부 교체</b> — 어느 것을 써도 상위권이다</td><td>모델 고르기에 시간 쓸 이유가 없다</td></tr>
+          <tr><td class="em">컨텍스트</td><td>3사 모두 <b>100만 토큰</b>으로 수렴 — 보고서 수십 편을 한 번에 읽힌다</td><td>자료를 통째로 주고 시킬 수 있다</td></tr>
+          <tr><td class="em">도구 표준화</td><td>MCP 등록 서버 <b>2만 개+</b> · 중립 재단으로 이관돼 경쟁 3사가 같은 표준을 쓴다</td><td>붙일 도구는 이미 널려 있다</td></tr>
+          <tr><td class="em">자율 작업</td><td>최상위 모델이 <b>1주일 이상 대부분 자율로</b> 연구를 수행한 사례가 발표됐다</td><td>"몇 번 시켜보고 포기"하기엔 판이 달라졌다</td></tr>
+        </tbody>
+      </table>
+      <div class="callout warn">다만 같은 회사의 시스템 카드에서 <b>실험 트러블슈팅</b> 문제는 모든 모델이 <b>박사 중앙값 42%에도 미달</b>했다 — 객관식은 90%대여도 <b>손에 잡히는 실험은 다른 이야기</b>다</div>
+      <div class="callout">그래서 — <b>모델 골라잡기 고민은 본질이 아니다</b>. 본질이 아니라면 무엇이 본질인가, 그 답을 찾는 것이 오늘 1부의 일이다</div>
+      <div class="src">출처 · 3사 공식 모델 문서·시스템 카드 · Rein et al.(GPQA 원논문) · MCP 공식 레지스트리 실측(2026-08) — 전부 원문 확인</div>
+    </section>
+
+    <section class="slide" data-sid="t2">
+      <div class="eyebrow">동향 · 성과 격차</div>
+      <h2>그런데 — 도입한 곳 대부분이 성과를 못 내고 있다</h2>
+      <div class="rule"></div>
+      <p class="lead">성능이 충분한데도 결과가 갈린다 — <em>가른 것은 도구가 아니었다</em></p>
+      <div class="grid-3">
+        <div class="card"><div class="stat"><span class="num">88% → 39%</span><span class="cap">AI를 정기적으로 쓰는 조직은 88%, 그러나 <b>전사 이익에 영향</b>이 있다고 답한 곳은 39%</span></div></div>
+        <div class="card"><div class="stat"><span class="num">5%</span><span class="cap">1,250개 기업 중 <b>규모 있는 가치</b>를 낸 곳 — 60%는 상당한 투자에도 유의미한 성과 없음</span></div></div>
+        <div class="card accent"><div class="stat"><span class="num">3배</span><span class="cap">고성과 기업이 <b>"워크플로를 근본적으로 재설계했다"</b>고 답할 확률 — 검증한 요인 중 최상위권</span></div></div>
+      </div>
+      <div class="callout">성과를 가른 것은 어떤 모델을 골랐는가가 아니라 <b>업무를 다시 짰는가</b>였다 — 오늘 이야기가 '일하는 방식'인 이유다</div>
+      <div class="src">출처 · McKinsey, The state of AI in 2025(2025.11, n=1,993) · BCG, The Widening AI Value Gap(2025.9, n=1,250) — 원문 확인</div>
+    </section>
+
+    <section class="slide" data-sid="t3">
+      <div class="eyebrow">동향 · 위임의 급소</div>
+      <h2>어디까지 맡기고 어디서 검증하는가 — 그것이 성과를 가른다</h2>
+      <div class="rule"></div>
+      <div class="grid-2">
+        <div class="card"><h3>맡길 곳과 맡기면 안 되는 곳</h3><p>컨설턴트 758명 현장실험 — AI 역량 <b>안쪽</b> 과제에서는 12.2% 더 많이, 25.1% 더 빨리 처리했다 그러나 역량 밖 과제에서는 정답을 낼 확률이 19% 더 낮았다</p>
+          <p class="eg">→ 무엇을 맡길지 고르는 것 자체가 실력이다</p></div>
+        <div class="card accent"><h3>좋은 AI일수록 검증을 안 하게 된다</h3><p>리크루터 181명 실험 — <b>정확도 높은 AI</b>를 받은 쪽이 오히려 최종 판단이 덜 정확했다 추천을 그대로 따르고 검토 시간을 줄였기 때문이다</p>
+          <p class="eg">→ 검증은 의지가 아니라 <b>공정</b>으로 강제해야 한다</p></div>
+      </div>
+      <div class="callout">그래서 고성과 조직의 공통점은 <b>"AI 결과물을 언제·어떻게 사람이 검증할지 프로세스로 정해 둔 것"</b>이었다</div>
+      <div class="src">출처 · Dell'Acqua et al., Navigating the Jagged Technological Frontier, Organization Science 37(2), 2026 · Dell'Acqua, Falling Asleep at the Wheel, HBS 워킹페이퍼 · McKinsey(2025.11) — 원문 확인</div>
+    </section>
+
+    <section class="slide" data-sid="o3">
+      <div class="eyebrow">동향 · 오늘의 논지</div>
+      <h2>그래서 오늘 할 얘기는 '위임'과 '일하는 방식'이다</h2>
+      <div class="rule"></div>
+      <p class="lead">앞의 조사들이 같은 곳을 가리킨다 — 기술이 아니라 <b>무엇을 맡기고 어떻게 일하는가</b>가 성과를 갈랐다</p>
+      <div class="cols">
+        <div class="card"><h3>① 위임 — 무엇을 맡길 것인가</h3><p>맡길 것과 쥘 것의 <b>경계를 정하는 일</b>.</p>
+          <div class="mini">
+            <div class="mini-row ai"><span>AI에게</span><i>조사</i><i>초안</i><i>조판</i><i>반복 검증</i></div>
+            <div class="mini-row hu"><span>사람이</span><i>방향</i><i>판단</i><i>확정</i><i>책임</i></div>
+          </div>
+        </div>
+        <div class="card accent"><h3>② 일하는 방식 — 어떻게 맡길 것인가</h3><p>위임이 실패하는 이유는 대개 도구가 아니라 <b>방식</b>에 있다</p>
+          <div class="mini-flow"><b>업무를<br>쪼갠다</b><span>→</span><b>관문에<br>사람이 선다</b><span>→</span><b>과정이<br>파일로 쌓인다</b></div>
+        </div>
+      </div>
+      <div class="callout">그래서 오늘은 도구 사용법이 아니라 — <b>제가 실제로 일을 맡기는 방식</b>을 통째로 보여드리고, 그 중 하나를 여러분 PC에 설치해 드린다</div>
+    </section>
+
+    <section class="slide" data-sid="s07-2">
+      <div class="eyebrow">동향 · 용어의 진화</div>
+      <h2>유행어가 계속 지나갔다 — '시키는 단위'가 커져온 것이다</h2>
+      <div class="rule"></div>
+      <p class="lead">프롬프트 엔지니어링을 겨우 익혔더니 컨텍스트, 하네스, 루프, 이제 그래프까지.</p>
+      <div class="flow">
+        <div class="step"><b>프롬프트<br>엔지니어링</b>문장을 잘 쓴다<span class="dim">단위: 문장 하나</span></div><span class="arrow">→</span>
+        <div class="step"><b>컨텍스트<br>엔지니어링</b>무엇을 보여줄지 설계<span class="dim">단위: 맥락 전체</span></div><span class="arrow">→</span>
+        <div class="step"><b>하네스<br>엔지니어링</b>도구·규칙·검증의 작업대<span class="dim">단위: 판 — 1차에서 배운 그것</span></div><span class="arrow">→</span>
+        <div class="step"><b>루프<br>엔지니어링</b>계획→실행→검증 반복<span class="dim">단위: 과정</span></div><span class="arrow">→</span>
+        <div class="step hi"><b>그래프<br>엔지니어링</b>여러 AI의 역할 분담·관문<span class="dim">단위: 조직 — 오늘 배포하는 팀</span></div>
+      </div>
+      <table class="tight">
+        <thead><tr><th style="width:22%">단계</th><th style="width:40%">앞 단계의 한계</th><th>그래서 무엇이 생겼나</th></tr></thead>
+        <tbody>
+          <tr><td class="em">① 프롬프트</td><td>문장이 그 대화 안에서만 살고 재사용이 안 됨</td><td>맥락을 <b>파일로 고정</b>하자 → 컨텍스트</td></tr>
+          <tr><td class="em">② 컨텍스트</td><td>글을 줘도 <b>읽고 쓸 수만</b> 있음 — 실제 작업은 못 함</td><td>도구·규칙·기록을 붙이자 → 하네스</td></tr>
+          <tr><td class="em">③ 하네스</td><td>매 단계 사람이 시켜야 진행됨</td><td>스스로 계획·검증·수정하게 → 루프</td></tr>
+          <tr><td class="em">④ 루프</td><td>혼자 도니 <b>자기 글을 자기가 통과</b>시킴</td><td>역할을 나누고 관문을 두자 → 그래프</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">새 유행어가 아니라 <b>앞 단계의 한계를 메우며 자라온 것</b>이다 — '잘 시키는 단위'가 문장 → 맥락 → 작업대 → 과정 → 조직으로 커져 왔을 뿐.</div>
+      <div class="src">출처 · Karpathy, "context engineering"(2025.6) · Anthropic, 「Building Effective Agents」(2024.12) · pulsemcp.com 실측 2026-08-05 · Chugunova et al.(2026), Research Policy 55(2)</div>
+    </section>
+
+    <section class="slide divider" data-sid="p0">
+      <span class="wm">01</span>
+      <div class="modtag">PART 1 · 원리와 한계</div>
+      <h2>믿어도 되는가? — 내 탓이 아니라 구조다</h2>
+      <p class="sub">확률 계산 · 무상태 · 컨텍스트 한계 · 자기 과대평가</p>
+    </section>
+
+    <section class="slide" data-sid="p1">
+      <div class="eyebrow">원리·한계 · 두 착각</div>
+      <h2>클로드는 진짜 답을 '알고' 나를 '기억'하는 걸까</h2>
+      <div class="rule"></div>
+      <p class="lead">하는 일은 둘뿐이다 — <b>다음 말의 확률 계산</b>, 그리고 매번 처음부터 다시 읽기. 여기서 <em>모든 한계</em>가 나온다</p>
+      <div class="cols">
+        <div class="card"><h3>"안다"는 착각 → 확률 계산</h3>
+          <ul class="bullets tight" style="margin-top:4px">
+            <li>글을 토큰으로 쪼개고 <b>다음 토큰의 확률</b>을 계산해 하나 고르기의 반복</li>
+            <li>지식을 꺼내는 게 아니라 <b>"가장 그럴듯한 다음 말"</b> 이어 붙이기</li>
+            <li>맞을 때가 많지만 <b>보장은 아님</b></li>
+            <li>이 사실 하나가 — 뒤의 환각·한계를 전부 설명</li>
+          </ul>
+          <div class="tokstrip"><span class="tk">소재</span><span class="tk">부품</span><span class="tk">장비</span><span class="tk">산업</span><span class="tk">경쟁력</span><span class="arrow2">→</span><span class="tk on">강화<span class="pct"> 71%</span></span></div>
+          <div class="eg">다음에 올 말의 확률을 계산해 하나를 고르는 것 — 그것을 수천 번 반복한 결과가 문장이다</div>
+        </div>
+        <div class="card accent"><h3>"기억한다"는 착각 → 무상태</h3>
+          <ul class="bullets tight" style="margin-top:4px">
+            <li>모델 자체는 <b>무상태</b> — 매 요청마다 이전 대화 전체를 다시 읽음</li>
+            <li>기억처럼 보이는 이유 — 대화를 매번 <b>통째로 다시 동봉</b>하기 때문</li>
+            <li>그래서 길어질수록 — 느려지고 · 비싸지고 · 한도에 부딪힘</li>
+            <li>진짜 기억이 필요하면 — <b>모델 밖에</b>: 파일과 CLAUDE.md</li>
+          </ul>
+          <div class="mini-flow" style="margin:4px 0 0"><b>1턴<br>질문①</b><span>→</span><b>2턴<br>질문①+②</b><span>→</span><b>3턴<br>①+②+③</b><span>→</span><b>N턴<br>한도 도달</b></div>
+          <div class="eg">대화가 길어질수록 매번 다시 읽는 양이 커진다</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-sid="p2">
+      <div class="eyebrow">원리·한계 · 실무 증상</div>
+      <h2>실무에서 만나는 한계 — 전부 구조에서 나온다</h2>
+      <div class="rule"></div>
+      <div class="grid-2">
+        <div class="card"><h3>① 긴 작업에서 품질 하락</h3><p>컨텍스트 윈도우 = <b>유한한 책상 넓이</b>. 꽉 차면 오래된 내용을 압축하거나 흘려버린다 — 기분 탓이 아니라 구조다</p>
+          <div class="deskbar"><div class="old">초반 지시(흐려짐)</div><div class="mid">중간 작업</div><div class="new">최근 대화</div><div class="over">넘침</div></div></div>
+        <div class="card"><h3>② 세션이 끝나면 백지</h3><p>다음 세션은 <b>완전한 백지</b>에서 시작한다 Anthropic의 비유 — "인수인계 없이 출근한 교대 근무자". 어제 합의한 용어·양식을 오늘 다시 설명하게 되는 이유다</p></div>
+        <div class="card"><h3>③ "완료" ≠ 보증</h3><p>"완료했습니다"는 품질 보증이 아니라 <b>"일단 끝냈다"는 신호</b>일 뿐. AI도 자기 결과물을 과대평가한다 — Anthropic 권고도 만드는 LLM과 채점하는 LLM의 분리다</p></div>
+        <div class="card accent"><h3>④ 체감 ≠ 실측</h3><p>METR 무작위대조실험(2025) — 숙련 개발자들은 <b>"24% 빨라졌다"</b>고 느꼈지만 실측은 19% 지연. 무용론이 아니라 검증 없는 체감을 믿지 말라는 뜻이다</p></div>
+      </div>
+      <div class="src">출처 · METR, RCT(2025) — 상세 수치·원문 링크는 배포 카탈로그</div>
+    </section>
+
+    <section class="slide" data-sid="p2-2">
+      <div class="eyebrow">원리·한계 · 실측 감사</div>
+      <h2>가장 무서운 오류는 '그럴듯한' 오류다</h2>
+      <div class="rule"></div>
+      <p class="lead">AI가 작성한 초안을 <b>인용 URL까지 전부 열어</b> 봤더니 — <em>이런 것들이 나왔다</em></p>
+      <div class="grid-3">
+        <div class="card"><h3>① 지표 혼동</h3><p>"경험률 67.8%" — 숫자는 실재하지만 <b>전혀 다른 지표</b>의 값이었다</p>
+          <p class="eg">없는 숫자를 지어내는 것보다 검산이 훨씬 어렵다 · 인접 공식 통계와 상충하는데도 확정 어조</p></div>
+        <div class="card"><h3>② 문서 귀속 오류</h3><p>"불편률 64.2%" — 인용된 보고서 원문 <b>237쪽 어디에도 없는</b> 수치였다</p>
+          <p class="eg">수치 자체는 실재하나 실제 출처는 다른 문서 · 출처만 보고는 걸러지지 않는다</p></div>
+        <div class="card"><h3>③ 각주의 착시</h3><p>말미에 <b>진짜 URL이 여러 개</b> 달려 있어 전체가 검증된 것처럼 보인다</p>
+          <p class="eg">"인용은 여럿, 원문 열람은 0회" — 각주가 많을수록 오히려 안심하게 된다</p></div>
+        <div class="card"><h3>④ 기준연도 표류</h3><p>최신 수치라며 제시한 값이 <b>몇 해 전 통계</b>였다</p>
+          <p class="eg">연도 표기가 빠지거나 뒤섞인다 · 정책 판단에서 가장 치명적인 유형</p></div>
+        <div class="card"><h3>⑤ 제도·조항 시제 오류</h3><p>이미 <b>개정·폐지된 조항</b>을 현행처럼 인용한다</p>
+          <p class="eg">학습 시점의 법령이 그대로 나온다 · 법령 인용은 반드시 [현행] 확인이 필요하다</p></div>
+        <div class="card"><h3>⑥ 해석을 사실로</h3><p>상관을 <b>인과처럼</b>, 추정을 <b>확정처럼</b> 서술한다 — 실존 인물의 말도 다듬어 직접인용으로 제시된다</p>
+          <p class="eg">"증가했다 → 때문이다"로 넘어가는 한 문장 · 따옴표가 붙는 순간 주장이 사실로 굳는다</p></div>
+      </div>
+      <div class="callout warn">틀린 티가 나는 오류는 걸러진다 — 위험한 것은 <b>그럴듯해서 통과하는 오류</b>다. 그래서 검증은 '읽어 보는 것'이 아니라 <b>원문을 여는 것</b>이어야 한다</div>
+    </section>
+
+    <section class="slide" data-sid="p3">
+      <div class="eyebrow">원리·한계 · 환각</div>
+      <h2>환각은 왜 사라지지 않는가 — 줄이는 원칙과 오늘의 태도</h2>
+      <div class="rule"></div>
+      <p class="lead">환각은 고칠 버그가 아니라 <b>작동 방식의 필연</b>이다 — 그럴듯하게 이어 붙도록 만들어졌지, <em>참을 보장하지는 않는다</em></p>
+      <table>
+        <thead><tr><th style="width:20%">원칙</th><th style="width:34%">무엇을 하나</th><th style="width:24%">한 줄 지시 예</th><th>오늘 어디서 만나나</th></tr></thead>
+        <tbody>
+          <tr><td class="em">① 근거 주입</td><td>자료를 직접 주고 <b>"이 안에서만"</b> 답하게 한다</td><td>"이 폴더 자료만 근거로 써"</td><td>실습 4 (수요조사 40건)</td></tr>
+          <tr><td class="em">② 출처 강제</td><td>주장마다 근거를 달게 하고, 없으면 <b>[출처 미확인]</b></td><td>"확인 못 한 건 미확인으로 표시해"</td><td>실습 1 (브리핑 킥오프)</td></tr>
+          <tr><td class="em">③ 검증 가능한 출력</td><td>로그·대조표·원본 대비표를 <b>파일로</b> 남기게 한다</td><td>"판단 근거를 열로 함께 적어"</td><td>실습 4·5 (분류표·브리핑)</td></tr>
+          <tr><td class="em">④ 생성–평가 분리</td><td>만든 쪽과 <b>다른 눈</b>이 채점하게 한다</td><td>"쓴 사람 말고 다른 검수자로 훑어"</td><td>강의 해부 (검수관 5축)</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">대응은 하나뿐 — <b>검증을 모델 밖에서 설계</b>하는 것이다. 이 원칙들은 오늘 배포할 팀에 전부 내장돼 있다</div>
+    </section>
+
+    <section class="slide" data-sid="pu1">
+      <div class="eyebrow">전환 · 오늘의 문장</div>
+      <h2>But — AI 공부하러 오신 게 아니다</h2>
+      <div class="rule"></div>
+      <p class="lead">원리와 한계는 여기까지면 충분하다 <b>실무에 필요한 것만 쓰면 된다</b></p>
+      <div class="grid-3">
+        <div class="card"><h3>이건 학습이 아니다</h3><p>용어를 다 외우지 못해도 — 오늘 가져가는 부품은 <b>돌아간다</b>. 업무를 효율적으로 하기 위한 도구일 뿐이다</p></div>
+        <div class="card"><h3>한계는 우회된다</h3><p>방금 본 한계는 전부 <b>일하는 방식</b>으로 우회된다 — 모델을 기다릴 필요가 없다</p></div>
+        <div class="card accent"><h3>그래서 다음은</h3><p>제가 실제로 <b>일을 맡기는 방식</b>을 통째로 보여드린다 — 그리고 그 중 하나를 여러분 PC에 설치한다</p></div>
+      </div>
+      <div class="callout">에이전트는 '위임'의 기술 — 우리가 설계할 것은 <b>'일하는 방식'</b>이다</div>
+    </section>
+
+    <section class="slide" data-sid="pu2">
+      <div class="eyebrow">전환 · 오늘의 선언</div>
+      <h2>'한 번 시키는 것'에서 '시스템을 만드는 것'으로</h2>
+      <div class="rule"></div>
+      <p class="lead">오늘 배우는 것은 <b>프롬프트 문장술</b>이 아니라 — <em>판을 짜는 법</em>이다</p>
+      <div class="cols">
+        <div class="card warn-c"><h3>챗봇에 시키기</h3>
+          <ul class="bullets tight" style="margin-top:2px">
+            <li>그때그때 지시를 다시 쓰고, 품질은 <b>그날그날 복불복</b></li>
+            <li>세션이 끝나면 <b>노하우도 함께 증발</b></li>
+            <li>잘 나온 결과를 <b>재현할 방법이 없다</b></li>
+            <li>반복하는 것은 <b>사람</b></li>
+          </ul></div>
+        <div class="card accent"><h3>시스템 만들기</h3>
+          <ul class="bullets tight" style="margin-top:2px">
+            <li>역할·절차·검증 기준을 <b>파일로 박아 두고 재사용</b></li>
+            <li>같은 품질을 계속 재현 — <b>팀 전체가 공유 가능</b></li>
+            <li>기록이 남아 <b>감사(監査)와 인수인계</b>가 된다</li>
+            <li>반복하는 것은 <b>시스템</b></li>
+          </ul></div>
+      </div>
+      <div class="keyq"><span class="qm">?</span> 핵심 질문 — <b>매번 새로 시킬 것인가, 판을 짜 둘 것인가?</b></div>
+      <div class="callout">이 전환이 1부의 뼈대다 — 먼저 <b>실물(시연)</b>을 보고, 그다음 그 '판'의 부품을 킷으로 하나씩 뜯어본다</div>
+    </section>
+
+    <section class="slide" data-sid="g1">
+      <div class="eyebrow">가능성 · 오늘의 예고</div>
+      <h2>오늘 여러분 PC에서 가능해지는 것들</h2>
+      <div class="rule"></div>
+      <p class="lead">전부 <b>"언젠가"가 아니라 오늘</b> 시제다 — 퇴근할 때 <em>내 PC에 남아 있는 것들</em></p>
+      <div class="cols">
+        <div class="card accent"><h3>1부 · 강의 중에</h3>
+          <ul class="bullets tight" style="margin-top:2px">
+            <li><b>5인 정책연구 에이전트팀</b>이 내 PC에 설치된다</li>
+            <li>한글 문서·법령 도구(<b>kordoc·korean-law</b>)가 붙는다</li>
+            <li>내 폴더의 <b>CLAUDE.md</b>를 직접 쓴다</li>
+            <li>깃허브 저장소를 열어 <b>남이 만든 것을 뜯어본다</b></li>
+          </ul></div>
+        <div class="card"><h3>2부 · 손으로</h3>
+          <ul class="bullets tight" style="margin-top:2px">
+            <li>그 팀에게 <b>3쪽 브리핑</b>을 시킨다 — 목차는 내가 승인</li>
+            <li>법령·논문 <b>API</b>가 응답한다 · 키는 .env에</li>
+            <li><b>수요조사서 40건</b>을 분류·클러스터링한다</li>
+            <li>매월 하던 <b>소부장 브리핑</b>을 엑셀에서 자동으로</li>
+          </ul></div>
+      </div>
+      <div class="callout">여기에 <b>키트</b>가 더해진다 — 우수성과·JCR 조사 프로토콜, RFP 초안 변환, 동향 뉴스레터 파이프라인까지 사무실에서 재현할 수 있는 형태로</div>
+    </section>
+
+    <section class="slide divider" data-sid="r0">
+      <span class="wm">02</span>
+      <div class="modtag">PART 1 · 일하는 방식</div>
+      <h2>그래서 — 일을 어떻게 시키고 있는가?</h2>
+      <p class="sub">쪼개기 · 고용 · 관문 · 기록 · 위키</p>
+    </section>
+
+    <section class="slide" data-sid="r1">
+      <div class="eyebrow">연구실 · 구조</div>
+      <h2>저의 연구실을 소개합니다</h2>
+      <div class="rule"></div>
+      <p class="lead">반복되는 업무를 <b>쪼개고</b>, 쪼갠 일마다 팀을 '고용'했다 — 채용공고가 아니라 <em>업무기술서(md) 작성</em>으로</p>
+      <div class="office">
+        <div class="ofloor">
+          <span class="ofl">3F · 관제 · 인프라</span>
+          <div class="orow">
+            <div class="oteam mgmt"><b>프로젝트팀</b><i>팀장 · 검수</i><i>RFP분석 · 제안서 · 운영</i></div>
+            <div class="oroom"><b>서버실</b><span>도구 · API · MCP</span></div>
+            <div class="oroom"><b>자료실</b><span>LLM 위키 · CLAUDE.md</span></div>
+            <div class="oroom"><b>회의실</b><span>관문 · 승인 · 판정</span></div>
+          </div>
+        </div>
+        <div class="ofloor">
+          <span class="ofl">2F · 실무 에이전트</span>
+          <div class="orow">
+            <div class="oteam hi"><b>동향조사팀 <span class="pill">오늘 배포</span></b><i>팀장 · 교차검증</i><i>정책 · 언론 · 논문 · 특허</i></div>
+            <div class="oteam"><b>데이터분석팀</b><i>팀장 · 검수</i><i>통계 · 질적 · 시뮬</i></div>
+            <div class="oteam"><b>논문작성팀</b><i>팀장 · 검수</i><i>SLR · 초안 · 교정</i></div>
+            <div class="oteam"><b>AI개발팀</b><i>팀장 · 리뷰</i><i>기획 · 데모 · 개발</i></div>
+            <div class="oteam"><b>강의준비팀</b><i>팀장 · 검수</i><i>슬라이드 · 강의안 · 시연</i></div>
+          </div>
+        </div>
+        <div class="ofloor">
+          <span class="ofl">1F · 외부 · 사람</span>
+          <div class="orow">
+            <div class="oroom me"><b>나</b><span>지시 · 승인 · 최종 판정</span></div>
+            <div class="oroom"><b>라운지</b><span>전문가 네트워크 · 자문</span></div>
+            <div class="oroom"><b>홍보실</b><span>배포 · 공유(GitHub)</span></div>
+            <div class="oroom"><b>안내실</b><span>요청 접수 · 분배</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="callout">팀마다 구조는 같다 — <b>팀장(위임) · 실무 에이전트(작업) · 검수자(관문)</b>. 오늘 이 중 동향조사·정책연구 팀을 통째로 드린다</div>
+    </section>
+
+    <section class="slide" data-sid="r2">
+      <div class="eyebrow">연구실 · 운영 원리 ①</div>
+      <h2>일 잘 시키는 사람은 무엇을 다르게 하는가</h2>
+      <div class="rule"></div>
+      <p class="lead">좋은 관리자의 '일머리'를 그대로 에이전트용 장치로 옮긴 표 — <b>새 개념은 하나도 없다</b></p>
+      <table>
+        <thead><tr><th>일머리 (사람에게)</th><th>하네스 (에이전트에게)</th></tr></thead>
+        <tbody>
+          <tr><td class="em">① 의도부터 파악시키는가?</td><td>플랜 모드 · 명세 · CLAUDE.md</td></tr>
+          <tr><td class="em">② 검증 가능한 단위로 쪼개는가?</td><td>플랜 파일 · feature list · 체크리스트</td></tr>
+          <tr><td class="em">③ 안 꼬이게 만드는가?</td><td>git 체크포인트 · 세션/worktree 분리</td></tr>
+          <tr><td class="em">④ 우선순위·완료기준을 주는가?</td><td>작업 순서 · 범위 제한 · DoD(완료 정의)</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">신입에게 일을 잘 시키는 분이라면 — <b>이미 에이전트도 잘 부릴 수 있다</b></div>
+    </section>
+
+    <section class="slide" data-sid="r5-2">
+      <div class="eyebrow">연구실 · 일머리의 증거</div>
+      <h2>만든 사람의 세팅은 "의외로 바닐라"였다</h2>
+      <div class="rule"></div>
+      <p class="lead">Claude Code를 만든 <b>Boris Cherny</b>가 공개한 자기 사용법 — 본인 표현이 <em>"surprisingly vanilla(의외로 순정)"</em>였다</p>
+      <div class="cols">
+        <div class="card"><h3>그가 실제로 하는 것</h3>
+          <ul class="bullets tight" style="margin-top:2px">
+            <li>대부분의 세션을 <b>플랜 모드로 시작</b> — "좋은 계획이 정말 중요하다"</li>
+            <li>CLAUDE.md를 <b>git으로 팀과 공유</b> — "뭔가 잘못하면 CLAUDE.md에 적어 다음엔 안 그러게 한다"</li>
+            <li>반복 작업은 슬래시 커맨드로, 포맷팅은 훅으로</li>
+            <li>가장 중요한 것 — <b>검증 수단을 쥐여주면 결과 품질이 2~3배</b></li>
+          </ul></div>
+        <div class="card accent"><h3>같은 결론에 도달한 또 한 사람</h3>
+          <p><b>Mitchell Hashimoto</b>(HashiCorp 공동창업자) — "에이전트가 실수하는 것을 발견할 때마다, 다시는 그 실수를 하지 않도록 해법을 엔지니어링한다"</p>
+          <p>그는 이 실천에 <b>'하네스 엔지니어링'</b>이라는 이름을 붙였다 — 서로 다른 두 사람이 같은 실천에 도달했다는 것이 이 방법의 강도다</p></div>
+      </div>
+      <div class="callout warn">단, 그는 같은 글에서 <b>"정답은 하나가 아니며, 팀원들도 저마다 매우 다르게 쓴다"</b>고 못박았다 — 따라 할 정답이 아니라 참고할 사례로 본다</div>
+      <div class="foot">
+        <div class="fi"><span class="fm">용어</span><span class="fd"><b>바닐라</b> — 개조 없는 순정 상태. 그가 말한 바닐라도 외부 도구를 얹지 않았다는 뜻이지, 아무 설정도 안 했다는 뜻은 아니다</span></div>
+        <div class="fi"><span class="fm src">출처</span><span class="fd">Boris Cherny, X(@bcherny) 2026.1 — 원문 확인</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-sid="r3">
+      <div class="eyebrow">연구실 · 운영 원리 ②</div>
+      <h2>기법을 외울 필요 없다 — 한계 × 처방 매트릭스</h2>
+      <div class="rule"></div>
+      <p class="lead">아까 본 한계마다 처방이 하나씩 — <b>대응표 하나면 된다</b></p>
+      <table>
+        <thead><tr><th style="width:38%">아까 본 한계</th><th>처방 (장치)</th></tr></thead>
+        <tbody>
+          <tr><td class="em">긴 작업에서 멍청해진다 (①책상)</td><td><b>압축과 오프로딩</b> — 중간 결과를 파일로 내려놓기</td></tr>
+          <tr><td class="em">세션이 끝나면 백지 (②교대 근무자)</td><td><b>플랜 파일 · 상태 외부화</b> — 계획·진행을 파일에</td></tr>
+          <tr><td class="em">"완료"가 보증이 아니다 (③과대평가)</td><td><b>생성자·평가자 분리</b> — 다른 눈이 채점</td></tr>
+          <tr><td class="em">중간에 꼬인다</td><td><b>git 체크포인트</b> — 언제든 되돌리기</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">전부 <b>모델 밖의 장치</b>라는 점에 주목 — 모델이 좋아져도 이 장치들은 그대로 유효한다</div>
+    </section>
+
+    <section class="slide" data-sid="r4">
+      <div class="eyebrow">연구실 · 에이전트 구조</div>
+      <h2>에이전트 한 명의 속 — 부품 배치도</h2>
+      <div class="rule"></div>
+      <p class="lead" style="margin-bottom:4px">에이전트 한 명의 속을 열면 이렇다 — 가운데 <b>두뇌</b>를 루프가 돌리고, 좌우로 기억·도구·관문이 붙는다</p>
+      <div class="anat2">
+        <svg class="anat2-wire" viewBox="0 0 1060 440" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <marker id="ah" markerWidth="8" markerHeight="8" refX="6.5" refY="3" orient="auto"><path d="M0,0 L6.5,3 L0,6 z" fill="#8494ad"/></marker>
+            <marker id="ahb" markerWidth="8" markerHeight="8" refX="6.5" refY="3" orient="auto"><path d="M0,0 L6.5,3 L0,6 z" fill="#1F6FE0"/></marker>
+          </defs>
+          <path d="M296,120 C345,152 350,168 374,186" class="w1" marker-end="url(#ah)"/>
+          <path d="M296,300 C345,272 350,256 374,236" class="w1" marker-end="url(#ah)"/>
+          <path d="M556,190 C578,164 582,150 596,132" class="w1" marker-end="url(#ah)"/>
+          <path d="M556,228 C578,256 582,270 596,288" class="w2" marker-end="url(#ahb)"/>
+          <path d="M448,326 L448,252" class="w1" marker-end="url(#ah)"/>
+          <path d="M492,252 L492,326" class="w1" marker-end="url(#ah)"/>
+          <path d="M844,282 C868,215 872,150 889,96" class="w1" marker-end="url(#ah)"/>
+          <path d="M844,300 C868,272 872,250 889,224" class="w1" marker-end="url(#ah)"/>
+          <path d="M844,330 C868,338 872,344 889,350" class="w1" marker-end="url(#ah)"/>
+        </svg>
+        <div class="anat2-frame"><span class="anat2-tag">에이전트 핵심 아키텍처 — 이 테두리 전체가 곧 작업 환경(하네스)</span></div>
+        <div class="ab mem"><b>기억 (Memory)</b><i>단기 — 대화 컨텍스트 (휘발)</i><i>장기 — CLAUDE.md · 메모리 · 위키</i></div>
+        <div class="ab loop"><b>에이전틱 루프 (Orchestration)</b><i>① 프롬프트 구성</i><i>② 추론 · 계획 — 플랜 모드</i><i>③ 실행 · 결과 처리 — 반복</i></div>
+        <div class="ab llm"><b>핵심 LLM</b><i>클로드 — 두뇌</i></div>
+        <div class="ab gate"><b>감독 · 평가</b><i>승인 게이트 — 사람이 선다</i><i>테스트 · 검수</i><i>기록 — git · 로그</i></div>
+        <div class="ab tool"><b>도구 연동 (API · MCP)</b><i>최적 도구 선택 · 실행</i><i>파일 · 터미널 · 브라우저</i><i>검색 · 스킬 · MCP 서버</i></div>
+        <div class="ab user"><b>사용자</b><i>지시 · 승인 · 판정</i></div>
+        <div class="ab ext e1"><b>외부 API · 서비스</b></div>
+        <div class="ab ext e2"><b>GitHub</b></div>
+        <div class="ab ext e3"><b>웹 · 데이터베이스</b></div>
+        <span class="al" style="left:306px;top:140px">저장 · 조회</span>
+        <span class="al" style="left:306px;top:262px">반복 호출</span>
+        <span class="al" style="left:566px;top:140px">검증 · 개선</span>
+        <span class="al" style="left:566px;top:262px">호출</span>
+        <span class="al" style="left:352px;top:280px">지시 · 프롬프트</span>
+        <span class="al" style="left:500px;top:280px">결과 · 디프</span>
+      </div>
+    </section>
+
+    <section class="slide" data-sid="r4-2">
+      <div class="eyebrow">연구실 · 예시</div>
+      <h2>예를 들면 — "수요조사서 40건 분류해줘" 한 줄이 도는 길</h2>
+      <div class="rule"></div>
+      <p class="lead">앞 장의 부품에 실제 업무를 얹으면 이렇게 흐른다 — 번호 순서대로 한 바퀴다</p>
+      <div class="anat2 ex">
+        <svg class="anat2-wire" viewBox="0 0 1060 440" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M296,120 C345,152 350,168 374,186" class="w1" marker-end="url(#ah)"/>
+          <path d="M296,300 C345,272 350,256 374,236" class="w1" marker-end="url(#ah)"/>
+          <path d="M556,190 C578,164 582,150 596,132" class="w2" marker-end="url(#ahb)"/>
+          <path d="M556,228 C578,256 582,270 596,288" class="w1" marker-end="url(#ah)"/>
+          <path d="M448,326 L448,252" class="w1" marker-end="url(#ah)"/>
+          <path d="M492,252 L492,326" class="w1" marker-end="url(#ah)"/>
+          <path d="M844,300 C868,272 872,250 889,224" class="w1" marker-end="url(#ah)"/>
+        </svg>
+        <div class="anat2-frame"><span class="anat2-tag">같은 배치도 · 내용만 실제 업무로</span></div>
+        <div class="ab mem"><span class="stepno">2</span><b>기억</b><i>CLAUDE.md — 12대 기술분야 체계</i><i>금지 — 애매하면 '분류보류'</i></div>
+        <div class="ab loop"><span class="stepno">3</span><b>루프 — 40번 반복</b><i>① 파일 하나 읽기</i><i>② 분야 판단 · 근거 한 줄</i><i>③ 표에 행 추가 → 다음 파일</i></div>
+        <div class="ab llm"><b>판단</b><i>이 제안은 어느 분야인가</i></div>
+        <div class="ab gate"><span class="stepno">5</span><b>관문 — 사람</b><i>'분류보류' 6건을 직접 확정</i><i>경계사례 판단은 내 몫</i></div>
+        <div class="ab tool"><span class="stepno">4</span><b>도구</b><i>파일 읽기 — .hwp는 kordoc</i><i>파일 쓰기 — 01_분류표.md</i></div>
+        <div class="ab user"><span class="stepno">1</span><b>나</b><i>"40건 분류해줘"</i></div>
+        <div class="ab ext e2"><b>산출물</b><span>01_분류표.md<br>(40행 · 근거 포함)</span></div>
+      </div>
+      <div class="callout">사람이 한 일은 요청 한 줄(1)과 보류 6건 확정(5)뿐 — 나머지는 부품이 돌았다 이것이 2부 실습 4에서 여러분이 직접 할 일이다</div>
+    </section>
+
+    <section class="slide" data-sid="r5">
+      <div class="eyebrow">연구실 · CLAUDE.md</div>
+      <h2>CLAUDE.md에는 무엇을 적어야 하는가</h2>
+      <div class="rule"></div>
+      <p class="lead">매 세션 반복하던 설명을 없애는 파일 — 프로젝트의 업무 매뉴얼이다</p>
+      <table>
+        <thead><tr><th style="width:20%">적을 것</th><th style="width:44%">우리 업무 예시</th><th>없으면</th></tr></thead>
+        <tbody>
+          <tr><td class="em">목적</td><td>"이 폴더는 월간 소부장 브리핑 제작용이다"</td><td>매번 맥락부터 설명</td></tr>
+          <tr><td class="em">자료 위치</td><td>"원본 엑셀은 raw/, 산출물은 out/에 만든다"</td><td>엉뚱한 파일을 건드림</td></tr>
+          <tr><td class="em">금지사항</td><td>"원본은 절대 수정하지 않는다 — 복사본으로 작업"</td><td>원본 훼손 사고</td></tr>
+          <tr><td class="em">출력 형식</td><td>"개조식·~다 종결 · 표는 연번 포함"</td><td>사람마다 다른 결과물</td></tr>
+          <tr><td class="em">검증 방법</td><td>"엑셀 행수와 기사 수가 같은지 세어서 보고"</td><td>틀린 걸 모른 채 납품</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">원칙 둘 — 프로젝트 <b>고유 규칙만</b> 적고("쓰레기로 채울 바엔 비워 두라"), 한 번에 완성하지 말고 실수가 날 때마다 한 줄씩 늘린다</div>
+      <div class="foot">
+        <div class="fi"><span class="fm">참고</span><span class="fd">도구마다 파일 이름만 다르다 — Claude Code는 <b>CLAUDE.md</b>, OpenAI Codex 등은 <b>AGENTS.md</b>를 읽는다. <b>내용과 원리는 같으므로</b> 한 번 써 두면 다른 도구로 옮길 때도 그대로 쓴다</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-sid="r6">
+      <div class="eyebrow">연구실 · 부품 지도</div>
+      <h2>부품 몇 가지만 알면 나만의 AI 팀을 조립할 수 있다</h2>
+      <div class="rule"></div>
+      <p class="lead">Claude Code의 핵심 구성요소 — 예시는 전부 <b>소재혁신선도본부 업무</b>로 바꿔 읽는다</p>
+      <table class="tight">
+        <thead><tr><th style="width:17%">부품</th><th style="width:36%">역할</th><th>소재혁신선도본부라면</th></tr></thead>
+        <tbody>
+          <tr><td class="em">CLAUDE.md</td><td>항상 읽히는 <b>업무 매뉴얼</b> — 역할·규칙·금지사항</td><td>"본부 보고서 규칙 — 단위는 억원 · 원자료 대조 필수 · 중립 서술"</td></tr>
+          <tr><td class="em">스킬 <span class="eg">Skill</span></td><td>불러 쓰는 <b>작업 절차서(SOP)</b> — 반복 작업의 표준</td><td>"회의 개최 계획(안) 작성 절차"를 한 마디로 가동</td></tr>
+          <tr><td class="em">슬래시 명령어 <span class="eg">Slash Command</span></td><td>자주 쓰는 절차의 <b>단축키</b></td><td><b>/소부장브리핑</b> 260901.xlsm → 수집→정리→표 생성</td></tr>
+          <tr><td class="em">서브에이전트</td><td>독립 컨텍스트의 <b>팀원</b> — 병렬·전문화</td><td>자료조사 담당 · 수치검증 담당을 따로 고용</td></tr>
+          <tr><td class="em">훅 <span class="eg">Hook</span></td><td>정해진 시점의 <b>자동 규칙</b> — 잊어도 지켜진다</td><td>저장할 때마다 수치 표기 점검 · <b>원본 수정 차단</b></td></tr>
+        </tbody>
+      </table>
+      <div class="callout">이것들을 합치면 <b>나만의 에이전트</b>가 된다 — 앞서 본 연구실의 팀들과 오늘 배포하는 킷이 그 실물이다</div>
+      <div class="foot">
+        <div class="fi"><span class="fm">참고</span><span class="fd">공개 스킬 생태계 — Anthropic 공식 스킬 저장소 <b>github.com/anthropics/skills</b> · 커뮤니티 마켓 <b>skillsmp.com</b></span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-sid="r6-2">
+      <div class="eyebrow">연구실 · 부품의 연결</div>
+      <h2>따로 배운 부품들이 실제로는 한 줄로 이어져 돈다</h2>
+      <div class="rule"></div>
+      <div class="flow">
+        <div class="step"><b>내 한마디</b>"소부장 브리핑 정리해줘"</div><span class="arrow">→</span>
+        <div class="step"><b>CLAUDE.md</b>늘 지킬 규칙 — 서식·말투·금지</div><span class="arrow">→</span>
+        <div class="step"><b>스킬 · 명령어</b>절차를 꺼낸다</div><span class="arrow">→</span>
+        <div class="step"><b>에이전트 팀</b>쪼개서 위임 — 조사·집필·검수</div><span class="arrow">→</span>
+        <div class="step"><b>MCP · API</b>원자료를 집는다 — NTIS·법제처</div><span class="arrow">→</span>
+        <div class="step gate"><b>훅 · 검증자</b>통과한 것만 — 출처·수치 대조</div><span class="arrow">→</span>
+        <div class="step hi"><b>산출물</b>표 · 보고서 · .hwpx</div>
+      </div>
+      <ul class="bullets">
+        <li><b>규칙·절차는 한 번 써 두면 자산</b> — CLAUDE.md와 스킬은 다음 요청에도 그대로 다시 쓰인다</li>
+        <li><b>손발이 붙어야 오늘자 수치</b> — MCP·API가 없으면 학습된 기억으로 답한다</li>
+        <li><b>검증은 끝이 아니라 공정 안</b> — 훅은 조건이 부르고, 검증자는 독립으로 판정한다</li>
+      </ul>
+      <div class="callout">부품 하나하나가 아니라 <b>이 한 줄 전체가 '판'(하네스)</b>이다 — 같은 모델이라도 판이 다르면 결과가 갈린다</div>
+      <div class="src"><b>하네스 엔지니어링</b> · 말(프롬프트)을 다듬는 대신 <b>일이 놓이는 판</b>을 설계하는 것 — 무엇을 늘 지킬지(규칙) · 어떤 절차로 할지(스킬) · 무엇을 집을 수 있는지(도구) · 무엇을 통과해야 하는지(검증)를 미리 짜 둔다. 말은 매번 새로 하지만 <b>판은 한 번 짜면 남는다</b> — 앞서 본 용어의 진화에서 '단위: 판'에 해당하는 층이다</div>
+    </section>
+
+    <section class="slide" data-sid="r6-3">
+      <div class="eyebrow">연구실 · 하루가 도는 법</div>
+      <h2>제 조교 Research Bot은 이렇게 일합니다</h2>
+      <div class="rule"></div>
+      <p class="lead">내가 <b>던지면</b> 리서치봇이 <b>밤새 조사하고</b>, 나는 아침에 <b>남길 것만 고른다</b></p>
+      <div class="korch">
+        <span class="ktag">오케스트레이터</span>
+        <span class="kcap">Research Bot (OpenClaw 게이트웨이) — 요청을 분해해 <b>클로드 코드 · 캘린더 · 위키</b>에 라우팅</span>
+      </div>
+      <div class="kflow">
+        <div class="kstep dk"><span class="kl">낮 · 이동 중</span><span class="kb">메모 · 회의록 던지기</span><span class="ks">메신저 / Tiro</span></div>
+        <span class="karr">→</span>
+        <div class="kstep on"><span class="kl">분류</span><span class="kb">할 일 vs 알 거리</span><span class="ks">triage</span></div>
+        <span class="karr">→</span>
+        <div class="kstep on"><span class="kl">밤새</span><span class="kb">근거 조사 · 캘린더 등록</span><span class="ks">클로드 코드에 위임</span></div>
+        <span class="karr">→</span>
+        <div class="kstep dk"><span class="kl">아침</span><span class="kb">브리핑을 읽는다</span><span class="ks">밤새 한 일 보고</span></div>
+        <span class="karr">→</span>
+        <div class="kstep user"><span class="kl">★</span><span class="kb">위키에 남길 것 고르기</span><span class="ks">★ 사용자 컨펌</span></div>
+        <span class="karr">→</span>
+        <div class="kstep chk"><span class="kl">✓</span><span class="kb">적재 · 자가 점검</span><span class="ks">wiki ingest</span></div>
+      </div>
+      <div class="grid-4">
+        <div class="card"><h3>① 조교는 OpenClaw, 일꾼은 클로드</h3><p>메신저로 받은 말을 OpenClaw가 받아 — <b>실제 작업은 클로드 코드에</b> 시킨다</p></div>
+        <div class="card"><h3>② 밤에 일하고 아침에 보고</h3><p>책상 앞이 아니어도 던져 두면 — 자는 동안 조사가 끝나 있고, <b>브리핑을 읽는 것으로</b> 하루가 시작된다</p></div>
+        <div class="card"><h3>③ 위키에 남길 것은 내가 고른다</h3><p>브리핑을 보고 <b>남길 것만 컨펌</b>한다 — 나머지는 버린다 — 그래서 검증된 것만 쌓인다</p></div>
+        <div class="card accent"><h3>④ 복리</h3><p>쌓일수록 <b>나를 더 잘 아는 위키</b>가 되고, 다음 보고서의 근거가 된다</p></div>
+      </div>
+      <div class="callout">자동화된 구간보다 중요한 건 <b>★ 하나</b> — 무엇을 남길지는 끝까지 <b>사람이 정한다</b></div>
+      <div class="src"><b>루프 엔지니어링</b> · 한 번 시켜 답을 받는 대신 <b>계획 → 실행 → 점검 → 수정</b>이 스스로 돌게 만드는 것 — 사람은 매 단계를 시키지 않고 <b>돌 조건과 멈출 지점</b>만 정한다(위 흐름의 ★가 그 멈출 지점) &nbsp;·&nbsp; <b>OpenClaw</b>는 메신저와 AI를 잇는 오픈소스 게이트웨이(코어 MIT, 2025.11), Anthropic의 <b>Claude Code Channels</b>로도 같은 구조를 만들 수 있다</div>
+    </section>
+
+    <section class="slide" data-sid="r7">
+      <div class="eyebrow">연구실 · 해보기 ①</div>
+      <h2><span class="hands">★ 해보기</span> — CLAUDE.md 작성: 반복하던 설명을 한 번만 적기</h2>
+      <div class="rule"></div>
+      <p class="lead">키트의 <b>0_내작업폴더</b>에서 Claude Code를 열고 — 아래를 붙여넣은 뒤 <em>초안을 내 말로 고친다</em></p>
+      <div class="prompt">이 폴더용 CLAUDE.md를 5줄 이내로 만들어줘.
+① 이 폴더가 무엇인지 ② 자료가 어디 있는지 ③ 하지 말아야 할 것
+④ 결과물 형식 ⑤ 어떻게 검증하는지
+<span class="w">일반론 말고, 나만 아는 것만 적어줘.</span></div>
+      <div class="cols">
+        <div class="card warn-c"><h3>파일이 없을 때</h3>
+          <ul class="bullets tight" style="margin-top:2px">
+            <li>어느 폴더의 무슨 자료인지부터 <b>되묻는다</b></li>
+            <li>원본을 <b>직접 수정</b>해 버린다 — 금지 규칙이 없으니</li>
+            <li>새 세션에서 <b>같은 설명을 처음부터</b></li>
+          </ul></div>
+        <div class="card accent"><h3>다섯 줄을 적어 둔 뒤</h3>
+          <ul class="bullets tight" style="margin-top:2px">
+            <li>한마디에 <b>자료를 찾아</b> 시작한다</li>
+            <li>원본은 건드리지 않고 <b>복사본으로</b> 작업한다</li>
+            <li>검증까지 <b>알아서 보고</b>한다 — 방법을 적어 뒀으니</li>
+          </ul></div>
+      </div>
+      <div class="callout">마지막 줄이 핵심이다 — AI가 <b>스스로 알아낼 수 있는 것</b>(폴더 구조 등)을 적으면 비용만 늘고 성공률은 떨어진다</div>
+    </section>
+
+    <section class="slide" data-sid="r7-2">
+      <div class="eyebrow">연구실 · 해보기 ②</div>
+      <h2><span class="hands">★ 해보기</span> — 스킬 하나를 만들고, 열어서 확인한다</h2>
+      <div class="rule"></div>
+      <p class="lead">핵심은 속도가 아니다 — <b>나만의 스킬을 내 손으로 만들 수 있다</b>는 것이다</p>
+      <div class="prompt">회의 개최 계획(안)을 쓰는 스킬을 만들어줘</div>
+      <div class="prompt">방금 만든 스킬 파일을 <span class="w">그대로 열어서 보여줘</span></div>
+      <table class="tight">
+        <thead><tr><th style="width:16%">열어 보면</th><th style="width:42%">무엇이 적혀 있나</th><th>내가 고칠 곳</th></tr></thead>
+        <tbody>
+          <tr><td class="em">발동 조건</td><td>언제 이 스킬이 호출되는지</td><td>우리가 쓰는 표현으로</td></tr>
+          <tr><td class="em">출력 항목</td><td>결과물에 반드시 들어갈 구성</td><td>부서 양식의 항목 이름으로</td></tr>
+          <tr><td class="em">판별 기준</td><td>무엇을 어떻게 판단할지</td><td>우리 시간 규칙·분량 규칙으로</td></tr>
+          <tr><td class="em">금지 규칙</td><td>지어내면 안 되는 것</td><td>자주 빠뜨리는 항목을 추가</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">읽을 수 있으면 <b>고칠 수 있다</b> — 반복되고 · 틀이 있고 · 기준을 말로 설명할 수 있으면 <b>스킬 대상</b>이다</div>
+    </section>
+
+    <section class="slide" data-sid="r7-3">
+      <div class="eyebrow">연구실 · 해보기 ③</div>
+      <h2><span class="hands">★ 해보기</span> — API에 직접 물어본다</h2>
+      <div class="rule"></div>
+      <p class="lead">주소를 외울 필요가 없다 — <b>필요한 것을 말하면</b> 창구를 찾아 호출한다</p>
+      <div class="prompt">국가법령정보 공개 API로 <span class="w">소재·부품·장비</span> 관련 법령을 찾아줘.
+법령명·소관부처·시행일을 표로 정리하고 원문 링크도 같이 줘.
+<span class="dim">(인증키는 시연용 OC=test를 쓰면 된다)</span></div>
+      <div class="prompt">OpenAlex API로 <span class="w">전고체 배터리</span> 분야 최근 3년 논문 수를 연도별로 정리해줘.
+<span class="w">몇 건을 근거로 집계했는지</span>도 함께 적어줘.</div>
+      <ul class="bullets">
+        <li><b>✅ 이렇게 나온다</b> — 법령이 표로 정리되고 원문 링크가 붙는다 · 논문 수가 연도별로 집계된다</li>
+        <li><b>학습된 기억이 아니라 오늘자 원천</b>이다 — 시행일·개정 여부가 실제 값으로 온다</li>
+      </ul>
+      <div class="callout">이 창구들이 앞서 본 <b>조사관 에이전트</b>가 쓰는 손발이다 — 이제 여러분도 같은 것을 쥐었다</div>
+    </section>
+
+    <section class="slide" data-sid="r7-6">
+      <div class="eyebrow">연구실 · 해보기 ④</div>
+      <h2><span class="hands">★ 해보기</span> — 내 첫 루프 걸기</h2>
+      <div class="rule"></div>
+      <p class="lead">한 번 시키는 것에서 <b>알아서 도는 것</b>으로 — 아침에 켜면 <em>어젯밤 결과가 와 있다</em></p>
+      <div class="prompt">매주 월요일 아침 8시에 — <span class="w">소재·부품·장비 관련 새 공고와 법령 개정</span>을 조사해서
+<span class="w">briefing/ 폴더에 날짜별 md 파일</span>로 저장해줘.
+확인 못 한 건 <span class="ok">[출처 미확인]</span>으로 남기고, <span class="w">메일이나 메신저로 보내지는 말고</span> 파일로만 남겨줘.
+<span class="dim">→ 슬래시 명령으로도 된다: /schedule</span></div>
+      <table class="tight">
+        <thead><tr><th style="width:38%">루프는 혼자 돈다 — 그래서</th><th>프롬프트에 반드시 적을 것</th></tr></thead>
+        <tbody>
+          <tr><td class="em">다음 실행은 <b>오늘 대화를 기억하지 못한다</b></td><td>무엇을 · 어디에 · 어떤 형식으로를 <b>한 번에 다</b> 적는다</td></tr>
+          <tr><td class="em">화면에만 뜬 결과는 사라진다</td><td>"<b>파일로 저장해줘</b>" — 폴더와 파일명까지 지정한다</td></tr>
+          <tr><td class="em">되돌릴 수 없는 일은 사람이 한다</td><td>"<b>보내지 말고 초안만</b>" — 발송·게시·삭제는 시키지 않는다</td></tr>
+        </tbody>
+      </table>
+      <ul class="bullets">
+        <li><b>✅ 성공 판정</b> — <span class="cmd">예약된 작업 목록 보여줘</span>라고 물으면 방금 건 루프와 <b>다음 실행 시각</b>이 나온다</li>
+        <li>앱이 꺼져 있던 시각은 건너뛰지 않는다 — <b>다음에 켤 때</b> 실행된다</li>
+      </ul>
+      <div class="callout">루프의 값어치는 '자동'이 아니라 — <b>내가 잠든 사이에도 내 규칙이 지켜진다</b>는 데 있다</div>
+    </section>
+
+    <section class="slide" data-sid="r8-0">
+      <div class="eyebrow">연구실 · API 이점</div>
+      <h2>API를 붙이면 — 손으로 하던 일이 사라진다</h2>
+      <div class="rule"></div>
+      <p class="lead">홈페이지에서 눈으로 보고 옮겨 적던 일이 <b>호출 한 번으로 끝난다</b> — 조사·집계 업무의 반복과 실수가 줄어든다</p>
+      <table>
+        <thead><tr><th style="width:16%">이점</th><th style="width:40%">손으로 하면</th><th>API를 붙이면</th></tr></thead>
+        <tbody>
+          <tr><td class="em">최신성</td><td>매번 홈페이지 접속·다운로드 — 받는 순간 이미 과거</td><td>항상 <b>오늘자 자료</b>를 자동으로</td></tr>
+          <tr><td class="em">대량·반복</td><td>수십 건을 하나씩 열어 옮겨 적기</td><td>수백 건을 <b>한 번에 수집·정리</b></td></tr>
+          <tr><td class="em">결합·대사</td><td>기관별로 따로 받아 수기 대조</td><td>여러 출처를 <b>자동 교차·결합</b></td></tr>
+          <tr><td class="em">재현·감사</td><td>언제·어디서 받았는지 불명</td><td>같은 요청 = 같은 결과, <b>출처 자동 기록</b></td></tr>
+          <tr><td class="em">자동화</td><td>사람이 매주 같은 작업 반복</td><td>정기 <b>자동 실행</b>(예약·알림)까지</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">핵심 — API는 AI에게 <b>실시간 손발</b>을 준다 학습된 기억이 아니라 오늘자 원자료로 일하고, 그 출처가 문서에 남는다</div>
+    </section>
+
+    <section class="slide" data-sid="r8">
+      <div class="eyebrow">연구실 · 외부 연동</div>
+      <h2>외부 연동 — AI가 직접 두드리는 자료 창구(API)</h2>
+      <div class="rule"></div>
+      <table>
+        <thead><tr><th style="width:11%">분야</th><th style="width:31%">창구</th><th>무엇이 나오나</th><th style="width:16%">키</th></tr></thead>
+        <tbody>
+          <tr><td class="em">법·제도</td><td>국가법령정보 · 자치법규</td><td>법령 조문 · 제개정 이력 (소부장특별법)</td><td><b>OC=test 즉시</b></td></tr>
+          <tr><td class="em">논문</td><td>OpenAlex · Crossref · arXiv · PubMed</td><td>전 세계 논문 · 서지 · 프리프린트 · 인용</td><td><b>키 없음</b></td></tr>
+          <tr><td class="em">과제·성과</td><td>NTIS · 과학기술지식인프라</td><td>국가 R&amp;D 과제 · 예산 · 수행주체 · 성과</td><td>신청 후 발급</td></tr>
+          <tr><td class="em">특허</td><td>KIPRIS · Google Patents · EPO OPS</td><td>국내외 특허 · 출원인 · 인용 관계</td><td>신청 / 일부 무키</td></tr>
+          <tr><td class="em">통계·경제</td><td>KOSIS · ECOS · DART · 공공데이터포털</td><td>국가통계 · 경제지표 · 기업공시 · 조달</td><td>즉시 발급</td></tr>
+          <tr><td class="em">해외 R&amp;D</td><td>NSF Award · CORDIS(EU) · OECD Stat</td><td>미국 과제 · EU 과제 · 과학기술지표</td><td>대부분 <b>키 없음</b></td></tr>
+          <tr><td class="em">산업·무역</td><td>관세청 무역통계 · UN Comtrade</td><td>품목별 수출입 — <b>공급망 분석의 원료</b></td><td>즉시 / 무키</td></tr>
+        </tbody>
+      </table>
+      <ul class="bullets">
+        <li>제 조사관들은 이 창구를 <b>직접 호출</b>한다 — 학습된 기억이 아니라 오늘자 원천</li>
+      </ul>
+    </section>
+
+    <section class="slide" data-sid="r7-4">
+      <div class="eyebrow">연구실 · MCP 연결</div>
+      <h2>MCP를 꽂으면 쓰던 도구가 AI의 손발이 된다</h2>
+      <div class="rule"></div>
+      <p class="lead">API가 자료 창구라면 — MCP는 <b>그 창구를 AI에 꽂는 표준 플러그</b>다</p>
+      <table class="tight">
+        <thead><tr><th style="width:17%">붙일 수 있는 것</th><th style="width:41%">예</th><th>무엇이 가능해지나</th></tr></thead>
+        <tbody>
+          <tr><td class="em">협업 도구</td><td>Slack · Teams · Notion · Google Drive</td><td>흩어진 대화·문서를 찾아 온다</td></tr>
+          <tr><td class="em">메일 · 일정</td><td>Gmail · Google Calendar</td><td>일정 확인 · 회신 초안 (발송은 사람이)</td></tr>
+          <tr><td class="em">회의</td><td class="em">tiro — 오늘 시연</td><td>회의 내용을 대화로 물어본다</td></tr>
+          <tr><td class="em">우리 업무</td><td>kordoc (한글 문서) · korean-law (법령)</td><td>2부 실습에서 각자 설치한다</td></tr>
+        </tbody>
+      </table>
+      <ul class="bullets">
+        <li>설치는 <b>플러그인 하나 붙이는 정도</b>다 — 어려운 쪽은 설치가 아니라 <b>무엇을 붙일지 고르는 것</b>이다</li>
+      </ul>
+      <div class="callout warn">사내 도구(메일·메신저·문서함) 연결은 <b>기관 보안 검토가 먼저</b>다 — 오늘 시연은 강사 개인 계정으로만 한다</div>
+    </section>
+
+    <section class="slide" data-sid="r7-5">
+      <div class="eyebrow">연구실 · MCP 실물 사례</div>
+      <h2><span class="demo">[시연]</span> Tiro — 회의를 기록해 두면 나중에 물어볼 수 있다</h2>
+      <div class="rule"></div>
+      <p class="lead">회의록을 <b>찾아 읽는</b> 대신 — <em>"그때 뭐라고 했지?"를 그냥 물어본다</em></p>
+      <div class="grid-3">
+        <div class="card"><h3>기록</h3><p>실시간 전사·번역 · 화자 분리 · 문단별 다시 듣기 — 회의 중에는 <b>대화에만 집중</b></p></div>
+        <div class="card"><h3>정리</h3><p>맥락 기반 구조화 요약 · 템플릿으로 우리 양식에 맞춘 노트 · 팀 공유</p></div>
+        <div class="card accent"><h3>연결 (MCP)</h3><p><b>노트 검색</b> 주제어로 지난 회의를 찾는다 · <b>원문 전사</b> 발언 그대로 확인 · <b>위키·팀 폴더</b>까지 함께 뒤진다</p></div>
+      </div>
+      <div class="prompt">글로벌 기술경쟁력 분석 관련해서 <span class="w">최근에 회의한 내용</span> 요약해줘</div>
+      <div class="callout">회의록이 <b>보관함</b>에서 <b>물어볼 수 있는 자료</b>로 바뀐다 — MCP를 붙이는 이유가 이것이다</div>
+      <div class="src">출처 · <a href="https://docs.tiro.ooo/ko/developers/mcp/mcp-overview" target="_blank">docs.tiro.ooo</a> — 엔드포인트 mcp.tiro.ooo/mcp (OAuth 또는 API 키), 노트·전사·위키 검색 도구 제공</div>
+    </section>
+
+    <section class="slide" data-sid="e3-2">
+      <div class="eyebrow">연구실 · 회의록 파이프라인</div>
+      <h2>녹음에서 회의록까지 — 한 줄로 이어진다</h2>
+      <div class="rule"></div>
+      <p class="lead">새 도구를 배우는 것만이 아니다 — <b>이미 쓰고 있는 도구</b>를 AI 손에 붙이는 것도 MCP가 하는 일이다</p>
+      <div class="flow">
+        <div class="step"><b>회의 녹음</b>tiro가 회의를 그대로 받아 적는다</div><span class="arrow">→</span>
+        <div class="step"><b>전사 텍스트</b>MCP로 AI에 바로 전달</div><span class="arrow">→</span>
+        <div class="step"><b>회의록 스킬</b>우리 양식대로 + [확인] 태그</div><span class="arrow">→</span>
+        <div class="step gate"><b>사람</b>결정 문구·기한 확정</div>
+      </div>
+      <table class="tight">
+        <thead><tr><th style="width:24%">단계</th><th style="width:32%">누가 하나</th><th>주의</th></tr></thead>
+        <tbody>
+          <tr><td class="em">① 녹음·전사</td><td>tiro</td><td>참석자 고지·동의 절차는 기존대로</td></tr>
+          <tr><td class="em">② 전사본 전달</td><td>MCP 연동 또는 <b>파일 저장</b></td><td>연동이 안 되면 .txt 저장으로 동일하게 진행된다</td></tr>
+          <tr><td class="em">③ 구조화</td><td>회의록 스킬</td><td>녹취에 없는 내용 생성 금지 규칙 적용</td></tr>
+          <tr><td class="em">④ 확정</td><td><b>사람</b></td><td>결정 문구·기한·민감 발언은 반드시 검토</td></tr>
+        </tbody>
+      </table>
+      <div class="callout warn">회의 녹취는 민감 자료다 — <b>규정 확인 전 비공개 회의는 반입하지 않는다</b>. 오늘 실습은 가상 녹취로만 진행한다</div>
+    </section>
+
+    <section class="slide" data-sid="r9">
+      <div class="eyebrow">연구실 · 내부 장치</div>
+      <h2>내부 장치 — 팀에게 내 관점(perspective)을 주입하는 LLM 위키(LLM Wiki)</h2>
+      <div class="rule"></div>
+      <p class="lead">팀이 <b>일반론</b>으로 쓰는 이유는 하나 — <em>내 판단 기준을 모르기 때문</em>이다</p>
+      <div class="grid-3">
+        <div class="card"><h3>무엇을 쌓나</h3><p>용어 정의 · 판단 기준 · 문체 선호 · 금지 목록 · 자주 쓰는 프레임</p></div>
+        <div class="card"><h3>어떻게 쓰이나</h3><p>모든 팀이 <b>상시 참조</b> — 조사·집필 때 내 기준이 자동 반영</p></div>
+        <div class="card accent"><h3>효과</h3><p>산출물이 점점 <b>나를 닮아간다</b> — 위임의 품질은 위임하는 글의 품질</p></div>
+      </div>
+      <div class="wiki">
+        <div class="wk head"><b>암묵지 (내 머릿속)</b><span>말로만 있던 것</span></div>
+        <div class="wk arr"><span>적는다</span></div>
+        <div class="wk head mid"><b>LLM 위키 (md 파일)</b><span>읽을 수 있고 고칠 수 있는 상태</span></div>
+        <div class="wk arr"><span>참조</span></div>
+        <div class="wk head end"><b>모든 팀</b><span>조사 · 집필 · 검수에 자동 반영</span></div>
+
+        <div class="wk ex">"소부장은 '소재·부품·장비'로 풀어 쓴다"</div>
+        <div class="wk arr sm">→</div>
+        <div class="wk ex mid">용어 사전</div>
+        <div class="wk arr sm">→</div>
+        <div class="wk ex end">초안 용어가 통일된다</div>
+
+        <div class="wk ex">"정책 제언은 실행 주체를 반드시 명시"</div>
+        <div class="wk arr sm">→</div>
+        <div class="wk ex mid">판단 기준</div>
+        <div class="wk arr sm">→</div>
+        <div class="wk ex end">제언이 구체화된다</div>
+
+        <div class="wk ex">"'~할 것으로 보인다' 같은 흐린 표현 금지"</div>
+        <div class="wk arr sm">→</div>
+        <div class="wk ex mid">금지 목록</div>
+        <div class="wk arr sm">→</div>
+        <div class="wk ex end">문장이 단정해진다</div>
+      </div>
+      <div class="callout">여러분의 첫 버전은 아까 만든 <b>CLAUDE.md 한 장</b>이다 — 여기에 스킬이 하나씩 붙으면 그것이 곧 위키가 된다</div>
+    </section>
+
+    <section class="slide" data-sid="r9-2">
+      <div class="eyebrow">연구실 · LLM 위키 구성</div>
+      <h2>LLM 위키는 이렇게 생겼다 — 두꺼워질수록 산출물이 나를 닮는다</h2>
+      <div class="rule"></div>
+      <p class="lead">거창한 시스템이 아니다 — <b>내 판단 기준을 주제별로 나눠 적어 둔 문서 묶음</b>이다</p>
+      <div class="cols" style="align-items:flex-start">
+        <div class="card" style="padding:13px 15px"><h3 style="font-size:17px">구성</h3>
+          <div class="code" style="font-size:12px;line-height:1.55;margin:2px 0 0;padding:10px 12px">wiki/
+├── 용어.md        <span class="dim">표기 통일 · 약어</span>
+├── 판단기준.md    <span class="dim">무엇을 중요하게 볼지</span>
+├── 문체.md        <span class="dim">종결형 · 금지 표현</span>
+├── 출처규율.md    <span class="dim">등급 · 인용 방식</span>
+└── 사례.md        <span class="dim">잘 된 것 · 실패한 것</span></div>
+        </div>
+        <div class="card accent" style="padding:13px 15px"><h3 style="font-size:17px">쌓이는 방식</h3>
+          <ul class="bullets tight" style="margin-top:2px;gap:6px">
+            <li>처음부터 채우지 않는다 — <b>아쉬울 때 한 줄씩</b></li>
+            <li>"이건 이렇게 써야 하는데" 느낀 순간이 기록할 시점</li>
+            <li>같은 지적을 두 번 하면 — 위키에 없는 것</li>
+            <li>팀이 늘어도 위키는 하나 — 모두 같은 기준</li>
+          </ul></div>
+      </div>
+      <table class="tight">
+        <thead><tr><th style="width:22%">위키에 적힌 한 줄</th><th style="width:38%">없을 때 산출물</th><th>있을 때 산출물</th></tr></thead>
+        <tbody>
+          <tr><td class="em">"소부장은 풀어 쓴다"</td><td>소부장·소재부품장비가 뒤섞인다</td><td>표기가 문서 전체에서 통일된다</td></tr>
+          <tr><td class="em">"제언에 실행 주체 명시"</td><td>"~가 필요하다"로 끝난다</td><td>"누가 무엇을 한다"로 쓰인다</td></tr>
+          <tr><td class="em">"흐린 표현 금지"</td><td>"~할 것으로 보인다"가 반복된다</td><td>단정하거나 근거를 붙인다</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="slide" data-sid="r9-3">
+      <div class="eyebrow">연구실 · LLM 위키 작동</div>
+      <h2>위키는 어떻게 작동하는가 — 그리고 왜 강한가</h2>
+      <div class="rule"></div>
+      <p class="lead">한 번 적은 한 줄이 <b>모든 팀·모든 문서에 매번 다시 적용</b>된다</p>
+      <table class="tight">
+        <thead><tr><th style="width:17%">언제</th><th style="width:44%">무슨 일이 일어나나</th><th>결과</th></tr></thead>
+        <tbody>
+          <tr><td class="em">요청을 받을 때</td><td>조율자가 위키를 먼저 읽고 <b>관련 항목만</b> 팀원에게 딸려 보낸다</td><td>전부가 아니라 필요한 줄만</td></tr>
+          <tr><td class="em">조사할 때</td><td>출처 규율이 적용된다 — 무엇을 근거로 인정할지</td><td>근거의 등급이 일정해진다</td></tr>
+          <tr><td class="em">집필할 때</td><td>용어·문체·금지 표현이 적용된다</td><td>표기와 어투가 통일된다</td></tr>
+          <tr><td class="em">검수할 때</td><td>판단 기준이 그대로 <b>검사 항목</b>으로 바뀐다</td><td>내가 매번 지적하던 것이 자동 검출</td></tr>
+        </tbody>
+      </table>
+      <div class="grid-3">
+        <div class="card"><h3>같은 지적을 두 번 하지 않는다</h3><p>지적한 순간 <b>한 줄로 적는다</b> — 다음부터 그 오류가 나오지 않는다</p></div>
+        <div class="card"><h3>사람이 바뀌어도 남는다</h3><p>머릿속에 있던 기준이 파일이 된다 — 인수인계가 <b>폴더 하나</b></p></div>
+        <div class="card accent"><h3>언제든 되돌릴 수 있다</h3><p>기준이 틀렸으면 그 줄만 고친다 — <b>읽고 · 고치고 · 지운다</b></p></div>
+      </div>
+      <div class="callout">강점의 정체는 단순하다 — <b>기준이 사람 머릿속이 아니라 파일에 있다</b>는 것</div>
+    </section>
+
+    <section class="slide" data-sid="r9-4">
+      <div class="eyebrow">연구실 · 위키 그래프</div>
+      <h2>위키는 목록이 아니라 그물이다 — 한 장이 선을 만든다</h2>
+      <div class="rule"></div>
+      <p class="lead">제 연구용 위키입니다 — <b>[[링크]]</b>를 적으면 그게 <em>그대로 그래프의 선이 된다</em></p>
+      <div class="cols" style="align-items:flex-start;gap:16px;grid-template-columns:1.55fr 1fr">
+        <div class="wgraph" style="margin:0">
+          <svg viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg">
+            <g class="wg-edge">
+              <line x1="250" y1="200" x2="115" y2="100"/><line x1="250" y1="200" x2="115" y2="300"/>
+              <line x1="250" y1="200" x2="250" y2="70"/><line x1="250" y1="200" x2="250" y2="333"/>
+              <line x1="250" y1="200" x2="445" y2="110"/><line x1="250" y1="200" x2="445" y2="290"/>
+              <line x1="250" y1="62" x2="450" y2="105"/><line x1="110" y1="95" x2="450" y2="105"/>
+              <line x1="450" y1="105" x2="640" y2="200"/><line x1="450" y1="295" x2="640" y2="200"/>
+              <line x1="450" y1="295" x2="630" y2="330"/><line x1="110" y1="305" x2="450" y2="295"/>
+              <line x1="630" y1="60" x2="640" y2="200"/><line x1="630" y1="60" x2="450" y2="105"/>
+            </g>
+            <g class="wg-hub"><circle cx="250" cy="200" r="44"/><text x="250" y="196">판단기준</text><text x="250" y="215" class="wg-sub">.md</text></g>
+            <g class="wg-base">
+              <circle cx="110" cy="95" r="30"/><text x="110" y="100">용어</text>
+              <circle cx="110" cy="305" r="30"/><text x="110" y="310">문체</text>
+              <circle cx="250" cy="62" r="32"/><text x="250" y="67">출처규율</text>
+              <circle cx="250" cy="340" r="27"/><text x="250" y="345">사례</text>
+            </g>
+            <g class="wg-note">
+              <circle cx="450" cy="105" r="36"/><text x="450" y="103">미션지향</text><text x="450" y="118">혁신정책</text>
+              <circle cx="450" cy="295" r="36"/><text x="450" y="293">DARPA</text><text x="450" y="308">모델</text>
+              <circle cx="630" cy="60" r="27"/><text x="630" y="65">계량서지</text>
+              <circle cx="640" cy="200" r="33"/><text x="640" y="198">기술영향</text><text x="640" y="213">평가</text>
+              <circle cx="630" cy="330" r="26"/><text x="630" y="328">R&amp;D</text><text x="630" y="341">예타</text>
+            </g>
+            <g class="wg-lone"><circle cx="700" cy="128" r="20"/><text x="700" y="126">학회</text><text x="700" y="139">메모</text></g>
+            <g class="wg-tag"><text x="700" y="166" class="wg-lone-tag">외딴 점</text></g>
+          </svg>
+        </div>
+        <div>
+          <div class="code" style="font-size:12.5px;line-height:1.6;margin:0;padding:11px 13px"><span class="dim"># DARPA 모델.md      concepts/ · 3주 전 수정</span>
+
+<b>## 한 줄로 말하면</b>
+PM 한 명에게 예산·기간·중단 권한을 몰아주는 방식
+
+<b>## 내가 매번 걸리는 지점</b>
+- 성공 사례만 세지 말 것 → <b>[[판단기준]]</b>
+  <span class="dim">(생존편향 — 심의에서 두 번 지적받음)</span>
+- "우리도 하자"엔 맥락 조건을 → <b>[[출처규율]]</b>
+
+<b>## 이어지는 곳</b>
+<b>[[미션지향 혁신정책]] [[R&amp;D 예타]]</b>
+<b>[[기술영향평가]]</b></div>
+          <ul class="bullets tight" style="margin-top:11px;gap:8px">
+            <li><b>[[대괄호]]가 곧 선이다</b> — 이 한 장이 화살표 다섯 개를 만든다</li>
+            <li><b>굵게 얽힌 곳</b>은 거듭 걸리는 기준 — 여기부터 다듬는다</li>
+            <li><b>외딴 점</b>은 적어만 두고 안 쓴 것 — 지우거나 연결한다</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-sid="r9-5">
+      <div class="eyebrow">연구실 · 위키가 도는 방식</div>
+      <h2>실제로는 이렇게 돈다</h2>
+      <div class="rule"></div>
+      <p class="lead">자료 한 편이 들어오면 — <b>요약 한 장</b>이 생기고, 그게 <b>관련 개념·인물·정책 페이지를 찾아가 고쳐 쓴다</b></p>
+      <div class="korch" style="margin:26px 0 18px">
+        <span class="ktag">오케스트레이터</span>
+        <span class="kcap">위키 사서 — 요청을 분해해 <b>원본 · 위키 · 스키마</b> 3계층에 라우팅</span>
+      </div>
+      <div class="kflow" style="margin:0 0 38px">
+        <div class="kstep on"><span class="kl">수집·검증</span><span class="kb">관심 논문 · 보고서 · 칼럼</span><span class="ks">DOI·서지 확인 → raw/</span></div>
+        <span class="karr">→</span>
+        <div class="kstep on"><span class="kl">정독</span><span class="kb">구조화 요약</span><span class="ks">sources/</span></div>
+        <span class="karr">→</span>
+        <div class="kstep dk"><span class="kl">연결</span><span class="kb">개념 · 엔티티 갱신</span><span class="ks">concepts · entities</span></div>
+        <span class="karr">→</span>
+        <div class="kstep chk"><span class="kl">✓</span><span class="kb">자가 점검</span><span class="ks">훑어 고치기</span></div>
+        <span class="karr">→</span>
+        <div class="kstep dk"><span class="kl">질의</span><span class="kb">위키가 답함</span><span class="ks">출처 병기</span></div>
+        <span class="karr">→</span>
+        <div class="kstep user"><span class="kl">★</span><span class="kb">남길지 버릴지</span><span class="ks">★ 사용자</span></div>
+      </div>
+      <div class="grid-4">
+        <div class="card"><h3>① 들어올 때 출처가 확정된다</h3><p>Dimensions·OpenAlex·Crossref로 <b>DOI·서지를 확인</b>하고 넣는다 — 들어간 뒤 <b>raw/</b>는 읽기 전용</p></div>
+        <div class="card"><h3>② 쌓이는 게 아니라 자란다</h3><p>요약만 더해지는 게 아니다 — 자료 하나가 <b>기존 페이지 여러 장을 고쳐</b> 놓는다</p></div>
+        <div class="card"><h3>③ 질문한 답도 자산이 된다</h3><p>좋은 답은 종합 페이지로 남아 — <b>다음엔 다시 찾지 않는다</b></p></div>
+        <div class="card accent"><h3>④ 언제 기준인지 적는다</h3><p>"예산 33억 달러"에 <b>(2024년 기준)</b>을 붙여 둔다 — 안 붙이면 <b>3년 뒤에도 그대로</b> 인용된다</p></div>
+      </div>
+      <div class="callout" style="margin-top:34px"><b>돌수록 싸진다</b> — 한 번 돈 만큼 자산이 남아, 다음 질문이 더 빨라진다</div>
+    </section>
+
+    <section class="slide" data-sid="r9-6">
+      <div class="eyebrow">연구실 · 위키 마무리</div>
+      <h2>왜 이게 'AI 시대에 일하는 법'인가</h2>
+      <div class="rule"></div>
+      <p class="lead">도구가 아니라 <b>원칙</b>이다 — 이 위키는 오늘 배운 것을 <em>그대로 실천한 것</em>뿐이다</p>
+      <table class="tight">
+        <thead><tr><th style="width:26%">원칙</th><th style="width:48%">위키에서 어떻게 지켜지나</th><th>오늘 어디서 봤나</th></tr></thead>
+        <tbody>
+          <tr><td class="em">① 출처를 강제한다</td><td>주장마다 <b>(출처: raw/파일명)</b> · 못 확인한 건 <b>[출처 미확인]</b></td><td>환각 4원칙 ②</td></tr>
+          <tr><td class="em">② 만드는 일과 점검을 나눈다</td><td>넣는 일 · 묻는 일 · 훑어 고치는 일을 <b>따로 돌린다</b></td><td>환각 4원칙 ④ · 검수관</td></tr>
+          <tr><td class="em">③ 상태를 외부화한다</td><td>대화가 아니라 <b>파일</b>에 남아 — <b>복리로 쌓인다</b></td><td>기억의 한계 · CLAUDE.md</td></tr>
+          <tr><td class="em">④ 표준 계보를 따른다</td><td>구글이 낸 <b>OKF</b> 규격을 지킨다 — 이 방식을 표준으로 굳힌 것</td><td>이 절 전체</td></tr>
+        </tbody>
+      </table>
+      <div class="callout"><b>"AI를 잘 쓰는 사람"</b>이 아니라 <b>"지식을 이렇게 관리하는 사람"</b>이 오래 간다</div>
+      <div class="src">출처 · Google Cloud, <a href="https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing" target="_blank">Open Knowledge Format v0.1</a>(2026.6.12) — YAML 머리말이 붙은 마크다운 폴더, 벤더 중립. Karpathy의 LLM Wiki 패턴을 표준화한 규격</div>
+    </section>
+
+    <section class="slide" data-sid="r9-7">
+      <div class="eyebrow">연구실 · 실제 사용법</div>
+      <h2>그래서 실제로 이렇게 씁니다</h2>
+      <div class="rule"></div>
+      <p class="lead">특별한 앱이 없다 — <b>말로 시키면 된다</b></p>
+      <table>
+        <thead><tr><th style="width:18%">언제</th><th style="width:36%">내가 하는 말</th><th>위키에서 벌어지는 일</th></tr></thead>
+        <tbody>
+          <tr><td class="em">새 자료를 받았을 때</td><td class="em">"이 보고서 적용해줘"</td><td>요약 1장 + <b>관련 페이지 7~15개 갱신</b></td></tr>
+          <tr><td class="em">보고서를 쓸 때</td><td class="em">"고영향 AI 규제, 위키 기준으로 정리해줘"</td><td>원문 더미가 아니라 <b>위키에서 답</b> — 출처 병기</td></tr>
+          <tr><td class="em">좋은 답이 나왔을 때</td><td class="em">"이 답 저장해줘"</td><td>종합 페이지로 남아 — <b>다시 찾지 않는다</b></td></tr>
+          <tr><td class="em">한 달에 한 번</td><td class="em">"한 번 훑어 고쳐줘"</td><td>모순·중복·끊긴 링크 → <b>내가 승인한 것만</b> 반영</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">명령어를 외울 필요가 없다 — <b>"적용해줘"처럼 내 말로 부르면 된다</b></div>
+    </section>
+
+    <section class="slide divider" data-sid="kit1">
+      <span class="wm">03</span>
+      <div class="modtag">PART 1 · 해부</div>
+      <h2>정책연구 플러그인은 어떻게 작동하는가? — 함께 열어 본다</h2>
+      <p class="sub">설치 · 역할 · 호출 구조 · 스킬 · 규칙 · 검증 결과</p>
+    </section>
+
+    <section class="slide" data-sid="kitI">
+      <div class="eyebrow">해부 · 사전 설치</div>
+      <h2>설명에 앞서 설치부터 — 지금 함께 진행한다</h2>
+      <div class="rule"></div>
+      <p class="lead">설치 경로는 <b>두 가지</b>다 — 명령이 듣지 않으면 <em>설정 화면</em>에서 직접 추가하면 된다</p>
+      <div class="cols">
+        <div class="card"><h3>방법 A · 명령으로</h3><p>데스크톱 앱 입력창에 두 줄을 차례로 입력한다</p>
+          <div class="prompt" style="font-size:14.5px;margin:4px 0 0">/plugin marketplace add parkjui92/policy-research-kit
+/plugin install policy-research-kit@policy-research-kit</div>
+        </div>
+        <div class="card accent"><h3>방법 B · 설정 화면에서 <span class="pill">권장</span></h3>
+          <ul class="bullets tight" style="margin-top:2px">
+            <li>데스크톱 앱 <b>설정 → 사용자 지정 → 플러그인</b></li>
+            <li><b>마켓플레이스 추가</b>에 저장소 입력<br><span class="eg">parkjui92/policy-research-kit</span></li>
+            <li>목록에서 <b>policy-research-kit → 설치</b></li>
+            <li>명령이 인식되지 않을 때 <b>확실한 경로</b>다</li>
+          </ul></div>
+      </div>
+      <ul class="bullets">
+        <li>설치가 끝나면 <b>재시작</b>(약 10초)</li>
+        <li><b>✅ 성공 판정</b> — 재시작 후 "설치된 플러그인이 무엇을 할 수 있는지 알려줘"라고 물으면 다섯 팀원이 소개된다</li>
+      </ul>
+      <div class="callout">이번 설치로 확보된 것 — <b>에이전트 5명 + 스킬 6종 + 관문 2개</b></div>
+    </section>
+
+    <section class="slide" data-sid="s21">
+      <div class="eyebrow">해부 ② 누가 있고, 어떻게 부르나</div>
+      <h2>구성 ① 역할을 나누고, 사이에 관문을 둔다</h2>
+      <div class="rule"></div>
+      <div class="flow">
+        <div class="step"><b>설계자</b>목차 · 연구질문</div><span class="arrow">→</span>
+        <div class="step gate"><b>! 설계 점검</b>검수관 모드 1</div><span class="arrow">→</span>
+        <div class="step gate"><b>★ 목차 승인</b>사용자가 방향 결정</div><span class="arrow">→</span>
+        <div class="step"><b>조사관 → 집필가</b>근거 수집 · 집필</div><span class="arrow">→</span>
+        <div class="step gate"><b>! 5축 검수</b>출처 실재 확인</div><span class="arrow">→</span>
+        <div class="step hi"><b>변환가</b>.hwpx 산출</div>
+      </div>
+      <ul class="bullets">
+        <li>사람이 말을 거는 창구는 <b>하나</b>다 — 여섯 명을 외울 필요 없이 <b>조율자에게만</b> 말한다</li>
+        <li>검수관은 <b>쓰지 않고 검사만</b>(읽기 전용) — 자기 글 자기 통과를 구조로 차단</li>
+      </ul>
+      <table class="tight">
+        <thead><tr><th style="width:20%">역할 (agents/*.md)</th><th style="width:36%">맡는 일</th><th>넘기는 것 / 못 하는 것</th></tr></thead>
+        <tbody>
+          <tr><td class="em">조율자 <span class="pill">유일한 창구</span></td><td>한 마디를 받아 <b>다섯 팀원을 순서대로 호출</b>한다</td><td>사람이 말을 거는 곳은 여기 하나뿐이다</td></tr>
+          <tr><td class="em">설계자</td><td>연구질문·목차·분석틀 설계</td><td>집필은 하지 않는다 — 방향만 잡는다</td></tr>
+          <tr><td class="em">조사관</td><td>1차 자료 수집 · 출처 URL 기록</td><td>해석·주장 금지 — 사실과 출처만</td></tr>
+          <tr><td class="em">집필가</td><td>논증 구조로 본문 작성</td><td>조사노트에 없는 사실 생성 금지</td></tr>
+          <tr><td class="em">검수관 <span class="pill">두 번 등판</span></td><td>설계 관문 + 초안 검수 · 출처 실재 확인</td><td><b>파일 수정 권한 없음</b>(읽기 전용)</td></tr>
+          <tr><td class="em">변환가</td><td>.hwpx 조판 · 표 개수 대조 검증</td><td>내용 변경 금지 — 형식만</td></tr>
+        </tbody>
+      </table>
+      <ul class="bullets" style="display:none">
+        <li><b>★목차 승인</b> = 방향 전환이 가장 싼 시점에 사람이 개입 — "3장을 해외사례 중심으로" 한마디면 다시 짠다</li>
+      </ul>
+      <div class="src">공개 저장소: <a href="https://github.com/parkjui92/policy-research-kit" target="_blank">github.com/parkjui92/policy-research-kit</a> (MIT)</div>
+    </section>
+
+    <section class="slide" data-sid="kit2">
+      <div class="eyebrow">해부 ④ 팀원의 실체</div>
+      <h2>구성 ② 팀원 한 명을 열어 보면 — 코드가 아니라 업무기술서</h2>
+      <div class="rule"></div>
+      <div class="prompt">방금 설치한 정책연구팀 플러그인에서 조사관 에이전트 파일을 열어서 그대로 보여줘</div>
+      <div class="code" style="font-size:13px"><span class="dim"># 여러분 화면에 표시되는 것 — .claude/agents/researcher-kr.md (발췌)</span>
+---
+name: researcher-kr
+description: 국내 동향을 조사하는 조사관. 1차 자료를 수집한다.
+tools: WebSearch, WebFetch, Write        <span class="dim"># 쥐여줄 도구</span>
+---
+너는 국내 동향 조사관이다.
+## 검색 전략 — 기관을 앵커로 직접 노린다: 과기정통부, KISTEP, NTIS…
+## 원칙 — 출처 없는 주장 금지. 불확실하면 "[출처 미확인]"으로 표기한다.
+## 출력 — research-notes-kr.md 에 "요약 — 출처:URL" 형식으로 저장.</div>
+      <ul class="bullets">
+        <li>윗부분(설정)이 <b>권한과 신원</b>, 아랫부분이 업무 지시서 — 팀원 한 명의 전부이다</li>
+        <li>그래서 팀 확장 = <b>파일 추가</b>, 업무 변경 = 문장 수정, 인수인계 = 파일 전달이다</li>
+      </ul>
+    </section>
+
+    <section class="slide" data-sid="kit2-2">
+      <div class="eyebrow">해부 ⑤ 어디에 무엇이 있나</div>
+      <h2>전부 열어 볼 수 있다 — 킷(Kit)의 폴더 구조</h2>
+      <div class="rule"></div>
+      <div class="code">policy-research-kit/
+├── <span class="p">agents/</span>     <span class="dim">← 팀원의 업무기술서</span>
+│              <span class="dim">designer · investigator · writer · reviewer · hwpx-exporter</span>
+├── <span class="p">skills/</span>     <span class="dim">← 절차서</span>
+│              <span class="dim">오케스트레이터 · 설계 · 조사 · 집필 · 검수 · 한글 변환</span>
+├── <span class="p">examples/</span>   <span class="dim">← 전 과정 산출물 실물</span>
+├── <span class="p">docs/</span>       <span class="dim">← 설계 문서 · 실측 기록</span>
+└── <span class="p">README.md</span>   <span class="dim">← 설치와 사용법</span></div>
+      <ul class="bullets">
+        <li><b>블랙박스가 아니다</b> — 검수 기준·조사 규칙·문체 원칙까지 전부 읽고 고칠 수 있는 문서</li>
+        <li>"AI 도구를 쓴다"와 <b>"AI 팀의 취업규칙을 직접 고친다"</b>의 차이</li>
+        <li>열람 가능성이 <b>신뢰의 근거</b>이자 개조의 입구다</li>
+        <li>2부 실습 1의 마지막 과제가 바로 <b>이 폴더 열어보기</b>다</li>
+      </ul>
+    </section>
+
+    <section class="slide" data-sid="h5">
+      <div class="eyebrow">해부 ⑥ 스킬 — 절차</div>
+      <h2>스킬 — 무엇을 어떤 순서로 할지가 적혀 있다</h2>
+      <div class="rule"></div>
+      <p class="lead">스킬은 <b>작업 절차서(SOP)</b>다 — 부를 때 꺼내 쓰는 문서이고, 안에는 단계별 규격이 들어 있다</p>
+      <table>
+        <thead><tr><th style="width:16%">스킬</th><th style="width:38%">무엇을 하는가</th><th>안에 적혀 있는 것</th></tr></thead>
+        <tbody>
+          <tr><td class="em">연구설계</td><td>목차·연구질문·분석틀을 먼저 짠다</td><td>장별 분량 배분 · 논증 순서 · 필수 포함 항목</td></tr>
+          <tr><td class="em">근거조사</td><td>1차 자료를 찾고 출처를 기록한다</td><td>검색 시작점(기관 사이트) · 출처 등급 기준 · 기록 양식</td></tr>
+          <tr><td class="em">집필</td><td>조사 결과를 논증으로 엮는다</td><td>문단 구조(주장→근거→함의) · 문체 · 인용 표기</td></tr>
+          <tr><td class="em">검수</td><td>다섯 관점으로 초안을 검사한다</td><td>논리·근거·정책 타당성·정량·교열 점검표</td></tr>
+          <tr><td class="em">변환</td><td>한글 문서로 조판한다</td><td>서식 규격 · 표 처리 · 각주 방식</td></tr>
+          <tr><td class="em">브리프 압축</td><td>긴 보고서를 짧은 브리프로 줄인다</td><td>두괄식 원칙 · 근거 보존 기준 · 분량 규격</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">절차를 <b>글로 적어 두면</b> 담당자가 바뀌어도 같은 순서로 일한다 — 이것이 개인 숙련과 조직 공정의 차이다</div>
+    </section>
+
+    <section class="slide" data-sid="h5-2">
+      <div class="eyebrow">해부 ⑥′ 규칙 — 규율</div>
+      <h2>규칙 — 무엇을 하면 안 되는지가 문장으로 박혀 있다</h2>
+      <div class="rule"></div>
+      <p class="lead">절차가 <b>"무엇을 하는가"</b>라면, 규칙은 <b>"무엇을 하면 안 되는가"</b>다 — 검증의 실체가 여기에 있다</p>
+      <table>
+        <thead><tr><th style="width:14%">규칙</th><th style="width:30%">무엇을 막는가</th><th>킷 파일에 적힌 문장 그대로</th></tr></thead>
+        <tbody>
+          <tr><td class="em">출처 등급표</td><td>블로그 한 건으로 단정하는 것</td><td>"언론·블로그 — 1차 출처로 가는 단서로만. <b>단독 근거 금지</b>"</td></tr>
+          <tr><td class="em">원출처 추적</td><td>받아쓰기 기사를 근거로 쓰는 것</td><td>"수치를 보면 그 수치의 <b>원(原) 출처를 찾아 1차로 교체</b>한다"</td></tr>
+          <tr><td class="em">수치 표기</td><td>기준이 빠진 숫자</td><td>"수치는 <b>기준연도·정의·단위·비교군</b>을 함께 적는다"</td></tr>
+          <tr><td class="em">상충 처리</td><td>불리한 자료를 지우는 것</td><td>"다르면 <b>삭제하지 않는다</b> — 둘 다 남기고 차이의 이유를 메모한다"</td></tr>
+          <tr><td class="em">미확보 표기</td><td>추정으로 빈칸을 메우는 것</td><td>"못 찾은 것은 <b>[미확보]</b>로 명시. 빈칸을 지어내지 않는다"</td></tr>
+          <tr><td class="em">읽기 전용</td><td>쓴 사람이 자기 글을 통과시키는 것</td><td>"조사만 한다(<b>READ-ONLY</b>). 본문 집필·파일 개정은 하지 않는다"</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">규칙은 두 군데에 나뉘어 적힌다 — <b>스킬(SKILL.md)</b>에는 기준표와 절차가, <b>에이전트 파일(agents/*.md)</b>에는 그 팀원의 권한과 금지가</div>
+    </section>
+
+    <section class="slide" data-sid="h6">
+      <div class="eyebrow">해부 ⑦ 무엇이 다른가</div>
+      <h2>무엇이 '질적으로' 다른가</h2>
+      <div class="rule"></div>
+      <p class="lead">'빠르다 · 많다' 같은 <b>양</b>이 아니라 '믿을 수 있다 · 일정하다' 같은 질을 만드는 네 가지.</p>
+      <table>
+        <thead><tr><th style="width:17%">기둥</th><th style="width:30%">한 줄</th><th style="width:17%">만드는 것</th><th>없으면 이렇게 된다</th></tr></thead>
+        <tbody>
+          <tr><td class="em">① 자동 발동</td><td>키워드 한 번에 팀이 자동 호출된다</td><td>재현성</td><td>매번 길게 다시 설명 — 사람마다 품질이 다름</td></tr>
+          <tr><td class="em">② 역할 분업</td><td>쓰는 머리와 의심하는 머리를 분리</td><td>전문성</td><td>한 명이 다 하다 <b>자기 글을 자기가 통과</b></td></tr>
+          <tr><td class="em">③ 2단계 검문소</td><td>집필 前 설계게이트 + 집필 後 초안검수</td><td>자기검증 함정 탈출</td><td>잘못된 구조로 끝까지 쓰고 나서 후회</td></tr>
+          <tr><td class="em">④ 누적 학습</td><td>교훈을 기록해 다음 작업에 내장</td><td>갈수록 향상</td><td>같은 실수를 <b>매달 반복</b></td></tr>
+        </tbody>
+      </table>
+      <div class="callout">차이는 <b>양이 아니라 질</b>이다 — 더 빨리 많이가 아니라, 같은 품질이 매번 나오고 틀린 것이 걸러진다 이것이 개인의 숙련과 조직의 공정을 가르는 지점이다</div>
+    </section>
+
+    <section class="slide" data-sid="s19">
+      <div class="eyebrow">해부 · 왜 이렇게 만들었나</div>
+      <h2>동향조사의 진짜 병목은 수집이 아니라 검증이다</h2>
+      <div class="rule"></div>
+      <p class="lead">자료를 <b>찾는 데</b>는 몇 분이면 된다 — 시간이 새는 곳은 그 다음의 <em>검증 노동</em>이다</p>
+      <div class="hexa">
+        <div class="hx"><b>원문 찾아가기</b><span>인용의 실제 출처까지</span></div>
+        <div class="hx"><b>수치 대조</b><span>기사 vs 원자료</span></div>
+        <div class="hx"><b>재인용 가려내기</b><span>같은 보도자료 받아쓰기</span></div>
+        <div class="hx"><b>개정·철회 확인</b><span>지금도 유효한가</span></div>
+        <div class="hx"><b>출처 편향 점검</b><span>한쪽 자료만 보고 있지 않은가</span></div>
+        <div class="hx"><b>보고 형식 정리</b><span>인용 양식·각주 통일</span></div>
+      </div>
+      <table class="tight" style="margin-top:2px">
+        <thead><tr><th style="width:26%">손이 가던 일</th><th>지금은 무엇이 대신하나</th></tr></thead>
+        <tbody>
+          <tr><td class="em">원문 찾아가기</td><td>조사관이 기사 속 수치를 <b>원(原) 출처로 교체</b>한다</td></tr>
+          <tr><td class="em">수치 대조</td><td>기준연도·정의·단위를 <b>함께 적게</b> 해 대조 자체를 없앤다</td></tr>
+          <tr><td class="em">재인용 가려내기</td><td>언론·블로그는 <b>단독 근거로 쓰지 못한다</b></td></tr>
+          <tr><td class="em">개정·철회 확인</td><td>확인 못 한 것은 <b>[미확보]</b>로 남아 검수에서 걸린다</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">이 여섯 가지가 <b>시간을 먹는 진짜 일</b>이다 — 앞에서 본 규칙 문장들이 이것을 사람 대신 지킨다</div>
+    </section>
+
+    <section class="slide" data-sid="h6-2">
+      <div class="eyebrow">해부 ⑧ 무엇이 남나</div>
+      <h2>판정·근거·검수가 전부 파일로 남는다</h2>
+      <div class="rule"></div>
+      <p class="lead">브리프 한 편이 만들어진 <b>전 과정의 산출물 사슬</b> — 킷의 examples 폴더에 실물이 들어 있다</p>
+      <div class="flow">
+        <div class="step"><b>01 연구설계</b>design.md</div><span class="arrow">→</span>
+        <div class="step gate"><b>02 관문① 판정문</b>design_gate.md</div><span class="arrow">→</span>
+        <div class="step"><b>03 근거 장부</b>evidence.md</div><span class="arrow">→</span>
+        <div class="step"><b>04 초안</b>brief.md</div><span class="arrow">→</span>
+        <div class="step gate"><b>05 관문② 검수서</b>review.md</div><span class="arrow">→</span>
+        <div class="step hi"><b>06 최종</b>brief.hwpx</div>
+      </div>
+      <ul class="bullets">
+        <li>어느 수치가 <b>어느 근거에서 왔는지</b>, 검수가 무엇을 지적했는지 추적 가능하다</li>
+        <li>최종본만 남는 작업이 아니라 <b>과정이 남는 공정</b> — 감사(監査) 대응이 가능한 문서 생산</li>
+        <li>인수인계 · 재현 · 책임 소명 — 공공기관 문서에 필요한 성질이 <b>부산물로 따라온다</b></li>
+      </ul>
+      <div class="foot"><div class="fi"><span class="fm">용어</span><span class="fd"><b>근거 장부(evidence)</b> — 본문에 쓰인 모든 수치·주장의 출처를 모아 둔 파일. 본문과 분리 보관되어 사후 검증의 기준이 된다</span></div></div>
+    </section>
+
+    <section class="slide" data-sid="h7">
+      <div class="eyebrow">해부 ⑨ 실제 결과</div>
+      <h2>같은 모델, 같은 요청 — 공정이 다르면 오류가 0이 된다</h2>
+      <div class="rule"></div>
+      <p class="lead">같은 요청을 <b>순정 AI 단독</b>과 검증 팀에 각각 주고, 제3자가 <em>인용 URL을 전수 열람</em>해 감사한 실측이다</p>
+      <table>
+        <thead><tr><th style="width:20%">감사 항목</th><th style="width:40%">순정 AI 단독</th><th>검증 팀 (킷)</th></tr></thead>
+        <tbody>
+          <tr><td class="em">수치·귀속 오류</td><td>2건 + 연도 혼입 1건 — <b>전량 확정 어조</b></td><td class="em">0건</td></tr>
+          <tr><td class="em">출처 부착률</td><td>60%</td><td class="em">100% — 전 주장 인라인</td></tr>
+          <tr><td class="em">작성 중 원문 열람</td><td><b>0회</b> — 검색 요약만으로 인용</td><td class="em">핵심 수치 전건 확인 후 인용</td></tr>
+          <tr><td class="em">과정 기록</td><td>본문 파일 1개</td><td class="em">설계·판정·근거·검수 등 5종</td></tr>
+          <tr><td class="em">문장·구성 품질</td><td>유려함·맥락의 폭에서 <b>우위</b></td><td>골격은 명료 · 문장은 담백</td></tr>
+        </tbody>
+      </table>
+      <div class="callout warn">문체는 규칙을 적어 두면 따라온다 — 되돌릴 수 없는 것은 <b>틀린 숫자</b> 쪽이다</div>
+      <div class="src">출처 · 공개 감사 기록: policy-research-kit/docs/vanilla-vs-kit.md — 동일 요청·동일 모델, URL 전수 판정표와 프롬프트 공개(재현 가능)</div>
+    </section>
+
+    <section class="slide" data-sid="h8">
+      <div class="eyebrow">해부 ⑩ 만든 사람들도</div>
+      <h2>만든 사람들도 같은 구조로 쓴다</h2>
+      <div class="rule"></div>
+      <div class="quotes">
+        <div class="qt"><p>"Claude가 뭔가 잘못하면 <b>CLAUDE.md에 적어 둬서</b> 다음엔 그러지 않게 한다"</p>
+          <span>보리스 처니 — Claude Code 창시자 (2026.1)</span></div>
+        <div class="qt"><p>"에이전트가 실수하는 것을 발견할 때마다, <b>다시는 그 실수를 하지 않도록 해법을 엔지니어링</b>한다"</p>
+          <span>미첼 하시모토 — HashiCorp 공동창업자 (2026.2) · 이 실천에 '하네스 엔지니어링'이라 이름 붙였다</span></div>
+        <div class="qt"><p>"에이전틱 패턴의 첫째는 <b>리플렉션</b> — 만든 것을 비평자가 다시 보게 하는 구조다"</p>
+          <span>앤드류 응 — 데모와 실전을 가르는 것은 오류 분석과 평가 규율</span></div>
+        <div class="qt"><p>"자동 검증이 없으면 에이전트는 <b>성공을 허위 보고</b>한다"</p>
+          <span>사이먼 윌리슨 — AI 시대에 테스트·QA는 더 중요해진다</span></div>
+      </div>
+      <div class="callout">서로 다른 자리에 있는 사람들이 <b>같은 결론</b>에 도달했다 — 도구를 잘 아는 사람일수록 <b>구조에 기댄다</b></div>
+    </section>
+
+    <section class="slide" data-sid="e0">
+      <div class="eyebrow">생태계 · 왜 알아야 하나</div>
+      <h2>왜 깃허브를 알아야 하는가 — 개발자 이야기가 아니다</h2>
+      <div class="rule"></div>
+      <p class="lead">코드를 한 줄도 안 써도 알아야 하는 이유는 하나다 — <b>오늘 만든 파일들이 거기서 산다</b></p>
+      <table class="tight">
+        <thead><tr><th style="width:24%">알아야 하는 이유</th><th style="width:40%">오늘 이미 겪은 것</th><th>알면 달라지는 것</th></tr></thead>
+        <tbody>
+          <tr><td class="em">도구가 거기 있다</td><td>kordoc · korean-law · 정책연구팀 <b>전부 깃허브에서</b> 가져왔다</td><td>필요한 도구를 <b>직접 찾아</b> 쓴다</td></tr>
+          <tr><td class="em">남의 것을 뜯어본다</td><td>팀원 파일·스킬·규칙을 <b>열어서</b> 읽었다</td><td>잘 만든 것을 보고 <b>내 것을 고친다</b></td></tr>
+          <tr><td class="em">내 것을 남긴다</td><td>CLAUDE.md와 스킬을 <b>파일로</b> 만들었다</td><td>개인 노하우가 <b>부서 자산</b>이 된다</td></tr>
+          <tr><td class="em">바뀐 것이 보인다</td><td>규칙을 고칠 때마다 <b>버전</b>이 생겼다</td><td>누가 언제 왜 고쳤는지가 <b>남는다</b></td></tr>
+        </tbody>
+      </table>
+      <ul class="bullets">
+        <li><b>안 해도 되는 것</b> — 코드 작성 · 명령어 암기 · 전체 공개 <span class="note">비공개 저장소로 시작하면 된다</span></li>
+      </ul>
+      <div class="callout">오늘 필요한 것은 <b>읽기</b>뿐이다 — 올리는 것은 사무실에서 천천히 해도 늦지 않다</div>
+    </section>
+
+    <section class="slide" data-sid="e1">
+      <div class="eyebrow">생태계 · 깃허브의 유래</div>
+      <h2>GitHub는 불편에서 태어났다 — 그리고 일하는 방식이 됐다</h2>
+      <div class="rule"></div>
+      <p class="lead">세상에서 가장 널리 쓰이는 협업 도구는 — <em>협업 도구를 빼앗긴 사람</em>이 만들었다</p>
+      <div class="flow">
+        <div class="step"><b>2005 · git 탄생</b>쓰던 도구의 라이선스가 끊기자 대체품을 직접 만들었다<span class="dim">혼자 · 커널 개발용</span></div><span class="arrow">→</span>
+        <div class="step"><b>2008 · GitHub</b>저장소를 웹에 올려 같이 보는 서비스 · 같은 해 PR 등장<span class="dim">스타트업으로 시작</span></div><span class="arrow">→</span>
+        <div class="step"><b>2018 · 인수</b>도구가 인프라가 됐다<span class="dim">사실상의 표준</span></div><span class="arrow">→</span>
+        <div class="step hi"><b>오늘</b>이용자 1억 8천만 명 · 저장소 6억 개 이상<span class="dim">매달 수천만 건의 변경 제안이 합쳐진다</span></div>
+      </div>
+      <ul class="bullets">
+        <li>git이 푼 문제는 '저장'이 아니다 — <b>여럿이 같은 문서를 동시에 고치는 문제</b>였다 <span class="note">그래서 코드가 아닌 규칙·문서에도 그대로 쓰인다</span></li>
+        <li>우리 이야기와 정확히 겹친다 — <b>합치는 규칙이 먼저</b>고, 도구는 그 뒤다</li>
+      </ul>
+      <div class="callout">개인의 불편에서 시작한 것이 <b>전 세계가 일하는 방식</b>이 됐다 — 오늘 우리가 만드는 파일도 같은 경로를 탈 수 있다</div>
+      <div class="src">출처 · GitHub Blog "Git turns 20"(2025.4) · GitHub Octoverse(2025.10) — 수치는 발표 기준</div>
+    </section>
+
+    <section class="slide" data-sid="e1-2">
+      <div class="eyebrow">생태계 · 협업의 문법</div>
+      <h2>깃 사용법은 여섯 단어면 충분하다</h2>
+      <div class="rule"></div>
+      <p class="lead">깃이 붙드는 것은 파일이 아니라 <b>바뀐 줄</b>이다 — 그래서 누가 무엇을 왜 바꿨는지가 남는다</p>
+      <div class="flow">
+        <div class="step"><b>① 이슈</b>문제·요청을 글로 남긴다</div><span class="arrow">→</span>
+        <div class="step"><b>② 브랜치</b>원본을 두고 사본에서 작업</div><span class="arrow">→</span>
+        <div class="step"><b>③ 커밋</b>바뀐 줄을 이유와 함께 저장</div><span class="arrow">→</span>
+        <div class="step"><b>④ 푸시</b>내 작업을 올린다</div><span class="arrow">→</span>
+        <div class="step gate"><b>⑤ PR</b>합쳐 달라고 요청 · 여기서 리뷰</div><span class="arrow">→</span>
+        <div class="step hi"><b>⑥ 머지</b>본문에 반영</div>
+      </div>
+      <table class="tight">
+        <thead><tr><th style="width:20%">우리 업무로 옮기면</th><th style="width:38%">지금 방식</th><th>깃허브 방식</th></tr></thead>
+        <tbody>
+          <tr><td class="em">수정 요청</td><td>메신저·구두로 "이거 좀 고쳐 주세요"</td><td><b>이슈</b>로 남는다 — 누가 언제 무엇을 요청했는지</td></tr>
+          <tr><td class="em">동시 작업</td><td>파일명에 최종·최종2·진짜최종</td><td><b>브랜치</b>로 나눠 작업하고 합친다</td></tr>
+          <tr><td class="em">검토</td><td>메일로 주고받으며 의견 취합</td><td><b>PR</b>에서 바뀐 줄 옆에 코멘트</td></tr>
+          <tr><td class="em">되돌리기</td><td>백업 폴더를 뒤진다</td><td>어느 시점으로든 <b>한 번에</b></td></tr>
+        </tbody>
+      </table>
+      <div class="callout">코드 얘기가 아니다 — <b>규칙·절차·문서를 함께 고쳐 나가는 방식</b>이다. 우리가 만든 md 파일들이 바로 그 대상이다</div>
+    </section>
+
+    <section class="slide" data-sid="e1-2c">
+      <div class="eyebrow">생태계 · 이미 하던 일</div>
+      <h2>"v최종·v진짜최종"은 무엇이었나?</h2>
+      <div class="rule"></div>
+      <p class="lead">우리가 <b>이미 하고 있던 일</b>을 도구가 대신 해주는 것뿐이다</p>
+      <div class="vmap">
+        <div class="vold">보고서_최종.hwp</div><div class="var">→</div><div class="vnew">커밋 1</div>
+        <div class="vold">보고서_최종_v2.hwp</div><div class="var">→</div><div class="vnew">커밋 2</div>
+        <div class="vold">보고서_진짜최종.hwp</div><div class="var">→</div><div class="vnew">커밋 3</div>
+        <div class="vold">어느 게 진짜인지 모름</div><div class="var">→</div><div class="vnew"><span class="cmd">git log</span>에 <b>왜 바꿨는지</b>가 남음</div>
+        <div class="vold">무엇이 바뀌었는지 눈으로 대조</div><div class="var">→</div><div class="vnew"><span class="cmd">git diff</span>로 <b>바뀐 줄만</b> 본다</div>
+        <div class="vold">되돌리기 = 불가능</div><div class="var">→</div><div class="vnew"><b>어느 시점으로든</b> 복귀</div>
+      </div>
+      <div class="vclose">폴더 관리를 자동화·체계화한 것 — <b>새 개념이 아니다</b></div>
+    </section>
+
+    <section class="slide" data-sid="e1-2b">
+      <div class="eyebrow">생태계 · 무엇이 바뀌었나</div>
+      <h2>디프(diff) — 바뀐 줄만 빨강·초록으로 뽑아 준다</h2>
+      <div class="rule"></div>
+      <p class="lead">개정 전후본을 나란히 놓고 눈으로 찾지 않는다 — <b>바뀐 줄만 골라 주고, 바뀐 줄만 보고 판단하면 된다</b></p>
+      <div class="code" style="font-size:14.5px;line-height:1.7"><span class="dim">검수규칙.md — 어제 → 오늘</span>
+<span style="color:#B3261E">−  핵심 수치는 출처를 붙인다</span>
+<span style="color:#1E7A4C">+  핵심 수치는 <b>1차 출처</b>를 붙인다</span>
+<span style="color:#1E7A4C">+  확인 못 한 수치는 [보강 필요]로 남긴다</span>
+   그 밖의 줄은 그대로 <span class="dim">— 바뀌지 않은 것은 보여주지 않는다</span></div>
+      <table class="tight">
+        <thead><tr><th style="width:26%">이럴 때</th><th style="width:30%">이렇게 친다</th><th>보여주는 것</th></tr></thead>
+        <tbody>
+          <tr><td class="em">아직 저장 안 한 변경</td><td><span class="cmd">git diff</span></td><td>지금 고친 줄</td></tr>
+          <tr><td class="em">이 파일의 변경 내력</td><td><span class="cmd">git log -p 파일명</span></td><td>그 파일이 바뀌어 온 전 과정</td></tr>
+        </tbody>
+      </table>
+      <div class="prompt">어제 버전이랑 <span class="w">뭐가 달라졌는지</span> 보여줘 <span class="dim">— 명령을 몰라도 이렇게 말하면 된다</span></div>
+      <ul class="bullets">
+        <li>검토 의견도 달라진다 — "3쪽 두 번째 문단 말인데요" 대신 <b>바뀐 그 줄 옆에</b> 코멘트를 단다</li>
+        <li>줄마다 <b>사람·시각·이유</b>가 남고, 되돌릴 때도 <b>그 줄만</b> 골라 되돌린다</li>
+      </ul>
+    </section>
+
+    <section class="slide" data-sid="e2">
+      <div class="eyebrow">생태계 · 사례 ① kordoc</div>
+      <h2>사례 ① kordoc — 깃허브에서 바로 가져다 쓴다</h2>
+      <div class="rule"></div>
+      <p class="lead">먼저 <b>저장소를 열어 보고</b> — 거기 적힌 대로 설치한다 <span class="pill">MIT</span></p>
+      <div class="prompt">github.com/chrisryugj/kordoc 저장소를 열어서 <span class="w">README에 적힌 설치 방법</span>대로 설치해줘
+<span class="dim">→ 막히면: /plugin marketplace add chrisryugj/kordoc</span></div>
+      <div class="grid-3">
+        <div class="card"><h3>어디서 오나</h3><p><a href="https://github.com/chrisryugj/kordoc" target="_blank">github.com/chrisryugj/kordoc</a> — 코드·문서·이슈가 전부 공개돼 있다</p></div>
+        <div class="card"><h3>무엇을 하나</h3><p>.hwp·.hwpx·PDF·엑셀을 읽어 마크다운으로 · <b>병합된 표까지 복원</b> · 신구대조 · 양식 채우기</p></div>
+        <div class="card accent"><h3>우리 업무 접점</h3><p>매월 브리핑 원고 재활용 · 회의 개최안 파싱 · 접수된 수요조사서 읽기</p></div>
+      </div>
+      <div class="prompt">이 폴더의 <span class="w">.hwp 브리핑 3개</span>를 읽고, 기사 제목·기관·분야를 표로 합쳐줘
+문서에 없는 내용은 만들지 말고, 못 읽은 파일은 <span class="ok">'읽기 실패'</span>로 표시해</div>
+      <div class="callout">남이 만든 것을 <b>그대로 가져다 쓰는</b> 첫 경험이다 — 한계도 함께 안다: 구형 .hwp는 표가 평탄화될 수 있어 <b>원본 대조</b>가 원칙이다</div>
+    </section>
+
+    <section class="slide" data-sid="e3">
+      <div class="eyebrow">생태계 · 사례 ② korean-law</div>
+      <h2>사례 ② korean-law — 법령 검색과 인용 검증</h2>
+      <div class="rule"></div>
+      <p class="lead">국가법령정보 창구를 감싼 오픈소스 — 법령·판례·조례 검색과 <b>인용 실재 검증</b> <span class="pill">MIT</span></p>
+      <div class="prompt">github.com/chrisryugj/korean-law-mcp 저장소를 열어서 <span class="w">설치 방법대로 설치</span>해줘
+<span class="dim">→ 막히면: /plugin marketplace add chrisryugj/korean-law-mcp</span></div>
+      <div class="grid-3">
+        <div class="card"><h3>어디서 오나</h3><p><a href="https://github.com/chrisryugj/korean-law-mcp" target="_blank">github.com/chrisryugj/korean-law-mcp</a> — 법제처 인증키(OC)는 <b>open.law.go.kr에서 무료·1분</b></p></div>
+        <div class="card"><h3>무엇을 하나</h3><p>법령·판례·조례 검색 · <b>가짜 조문 인용 탐지</b> · 폐기된 판례 감지</p></div>
+        <div class="card accent"><h3>우리 업무 접점</h3><p>보고서 법령 인용의 <b>환각 차단</b> · 제·개정 이력 추적 · 현행 여부 확인</p></div>
+      </div>
+      <div class="prompt">이 보고서 초안에 나온 <span class="w">법령 인용이 전부 실재하는지</span> 검증해줘
+조문 번호·시행일까지 확인하고, 없거나 개정된 것은 표로 정리해줘</div>
+      <div class="callout">앞에서 본 <b>'제도·조항 시제 오류'</b>의 해독제다 — 규율을 도구가 대신 지켜 준다</div>
+    </section>
+
+    <section class="slide" data-sid="e4">
+      <div class="eyebrow">생태계 · 사례 ③ 제도 100</div>
+      <h2>사례 ③ 제도 100 — 코드 한 줄 없는 저장소</h2>
+      <div class="rule"></div>
+      <p class="lead">「한 장으로 끝내는 대한민국 제도 지도」 — <b>제도를 법령·조직·절차·예산 구조도로</b> 정리한 문서 저장소다</p>
+      <div class="cols">
+        <div class="card"><h3>무엇이 들어 있나</h3>
+          <ul class="bullets tight" style="margin-top:2px">
+            <li>제도 하나당 <b>한 장</b> — 근거 법령 · 담당 조직 · 집행 절차 · 예산 흐름</li>
+            <li>코드가 아니라 <b>정리된 지식</b>이 자산이다</li>
+            <li>누구나 열어 보고, 틀린 곳은 <b>이슈로 제보</b>하고, 고쳐서 <b>제안</b>할 수 있다</li>
+          </ul></div>
+        <div class="card accent"><h3>우리에게 뜻하는 것</h3>
+          <ul class="bullets tight" style="margin-top:2px">
+            <li>깃허브는 개발자만의 공간이 아니다 — <b>문서·규칙·지식</b>이 오히려 잘 맞는다</li>
+            <li>소재 정책 제도 지도 · 과제 유형별 절차서 · 부서 업무 매뉴얼 — <b>전부 같은 방식</b>으로 만들 수 있다</li>
+            <li>공개하면 <b>남의 검증이 공짜로</b> 붙는다</li>
+          </ul></div>
+      </div>
+      <div class="callout">오늘 만든 CLAUDE.md와 스킬도 결국 <b>이런 문서</b>다 — 부서 레포에 올리는 순간 개인 노하우가 <b>조직 공정</b>이 된다</div>
+      <div class="src">사례 · <a href="https://hosungseo.github.io/korea100" target="_blank">hosungseo.github.io/korea100</a> — 공개 문서 저장소</div>
+    </section>
+
+    <section class="slide" data-sid="e4-2">
+      <div class="eyebrow">생태계 · 사례 ④ 국무회의 아카이브</div>
+      <h2>사례 ④ 국무회의 아카이브 — 흩어진 원자료를 자산으로</h2>
+      <div class="rule"></div>
+      <p class="lead">정책브리핑에 흩어져 있던 <b>.hwp 문서</b>를 모아 — <em>검색·분석·자연어 질의가 되는 아카이브</em>로 만들었다</p>
+      <div class="grid-3">
+        <div class="card"><div class="stat"><span class="num">16,742건</span><span class="cap">국무회의 <b>447회</b>의 안건 전수 (2018.9~2026.7) — 대통령·국무위원 발언 <b>4,603건</b>도 함께</span></div></div>
+        <div class="card"><h3>어떻게 만들었나</h3><p>.hwp 수집 → 파싱 → DB 적재 → 대시보드 · 파이썬 스크립트 <b>11개</b>가 전부 공개돼 있다 — 오늘 배운 재료 그대로</p></div>
+        <div class="card accent"><h3>어떻게 쓰나</h3><p>브라우저에서 검색 · SQL로 계량분석 · 그리고 <b>자연어 질의</b> — 클로드 코드가 말을 쿼리로 바꿔 준다</p></div>
+      </div>
+      <table class="tight">
+        <thead><tr><th style="width:30%">이렇게 묻는다</th><th>이런 답이 나온다</th></tr></thead>
+        <tbody>
+          <tr><td class="em">"과기정책 안건 비중은 어떻게 변했나"</td><td>정권별 <b>5.6% → 7.3% → 9.1%</b> — 정책안건 1,008건 기준</td></tr>
+          <tr><td class="em">"의결 없이 보고만 된 의제는"</td><td>보고·토의 <b>151건</b>을 따로 뽑아 준다</td></tr>
+          <tr><td class="em">"이 주제로 누가 무슨 말을 했나"</td><td>화자가 명시된 발언 원문을 회차 키로 연결해 보여준다</td></tr>
+        </tbody>
+      </table>
+      <div class="src">사례 · <a href="https://github.com/parkjui92/korea-cabinet-stp" target="_blank">github.com/parkjui92/korea-cabinet-stp</a> — 코드 MIT · 데이터 공공누리 제1유형(출처표시), 정책브리핑 2차 저작물</div>
+    </section>
+
+    <section class="slide" data-sid="e5">
+      <div class="eyebrow">생태계 · 사례 ⑤ harness</div>
+      <h2>사례 ⑤ harness — 팀을 만들어 주는 팀</h2>
+      <div class="rule"></div>
+      <p class="lead">에이전트 팀을 <b>설계해 주는 메타 스킬</b> — 도메인을 말하면 <em>필요한 팀원과 스킬을 대신 만들어 준다</em> <span class="pill">★8,600+ · Apache-2.0</span></p>
+      <div class="grid-3">
+        <div class="card"><h3>무엇을 하나</h3><p>내 업무 영역을 설명하면 <b>어떤 역할이 필요한지 설계</b>하고, 그 역할의 업무기술서와 절차서까지 만들어 준다</p></div>
+        <div class="card"><h3>어디서 오나</h3><p><a href="https://github.com/revfactory/harness" target="_blank">github.com/revfactory/harness</a> — 오늘 배운 '하네스 엔지니어링'이 그대로 이름이 된 저장소</p></div>
+        <div class="card accent"><h3>우리 업무 접점</h3><p>정책연구팀 같은 팀을 <b>내 분야로 새로 만들 때</b> — 백지에서 시작하지 않아도 된다</p></div>
+      </div>
+      <ul class="bullets">
+        <li>오늘 배포한 정책연구팀도 같은 방식으로 만들어졌다 — <b>쪼개고 · 역할을 정하고 · 관문을 두는</b> 그 과정</li>
+        <li>다음 단계는 이것이다 — 남의 팀을 쓰다가, <b>내 팀을 짓는 것</b></li>
+      </ul>
+      <div class="callout">깃허브에는 <b>도구</b>만 있는 게 아니다 — <b>만드는 방법</b>도 공개돼 있다</div>
+      <div class="src">사례 · <a href="https://github.com/revfactory/harness" target="_blank">github.com/revfactory/harness</a> — 별점·라이선스는 실측(2026-08)</div>
+    </section>
+
+    <section class="slide" data-sid="e5-2">
+      <div class="eyebrow">생태계 · 사례 ⑥ 공개 저장소</div>
+      <h2>사례 ⑥ 전부 공개돼 있다 — 오늘 쓰는 것들의 출처</h2>
+      <div class="rule"></div>
+      <p class="lead">오늘 설치한 팀도, 이 강의자료를 만든 도구도 — <b>같은 자리에 열려 있다</b></p>
+      <div class="grid-3">
+        <div class="card accent"><h3>에이전트 팀 (플러그인)</h3>
+          <ul class="bullets tight" style="margin-top:2px;gap:6px">
+            <li><b>policy-research-kit</b> — 정책연구보고서 5인 팀 <span class="eg">오늘 배포한 그것</span></li>
+            <li><b>rnd-proposal-kit</b> — 정부 R&amp;D 제안서 5인 팀</li>
+            <li><b>socsci-paper-kit</b> — 사회과학 논문 6인 팀</li>
+            <li><b>lecture-deck-kit</b> — 강의자료를 브라우저에서 고치는 도구 <span class="eg">이 자료도 이것으로</span></li>
+          </ul></div>
+        <div class="card"><h3>스킬 (한 가지 일을 하는 절차서)</h3>
+          <ul class="bullets tight" style="margin-top:2px;gap:6px">
+            <li><b>form-tailor</b> — 샘플 양식을 배워 같은 서식으로 <span class="eg">hwp·hwpx·docx</span></li>
+            <li><b>report-to-brief</b> — 긴 보고서를 정책브리프로 압축</li>
+            <li><b>paper-proofread</b> — 한국어 학술 교정 + 출처 검증</li>
+            <li><b>fact-verify</b> — 출처 실재·인용 일치 검증</li>
+          </ul></div>
+        <div class="card"><h3>도구 · 데이터</h3>
+          <ul class="bullets tight" style="margin-top:2px;gap:6px">
+            <li><b>doc-figure</b> — 한글이 깨지지 않는 삽도 생성 <span class="eg">파이썬·설치 없이도</span></li>
+            <li><b>korea-cabinet-stp</b> — 국무회의 아카이브 <span class="eg">앞의 사례 ④</span></li>
+          </ul></div>
+      </div>
+      <div class="callout">한 번에 만든 게 아니다 — <b>아쉬울 때마다 하나씩</b> 늘어난 결과다. 여러분의 첫 칸은 오늘 만든 <b>CLAUDE.md</b>다</div>
+      <div class="src">사례 · <a href="https://github.com/parkjui92" target="_blank">github.com/parkjui92</a> — 공개 저장소 10종(2026-08 기준)</div>
+    </section>
+
+    <section class="slide" data-sid="e6">
+      <div class="eyebrow">생태계 · 해보기 ⑤</div>
+      <h2><span class="hands">★ 해보기</span> — 깃허브를 MCP로 붙이고, 쓸 만한 것을 찾는다</h2>
+      <div class="rule"></div>
+      <p class="lead">검색창을 거치지 않는다 — <b>"이런 거 있어?"라고 물으면 깃허브를 뒤져서 답한다</b></p>
+      <div class="prompt">깃허브 MCP를 연결해줘. 방법을 알려주고, 명령이 안 되면 <span class="w">설정 화면 경로</span>도 알려줘</div>
+      <div class="prompt">깃허브에서 <span class="w">회의록을 자동으로 정리해 주는 스킬이나 도구</span>가 있는지 찾아봐줘.
+별 수·최근 업데이트·라이선스를 같이 알려주고, <span class="w">한국어 문서를 다루는 것</span> 위주로 골라줘.</div>
+      <table class="tight">
+        <thead><tr><th style="width:26%">이렇게 물어본다</th><th>돌아오는 것</th></tr></thead>
+        <tbody>
+          <tr><td class="em">"~하는 스킬 있어?"</td><td>후보 저장소 목록 + 각각 무엇을 하는 것인지 요약</td></tr>
+          <tr><td class="em">"이 저장소 뜯어봐"</td><td>폴더 구조·핵심 파일을 <b>읽은 내용</b>으로 설명</td></tr>
+          <tr><td class="em">"내 일에 쓸 만한가?"</td><td>우리 업무 접점과 한계를 짚어 준다</td></tr>
+        </tbody>
+      </table>
+      <div class="callout"><b>✅ 후보 몇 개와 그 차이</b>가 정리돼 나오면 성공 — 남이 만든 것을 찾아 뜯어보는 것이 가장 빠른 학습법이다</div>
+    </section>
+
+    <section class="slide divider" data-sid="s41">
+      <span class="wm">04</span>
+      <div class="modtag">PART 2 · 실습</div>
+      <h2>이제 직접 해 볼까? — 하나씩, 같이, 끝까지</h2>
+      <p class="sub">환경 · 팀 · API · MCP · 수요조사 · 브리핑</p>
+    </section>
+
+    <section class="slide" data-sid="s39">
+      <div class="eyebrow">2부 실습 · 약속</div>
+      <h2>실습의 약속 — 넣지 않을 것부터 정한다</h2>
+      <div class="rule"></div>
+      <ul class="bullets">
+        <li><b>프롬프트와 첨부 자료는 외부 서버로 전송된다</b> — 미공개 과제·평가 자료 · 연구자 개인정보 원자료 · 인증키는 넣지 않는다 <span class="note">오늘 실습도 공개 자료와 가상 데이터만 사용한다</span></li>
+        <li><b>기관 도입은 단계적으로</b> — 개인 학습 → 팀 시험 운영 → 보안 심의·가이드라인 → 확산 <span class="note">개인 단계에서 충분히 검증한 뒤 기관 절차를 밟는 것이 정석</span></li>
+        <li><b>민감 자료는 로컬 파일로만</b> — 에이전트가 폴더에서 직접 읽으므로 채팅창에 올릴 이유가 없다 · 원본 수정 금지는 훅으로 강제한다</li>
+        <li><b>API 키는 환경변수(.env)로 분리</b> — 코드·문서·채팅에 직접 쓰지 않는다</li>
+      </ul>
+      <table class="tight">
+        <thead><tr><th style="width:16%">구분</th><th style="width:46%">예시</th><th>취급</th></tr></thead>
+        <tbody>
+          <tr><td class="em">써도 되는 것</td><td>공개 공고·법령·논문·보도자료 · 가상 샘플 · 내가 쓴 초안</td><td>자유롭게</td></tr>
+          <tr><td class="em">조건부</td><td>내부 회의자료 · 집계된 성과 데이터 · 개인정보 제거본</td><td><b>로컬 파일로만</b> · 규정 확인 후</td></tr>
+          <tr><td class="em">안 되는 것</td><td>미공개 과제·평가 원자료 · 개인정보 원본 · 인증키</td><td><b>반입 금지</b></td></tr>
+        </tbody>
+      </table>
+      <div class="src">오늘 실습 · 키트의 가상 데이터와 공개 자료만 사용한다 · 인증키는 채팅창이 아니라 .env 파일로 · 기관망 관련 개별 사항은 정보보안 담당 확인</div>
+    </section>
+
+    <section class="slide" data-sid="s43">
+      <div class="eyebrow">2부 실습 · 진행 지도</div>
+      <h2>실습 지도 — 1부에서 한 것은 빼고, 손으로 할 것만</h2>
+      <div class="rule"></div>
+      <p class="lead">강의에서 이미 <b>설치·CLAUDE.md·스킬 개념·저장소 읽기</b>를 했다 — 2부는 그 위에서 <em>실전만</em> 한다</p>
+      <table>
+        <thead><tr><th style="width:30%">실습</th><th style="width:36%">무엇을 하나</th><th>끝났을 때 손에 남는 것</th></tr></thead>
+        <tbody>
+          <tr><td class="em">0 · 환경 점검</td><td>앱 열기 · 폴더 열기 · 첫 대화</td><td>권한 읽는 법</td></tr>
+          <tr><td class="em">1 · 브리핑 팀 가동</td><td>3쪽 브리핑 킥오프 → 목차 관문에서 한마디</td><td>켜 둔 채 진행되는 <b>브리핑</b></td></tr>
+          <tr><td class="em">2 · API 연결</td><td>법령·논문 창구 호출 → 키 발급 → .env</td><td>호출 성공 + <b>안전하게 보관된 키</b></td></tr>
+          <tr><td class="em">3 · MCP 활용</td><td>한글 문서 읽기 · 다건 통합 · 법령 인용 검증</td><td>재활용 가능한 <b>표 파일</b></td></tr>
+          <tr><td class="em">4 · 수요조사서 분류</td><td>40건 분류 · 클러스터링 · 요약표 · 품목 매핑</td><td><b>회의용 요약표</b> 파일</td></tr>
+          <tr><td class="em">5 · 브리핑 조판</td><td>스크랩 엑셀 → 목차·기관별·분야별 배치 · 재생성 검증</td><td><b>브리핑 초안</b> 파일(md·HTML)</td></tr>
+          <tr><td class="em">마무리</td><td>브리핑 팀 수확 · 못 다룬 주제 안내 · 체크아웃</td><td>가져갈 프롬프트와 키트</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="slide divider" data-sid="s45">
+      <span class="wm">05</span>
+      <div class="modtag">실습 0 · 준비</div>
+      <h2>준비는 됐는가? — 환경 점검과 첫 대화</h2>
+      <p class="sub">앱 실행 · 폴더 열기 · 권한 확인</p>
+    </section>
+
+    <section class="slide" data-sid="s46">
+      <div class="eyebrow">실습 0-1</div>
+      <h2>실습 0-1 — 데스크톱 앱을 열고, 실습 폴더를 연다</h2>
+      <div class="rule"></div>
+      <div class="flow">
+        <div class="step"><b>STEP 1</b>Claude Code 데스크톱 앱 실행</div><span class="arrow">→</span>
+        <div class="step"><b>STEP 2</b>[폴더 열기]로 실습키트의 <b>0_내작업폴더</b> 선택</div><span class="arrow">→</span>
+        <div class="step hi"><b>STEP 3</b>아래 첫 인사를 입력</div>
+      </div>
+      <div class="prompt">지금 열려 있는 폴더가 어디인지 알려주고, 안에 뭐가 있는지 한 줄로 요약해줘</div>
+      <ul class="bullets">
+        <li><b>✅ 성공 판정</b> — 실습키트 경로와 폴더 요약이 답으로 온다 · 터미널도 명령어도 없었다</li>
+        <li>실행되지 않으면 조교를 호출하고 <b>옆자리 화면으로 진행</b>한다 (개별 조치는 휴식 시간에)</li>
+      </ul>
+      <div class="callout">오늘 조작의 전부 — <b>한국어로 말하면 된다</b> 명령어는 외울 것이 없다</div>
+    </section>
+
+    <section class="slide" data-sid="s47">
+      <div class="eyebrow">실습 0-2</div>
+      <h2>실습 0-2 — 첫 심부름으로 '권한 읽는 법'까지 익힌다</h2>
+      <div class="rule"></div>
+      <div class="prompt">이 폴더의 파일 목록을 표로 보여줘</div>
+      <ul class="bullets">
+        <li>실행 전 <b>권한 확인 창</b>이 표시된다 — 무엇을 하려는지 읽고 허용 <span class="note">읽기·목록 조회는 안전. 실습 폴더 밖을 요청하면 중단하고 조교를 호출한다</span></li>
+        <li><b>✅ 성공 판정</b> — 실습키트의 폴더 구조가 표로 나온다</li>
+        <li>한 걸음 더 — <b>"README.md 읽고 오늘 실습 순서를 요약해줘"</b></li>
+      </ul>
+      <div class="callout">권한 창은 장애물이 아니라 <b>안전장치</b>다 — 읽고 허용하는 습관이 오늘의 첫 기술이다</div>
+    </section>
+
+    <section class="slide divider" data-sid="s57">
+      <span class="wm">06</span>
+      <div class="modtag">실습 1 · 브리핑</div>
+      <h2>팀에게 어떻게 시키는가? — 브리핑 3쪽 작성</h2>
+      <p class="sub">설치 확인 · 킥오프 · 목차 관문</p>
+    </section>
+
+    <section class="slide" data-sid="s58">
+      <div class="eyebrow">실습 1-1</div>
+      <h2>실습 1-1 — 설치 상태를 먼저 확인한다</h2>
+      <div class="rule"></div>
+      <div class="prompt">설치돼 있는 정책연구팀 플러그인이 뭘 할 수 있는지 알려줘</div>
+      <ul class="bullets">
+        <li><b>✅ 성공 판정</b> — 에이전트 5명(설계·조사·집필·검수·변환)과 스킬 6종, 관문 두 개가 소개된다</li>
+        <li>강의 중 설치가 완료되지 않았다면 아래 두 줄을 먼저 실행한다</li>
+      </ul>
+      <div class="prompt"><span class="dim"># 미설치자만</span>
+/plugin marketplace add parkjui92/policy-research-kit
+/plugin install policy-research-kit@policy-research-kit</div>
+      <div class="callout">팀 채용이 <b>명령 두 줄</b> — 부서 배포도, 우리 팀 노하우 레포도 같은 방식이다</div>
+    </section>
+
+    <section class="slide" data-sid="s59">
+      <div class="eyebrow">실습 1-2</div>
+      <h2>실습 1-2 — 3쪽 브리핑 킥오프, 목차 관문에서 '한마디'</h2>
+      <div class="rule"></div>
+      <div class="prompt">정책연구팀으로 <span class="w">3쪽짜리 동향 브리핑</span>을 만들어줘.
+주제는 내가 정한다: <span class="w">(여기에 본인 관심 주제)</span></div>
+      <ul class="bullets">
+        <li>팀이 <b>목차부터 제시하고 멈춘다</b> — 그대로 승인하지 말고 <b>한마디 고친다</b>: "해외 사례는 일본·독일만" / "제언은 3개로"</li>
+        <li><b>✅ 성공 판정</b> — 수정이 반영된 목차 → 승인 → 팀이 조사·집필 시작</li>
+        <li>승인 후 <b>켜 둔 채로 실습 2로</b> — 수확은 마무리에서</li>
+      </ul>
+      <div class="callout">출처 규율·목차 관문·독립 검수는 <b>이미 팀 안에</b> 있다 — 프롬프트에 다시 적을 필요가 없다는 것이 팀을 쓰는 이유다</div>
+    </section>
+
+    <section class="slide" data-sid="x1">
+      <div class="eyebrow">실습 1-3</div>
+      <h2>실습 1-3 — 뜯어보기: 검수 기준을 직접 읽어 본다</h2>
+      <div class="rule"></div>
+      <div class="prompt">정책연구팀 플러그인의 <span class="w">검수관 에이전트 파일</span>을 열어서 5축 검수 기준 부분만 보여줘</div>
+      <ul class="bullets">
+        <li><b>돈다</b> — 플러그인 폴더의 md 파일을 찾아 해당 부분만 발췌해 온다</li>
+        <li><b>✅ 된다</b> — 논리 · 근거(출처 실재) · 정책 타당성 · 정량 · 교열의 다섯 축이 문장으로 보인다</li>
+        <li><b>이게 좋다</b> — 기준을 읽을 수 있으면 고칠 수도 있다 블랙박스가 아니라는 것이 신뢰의 근거</li>
+        <li><b>이렇게 활용</b> — 우리 기관 기준 한 줄 추가(예: 소재 용어 표기 규칙 · 인용 양식) → 다음 보고서부터 적용</li>
+      </ul>
+      <div class="callout">강의에서 본 그대로 — <b>전부 열어 볼 수 있는 md 문서</b>다. 읽을 수 있으면 <b>고칠 수도 있다</b></div>
+    </section>
+
+    <section class="slide divider" data-sid="s48">
+      <span class="wm">07</span>
+      <div class="modtag">실습 2 · API</div>
+      <h2>원자료는 어디서 오는가? — API 연결</h2>
+      <p class="sub">법령 · 논문 · 키 발급 · .env 보관</p>
+    </section>
+
+    <section class="slide" data-sid="s49">
+      <div class="eyebrow">실습 2-1</div>
+      <h2>실습 2-1 — 법령을 키 없이 바로 물어본다</h2>
+      <div class="rule"></div>
+      <p class="lead">주소를 외울 필요가 없다 — <b>무엇이 필요한지 말하면</b> 창구를 찾아 호출한다</p>
+      <div class="prompt">국가법령정보 공개 API를 써서 <span class="w">소재·부품·장비</span> 관련 법령을 찾아줘.
+법령명·소관부처·시행일을 표로 정리하고, <span class="w">각 법령의 원문 링크</span>도 같이 줘.
+<span class="dim">(인증키는 시연용 OC=test를 쓰면 된다)</span></div>
+      <ul class="bullets">
+        <li><b>✅ 성공 판정</b> — 소부장 관련 법령이 <b>표로</b> 정리되고 원문 링크가 붙는다</li>
+        <li><b>이렇게 활용</b> — "이 보고서 초안의 법령 인용이 실재하는지 확인해줘" · "최근 개정된 조항이 있는지 봐줘"</li>
+      </ul>
+      <div class="callout">학습된 기억이 아니라 <b>오늘자 원천</b>이다 — URL을 손으로 만들 일은 없고, 말하고 결과를 확인하면 된다</div>
+    </section>
+
+    <section class="slide" data-sid="s51">
+      <div class="eyebrow">실습 2-2</div>
+      <h2>실습 2-2 — 내 키 발급, 오늘 필요한 만큼만</h2>
+      <div class="rule"></div>
+      <div class="grid-2">
+        <div class="card accent"><h3>지금 발급 ① 법제처 OC</h3><p><b>open.law.go.kr</b> → 회원가입 → OpenAPI 신청 → OC = 이메일 ID 앞부분 · 무료·즉시<span class="eg">실습 3의 korean-law 설치에서 바로 쓴다</span></p></div>
+        <div class="card"><h3>지금 발급 ② KOSIS</h3><p><b>kosis.kr/openapi</b> → 회원가입 → 활용 신청 → 즉시 발급<span class="eg">국가통계 — 다음 따라하기의 .env 실습 재료</span></p></div>
+      </div>
+      <table>
+        <thead><tr><th>이번 주 안에 마저 신청</th><th style="width:20%">승인</th><th>여는 것</th></tr></thead>
+        <tbody>
+          <tr><td>공공데이터포털 · NTIS · KIPRIS</td><td>자동~수일</td><td>나라장터 조달 · R&amp;D 과제 · 특허</td></tr>
+          <tr><td>OpenDART · ECOS</td><td>즉시</td><td>기업 공시 · 경제 통계</td></tr>
+        </tbody>
+      </table>
+      <div class="src">진행 · 발급 대기가 길면 건너뛰고 2-4는 화면으로 함께 — 절차는 미션카드에 그대로</div>
+    </section>
+
+    <section class="slide" data-sid="s52">
+      <div class="eyebrow">실습 2-3</div>
+      <h2>실습 2-3 — 키는 파일에 넣는다, 채팅창이 아니라</h2>
+      <div class="rule"></div>
+      <p class="lead">발급 절차부터 물어보면 된다 — 그리고 <b>키를 채팅에 붙여넣지 않는다</b>, <em>파일을 만들게 하고 값만 내가 넣는다</em></p>
+      <div class="prompt"><span class="w">KOSIS API 키</span> 발급받는 방법을 자세히 알려줘.
+화면 순서대로, <span class="w">어디를 눌러야 하는지</span>까지</div>
+      <div class="prompt">API 키 발급받았어. <span class="w">.env 파일에 넣을게</span> — 이 폴더에 .env를 만들어줘.
+항목은 <span class="w">KOSIS_KEY</span>와 <span class="w">LAW_OC</span>, 값은 비워 두고 <span class="w">내가 직접 넣을게</span>.
+.gitignore에도 .env를 추가해서 실수로 공유되지 않게 해줘.</div>
+      <div class="code">KOSIS_KEY=<span class="dim">여기에 발급받은 키를 붙여넣는다</span>
+LAW_OC=<span class="dim">여기에 법제처 OC를 붙여넣는다</span></div>
+      <ul class="bullets">
+        <li><b>✅ 성공 판정</b> — .env가 생성되고, 값을 넣은 뒤 <span class="cmd">.env 키로 KOSIS 통계 하나만 불러와 봐</span>가 성공한다</li>
+        <li><b>"내가 직접 넣을게"</b>가 핵심 문장 — 이 한 줄로 AI가 키를 요구하지 않는다 <span class="note">노출되면 재발급이 원칙</span></li>
+      </ul>
+    </section>
+
+    <section class="slide divider" data-sid="s53">
+      <span class="wm">07</span>
+      <div class="modtag">실습 3 · MCP 활용</div>
+      <h2>도구로 무엇을 하는가? — MCP 활용</h2>
+      <p class="sub">한글 문서 · 다건 통합 · 인용 검증</p>
+    </section>
+
+    <section class="slide" data-sid="s54">
+      <div class="eyebrow">실습 3-1</div>
+      <h2>실습 3-1 — 설치를 확인하고 한글 파일을 읽힌다</h2>
+      <div class="rule"></div>
+      <p class="lead">강의에서 설치한 <b>kordoc</b>이 살아 있는지 먼저 확인한다 — <em>확인 방법은 실제로 읽혀 보는 것</em></p>
+      <div class="prompt">지금 쓸 수 있는 MCP 도구 목록을 보여줘</div>
+      <div class="prompt">심화A_회의록/<span class="w">sample_회의_개최안.hwpx</span> 읽고 안건을 표로 정리해줘</div>
+      <ul class="bullets">
+        <li><b>✅ 성공 판정</b> — 목록에 kordoc이 있고, 개최안의 <b>안건 3건이 표로</b> 나온다</li>
+        <li><b>이게 좋다</b> — "AI는 한글 파일을 못 읽는다"가 깨지는 순간이다. <b>복사·붙여넣기 왕복이 사라진다</b></li>
+        <li>설치가 안 돼 있다면 — <b>npx -y kordoc setup</b>을 지금 실행한다 (조교 지원)</li>
+      </ul>
+      <div class="callout warn">한계도 함께 — 구형 .hwp는 표가 평탄화될 수 있다. 표가 중요한 문서는 <b>원본과 대조</b>하는 습관을 남긴다</div>
+    </section>
+
+    <section class="slide" data-sid="s55">
+      <div class="eyebrow">실습 3-2</div>
+      <h2>실습 3-2 — 흩어진 한글 문서를 하나의 표로</h2>
+      <div class="rule"></div>
+      <p class="lead">한 건 읽기는 시작일 뿐이다 — <b>여러 건을 한 번에</b> 처리하는 것이 실무의 이득이다</p>
+      <div class="prompt">심화B_브리핑자동화 폴더의 <span class="w">한글 문서를 전부</span> 읽고,
+기사 제목 · 발표기관 · 분야 · 날짜를 하나의 표로 합쳐줘.
+· 문서에 없는 내용은 <span class="w">만들지 마</span>
+· 읽지 못한 파일은 <span class="ok">'읽기 실패'</span>로 따로 표시해
+· 결과는 md 파일로 저장해줘</div>
+      <ul class="bullets">
+        <li><b>✅ 성공 판정</b> — 여러 문서의 내용이 <b>하나의 표 파일</b>로 합쳐지고, 실패한 파일이 있으면 표시된다</li>
+        <li><b>이게 좋다</b> — 기존 브리핑·보도자료·개최안이 <b>재활용 가능한 데이터</b>가 된다</li>
+        <li><b>이렇게 활용</b> — 지난 호 브리핑에서 특정 기관 기사만 추출 · 연간 통계 집계 · 중복 기사 확인</li>
+      </ul>
+      <div class="callout">'읽기 실패'를 <b>따로 표시하게</b> 한 것에 주목 — 조용히 빠뜨리지 않게 하는 것이 검증의 기본이다</div>
+    </section>
+
+    <section class="slide" data-sid="s56">
+      <div class="eyebrow">실습 3-3</div>
+      <h2>실습 3-3 — 법령 인용을 도구에 검증시킨다</h2>
+      <div class="rule"></div>
+      <p class="lead">보고서에서 가장 위험한 곳 하나가 <b>법령 인용</b>이다 — 이제 검증을 도구에 맡긴다</p>
+      <div class="prompt"><span class="w">소재부품장비산업법</span>에서 특화선도기업 지원 근거 조항을 찾아줘.
+조문 번호 · 시행일 · 현행 여부까지 알려줘.</div>
+      <div class="prompt">이 초안에 나온 <span class="w">법령 인용이 전부 실재하는지</span> 검증해줘.
+없는 조항이나 개정된 조항은 표로 정리하고, <span class="ok">확인 못 한 것은 그렇게 표시</span>해줘.</div>
+      <ul class="bullets">
+        <li><b>✅ 성공 판정</b> — 조문이 <b>[현행] 라벨</b>과 함께 오고, 검증 결과가 표로 정리된다</li>
+        <li><b>이렇게 활용</b> — 보고서 제출 전 인용 점검 · 제·개정 이력 추적 · 근거 조항 찾기</li>
+      </ul>
+      <div class="callout warn">키가 없어 설치가 막히면 — <b>실습 2-3에서 발급한 법제처 OC</b>를 넣는다. 아직 없으면 옆자리 화면으로 진행한다</div>
+    </section>
+
+    <section class="slide divider" data-sid="d0">
+      <span class="wm">09</span>
+      <div class="modtag">실습 4 · 메인 핸즈온</div>
+      <h2>수백 건을 어떻게 검토하는가? — 분류와 클러스터링</h2>
+      <p class="sub">분류 · 클러스터링 · 요약표 · 품목 매핑</p>
+    </section>
+
+    <section class="slide" data-sid="d1">
+      <div class="eyebrow">실습 4 · 페인포인트</div>
+      <h2>수요조사서 수백 건 — 지금은 어떻게 하고 있는가?</h2>
+      <div class="rule"></div>
+      <div class="cols">
+        <div class="card warn-c"><h3>지금 (수작업)</h3>
+          <ul class="bullets tight" style="margin-top:4px">
+            <li>한 건씩 열어 <b>기술분야를 눈으로 분류</b></li>
+            <li>비슷한 제안이 있었는지 <b>기억에 의존</b></li>
+            <li>중복·유사 판단이 <b>담당자마다 다름</b></li>
+            <li>요약표는 마지막에 <b>손으로 정리</b> — 총 2주</li>
+          </ul></div>
+        <div class="card accent"><h3>오늘 (이 실습이 끝나면)</h3>
+          <ul class="bullets tight" style="margin-top:4px">
+            <li>40건을 <b>기술분야로 자동 분류</b></li>
+            <li>유사·중복 제안을 <b>클러스터로 묶음</b></li>
+            <li>판단 근거가 <b>표에 남음</b> — 재현·감사 가능</li>
+            <li>클러스터별 <b>요약표</b>까지 한 번에</li>
+          </ul></div>
+      </div>
+      <div class="callout warn">오늘 쓰는 자료는 <b>가상 수요조사서 40건</b>(키트 동봉)이다 — 공개 양식을 기준으로 생성한 연습용. 실데이터는 사무실에서 같은 절차로.</div>
+      <div class="src">자료 · 키트 <b>실습4_수요조사/</b> — 수요조사서 40건 · 핵심품목_리스트.csv 18품목 · 미션카드(프롬프트 전문). 공개 서식을 기준으로 생성한 가상 자료</div>
+    </section>
+
+    <section class="slide" data-sid="d2">
+      <div class="eyebrow">실습 4-1</div>
+      <h2>실습 4-1 — 40건을 읽히고, 기술분야로 분류한다</h2>
+      <div class="rule"></div>
+      <div class="prompt"><span class="dim"># 실습4_수요조사 폴더에서 — 그대로 붙여넣기</span>
+"수요조사서 폴더의 파일을 전부 읽고, 각 건을 <span class="w">12대 기술분야 기준으로 분류</span>해줘.
+ 표로 정리하되 열은 <span class="w">연번 · 제안명 · 제안기관 · 기술분야 · 분류 근거(한 줄)</span>.
+ 애매하면 임의로 정하지 말고 <span class="ok">'분류보류'</span>로 표시하고 이유를 적어."</div>
+      <ul class="bullets">
+        <li><b>돈다</b> — 40개 파일을 순차로 읽고 표를 만들어 파일로 저장한다(진행 상황이 화면에 흐른다)</li>
+        <li><b>✅ 된다</b> — 40행 표 + '분류보류' 몇 건이 이유와 함께 남는다</li>
+        <li><b>이게 좋다</b> — 분류 근거가 함께 남는다 "왜 이 분야로 봤나"에 답할 수 있는 상태</li>
+        <li><b>이렇게 활용</b> — 우리 기관 분류 체계(12대 기술 · 소부장 6대 분야 등)를 기준 파일로 주면 그 체계로 분류한다</li>
+      </ul>
+      <div class="callout">'분류보류'가 <b>0건이면 오히려 의심</b>할 것 — 애매한 걸 애매하다고 말하는 것이 신뢰의 조건이다(환각을 줄이는 원칙 ②).</div>
+    </section>
+
+    <section class="slide" data-sid="d3">
+      <div class="eyebrow">실습 4-2</div>
+      <h2>실습 4-2 — 유사·중복 제안을 클러스터로 묶는다</h2>
+      <div class="rule"></div>
+      <div class="prompt"><span class="dim"># 앞의 분류표를 그대로 이어서 사용</span>
+"이제 <span class="w">내용이 유사하거나 중복되는 제안</span>을 묶어줘.
+ · 묶음마다 <span class="w">클러스터명 · 포함 연번 · 공통 키워드 · 유사도 판단 근거</span>를 적어라
+ · 기술분야가 달라도 <span class="w">해결하려는 문제가 같으면</span> 같은 묶음으로 보고, 그 사실을 명시해라
+ · 애매한 경계는 <span class="ok">'경계사례'</span>로 따로 모아줘"</div>
+      <ul class="bullets">
+        <li><b>✅ 된다</b> — 클러스터 6~10개 + 경계사례 목록이 나온다</li>
+        <li><b>이게 좋다</b> — 사람이 기억으로 하던 중복 판단이 근거 있는 표가 된다 담당자가 바뀌어도 판정 과정을 추적할 수 있다</li>
+        <li><b>이렇게 활용</b> — 기획 착수 회의 자료로 그대로 · 중복 제안 통합 협의의 근거 자료로</li>
+      </ul>
+      <div class="callout">여기서 사람의 자리 — <b>경계사례를 어느 쪽으로 볼 것인가.</b> 그 판단은 여러분 몫이고, AI는 후보와 근거만 올린다</div>
+    </section>
+
+    <section class="slide" data-sid="d4">
+      <div class="eyebrow">실습 4-3</div>
+      <h2>실습 4-3 — 클러스터별 요약표: 회의에 그대로 올릴 형태로</h2>
+      <div class="rule"></div>
+      <div class="prompt"><span class="dim"># 산출물 형태까지 지정하는 것이 요령</span>
+"클러스터별로 <span class="w">한 장짜리 요약표</span>를 만들어줘.
+ 열: 클러스터명 · 제안 건수 · 핵심 내용 3줄 · 주요 제안기관 · <span class="w">검토 포인트</span>
+ · 개조식 · 존댓말 없이 · 표 아래 <span class="w">총계 행</span>
+ · 마지막에 <span class="ok">[확인 필요]</span> 항목을 따로 모아줘 (근거가 약하거나 판단이 갈린 것)
+ 결과는 md와 HTML 두 형식으로 저장."</div>
+      <ul class="bullets">
+        <li><b>✅ 된다</b> — 요약표 파일 2종(md · HTML) + [확인 필요] 목록</li>
+        <li><b>이게 좋다</b> — 보고 형태까지 지정하면 그대로 회의 자료가 된다 — 재가공이 사라진다</li>
+        <li><b>이렇게 활용</b> — 부서 양식 문구를 그대로 프롬프트에 넣기 · 다음 달엔 같은 프롬프트를 스킬로(바로 다음 실습)</li>
+      </ul>
+      <div class="callout">지금 여러분이 한 것 — <b>읽기 → 분류 → 군집 → 보고 형태 산출</b>. 이 네 단계가 기획 업무의 앞단 전부이다</div>
+    </section>
+
+    <section class="slide" data-sid="d5">
+      <div class="eyebrow">실습 4 · 심화 (선택)</div>
+      <h2>심화 — 소부장 핵심품목 리스트에 매핑해 본다</h2>
+      <div class="rule"></div>
+      <div class="prompt"><span class="dim"># 기준 파일을 주고 대조시키는 패턴 — 실무에서 가장 자주 쓰게 될 형태</span>
+"<span class="w">핵심품목_리스트.csv</span>를 기준으로 앞의 40건을 매핑해줘.
+ · 각 제안이 <span class="w">어느 품목에 해당하는지</span>, 근거 문구를 인용해서
+ · 해당 없음이면 <span class="ok">'미해당'</span> — 억지로 붙이지 마
+ · 품목별로 <span class="w">제안이 몰린 곳과 비어 있는 곳</span>을 표로 보여줘"</div>
+      <ul class="bullets">
+        <li><b>✅ 된다</b> — 품목×제안 매핑표 + 공백 품목 목록</li>
+        <li><b>이게 좋다</b> — 수요조사가 정책 판단 자료로 바뀐다: 어디에 몰렸고 어디가 비어 있는가</li>
+        <li><b>이렇게 활용</b> — 신규 기획 주제 발굴 · 지원 필요 분야 도출 (강의에서 본 분석 로드맵의 L4 '공백' 층)</li>
+      </ul>
+      <div class="callout warn">기준 파일이 있으면 <b>반드시 줄 것</b> — 없으면 AI가 일반 상식으로 분류한다 기준을 주는 것이 품질의 8할이다</div>
+    </section>
+
+    <section class="slide" data-sid="d6">
+      <div class="eyebrow">실습 4 · 확장</div>
+      <h2>같은 방법이 우수성과·JCR 업무에도 그대로 적용된다</h2>
+      <div class="rule"></div>
+      <p class="lead">방금 한 것은 <b>기준 파일을 주고 대조시키기</b>다 — 대상만 바꾸면 다른 업무가 된다</p>
+      <table>
+        <thead><tr><th style="width:24%">방금 한 것</th><th style="width:36%">같은 패턴의 다른 업무</th><th>바뀌는 것</th></tr></thead>
+        <tbody>
+          <tr><td class="em">40건을 분류 체계로 분류</td><td>논문 목록을 <b>JCR 저널 목록과 매칭</b></td><td>기준 파일이 분류 체계 → JCR 목록</td></tr>
+          <tr><td class="em">애매하면 '분류보류'</td><td>매칭 안 되면 <b>'미매칭'으로 남기기</b></td><td>같은 원칙 — 추정으로 채우지 않는다</td></tr>
+          <tr><td class="em">핵심품목 매핑</td><td>미매칭 저널의 <b>개명·통합·폐간 조사</b></td><td>대조에서 조사로 — 근거 URL 병기</td></tr>
+          <tr><td class="em">클러스터 요약표</td><td>평가 대상 <b>후보 표 + 검토 포인트</b></td><td>산출 형식만 바뀐다</td></tr>
+        </tbody>
+      </table>
+      <div class="callout warn">다만 우수성과 데이터는 <b>실제 평가 자료</b>다 — 오늘은 방법만 익히고, 실제 적용은 사무실에서 <b>로컬 파일로</b> 한다. 외부로 나가는 것은 저널명·ISSN뿐이어야 한다</div>
+      <div class="src">키트 · 심화C_JCR조사에 조사 프로토콜 전문 · 파이프라인 운전 규칙(CLAUDE.md) 예시 수록</div>
+    </section>
+
+    <section class="slide divider" data-sid="b0">
+      <span class="wm">09</span>
+      <div class="modtag">실습 5 · 브리핑 조판</div>
+      <h2>매월 하던 그 일, 자동이 되는가? — 브리핑 조판</h2>
+      <p class="sub">목차 · 기관별 · 분야별 배치 · 재생성</p>
+    </section>
+
+    <section class="slide" data-sid="b2">
+      <div class="eyebrow">실습 5-1</div>
+      <h2>실습 5-1 — 엑셀 하나로 브리핑 초안을 만든다</h2>
+      <div class="rule"></div>
+      <p class="lead">분류는 이미 여러분이 해 두었다 — 남은 것은 <b>옮겨 붙이는 일</b>이고, 그건 넘겨도 되는 일이다</p>
+      <div class="prompt">심화B_브리핑자동화 폴더의 <span class="w">스크랩 엑셀</span>을 읽고 브리핑 초안을 만들어줘.
+① 전체 기사 <span class="w">목차표</span> (연번·제목·기관·분야)
+② 정책 기사는 <span class="w">기관별</span>로 묶어 정리
+③ R&amp;D·기업동향 기사는 <span class="w">12대 기술분야별</span>로 정리
+· 연번과 건수는 <span class="w">직접 세어서</span> 넣어줘
+· <span class="w">원본 엑셀은 절대 수정하지 마</span>
+· 결과는 md와 HTML 두 형식으로 저장해줘</div>
+      <ul class="bullets">
+        <li><b>✅ 성공 판정</b> — 목차표·기관별·분야별 세 묶음이 파일로 나오고, <b>엑셀 행수와 기사 수가 일치</b>한다</li>
+        <li>검증 습관 — <b>"엑셀 행수와 기사 수가 같은지 세어서 보고해줘"</b>를 한 번 더 시킨다</li>
+        <li>사람 몫으로 남는 것 — 표지 · 심층 분석 원고 · <b>발행 판단</b></li>
+      </ul>
+    </section>
+
+    <section class="slide" data-sid="b3">
+      <div class="eyebrow">실습 5-2</div>
+      <h2>실습 5-2 — 고치지 않는다, 다시 만든다</h2>
+      <div class="rule"></div>
+      <p class="lead">기사가 추가되거나 분류가 바뀌면 — <b>문서를 고치는 대신 엑셀을 고치고 재생성</b>한다</p>
+      <div class="prompt">엑셀에서 기사 한 건을 지운 셈 치고, 브리핑을 <span class="w">처음부터 다시</span> 만들어줘.
+연번·목차·건수 통계가 <span class="w">전부 다시 계산</span>됐는지 확인해서 알려줘.</div>
+      <div class="cols">
+        <div class="card warn-c"><h3>문서를 직접 고치면</h3>
+          <ul class="bullets tight" style="margin-top:2px">
+            <li>연번 밀림을 손으로 다시 맞춘다</li>
+            <li>목차와 본문이 어긋난다</li>
+            <li>통계 재계산을 잊는다</li>
+            <li>"어느 게 최신본이지?"</li>
+          </ul></div>
+        <div class="card accent"><h3>재생성하면</h3>
+          <ul class="bullets tight" style="margin-top:2px">
+            <li>연번·목차·통계가 <b>전부 자동 재계산</b></li>
+            <li>원천은 엑셀 하나 — <b>단일 진실</b></li>
+            <li>md·HTML 등 <b>여러 형식 동시 산출</b></li>
+            <li>몇 번이든 반복 가능</li>
+          </ul></div>
+      </div>
+      <div class="callout"><b>문서는 산출물이지 저장소가 아니다</b> — 이 원칙 하나가 매월 반복되는 수정 작업을 없앤다</div>
+    </section>
+
+    <section class="slide" data-sid="s69">
+      <div class="eyebrow">마무리 · 수확</div>
+      <h2>수확 — 켜 두었던 팀에게 돌아간다</h2>
+      <div class="rule"></div>
+      <div class="flow">
+        <div class="step"><b>① 태그</b>[보강 필요] 찾기</div><span class="arrow">→</span>
+        <div class="step"><b>② 출처</b>조사노트 URL 하나 직접 열기</div><span class="arrow">→</span>
+        <div class="step"><b>③ 검수</b>검수보고서 지적사항 읽기</div>
+      </div>
+      <ul class="bullets">
+        <li><b>✅ 성공 판정</b> — 3쪽 브리핑 본문 + 과정 파일(연구설계·조사노트·검수보고서)이 폴더에 남아 있다</li>
+        <li>[보강 필요]가 있다는 건 <b>실패가 아니라 정직</b> — 확인 못 한 숫자를 단정하지 않았다는 표시</li>
+        <li>아직 안 끝난 분 — 그대로 두면 된다 <b>완성되면 파일로 남는다</b> (세션이 유지되는 동안 작업은 이어진다)</li>
+      </ul>
+      <div class="prompt">방금 만든 브리핑에서 [출처 미확인] 표시가 몇 개인지 세고, 각각 왜 확인이 안 됐는지 한 줄로 정리해줘</div>
+      <div class="callout">이 한 줄이 <b>검수 습관의 시작</b>이다 — 산출물을 받자마자 "무엇이 확인 안 됐나"부터 묻는 것</div>
+    </section>
+
+    <section class="slide" data-sid="fin1">
+      <div class="eyebrow">마무리 · 못 다룬 니즈</div>
+      <h2>오늘 실습에서 다루지 않은 두 가지도 키트에 있다 — JCR · 분석</h2>
+      <div class="rule"></div>
+      <p class="lead">실습을 못 했을 뿐 <b>빈손이 아니다</b> — 절차와 프롬프트가 그대로 들어 있다</p>
+      <div class="grid-2">
+        <div class="card"><h3>JCR 미매칭 조사 <span class="pill">요청 4</span></h3>
+          <p>저널명·ISSN만으로 개명·통합·폐간을 조사해 <b>근거 URL 딸린 후보 표</b>를 받는다 — 후보는 AI, 확정은 사람, 미확인은 미확인으로. 파이프라인 운전 규칙은 CLAUDE.md에 적어 두면 매달 같은 방식으로 돈다<br>
+          <span class="eg">실습으로 넣지 않은 이유 · 실제 미매칭 목록이 있어야 의미가 있어 가상 데이터로는 체감이 안 된다</span><br>
+          <span class="eg">키트 · 심화C + 운전기사 규칙 · 방법은 앞의 우수성과 장에서 이미 봤다</span></p></div>
+        <div class="card accent"><h3>분석 로드맵 <span class="pill">요청 5</span></h3>
+          <p>규모 → 구조 → 위치 → <b>공백</b>의 네 층으로 쌓는다 — 연료는 오늘 연결한 NTIS·OpenAlex·KIPRIS, 연결키는 과제번호·DOI·기관명<br>
+          <span class="eg">실습으로 넣지 않은 이유 · 네 층은 하루에 끝나지 않는다. 원료를 붙이는 데까지가 오늘 몫이다</span><br>
+          <span class="eg">카탈로그 · 분석 로드맵 장 · 원료 연결은 실습 2에서 이미 했다</span></p></div>
+      </div>
+      <div class="mini-flow"><b>키트 폴더를<br>바탕화면에 복사</b><span>→</span><b>그 폴더에서<br>Claude Code 열기</b><span>→</span><b>미션카드의<br>프롬프트 복사</b><span>→</span><b>내 자료로<br>바꿔 실행</b></div>
+      <div class="callout">각 폴더의 <b>미션카드.md</b>에 전 단계가 있다 — 오늘 배운 방식 그대로 사무실에서 재현하면 된다</div>
+    </section>
+
+    <section class="slide" data-sid="s70">
+      <div class="eyebrow">마무리 · 처방과 다음 걸음</div>
+      <h2>진행이 막혔을 때의 처방 — 그리고 내일 아침의 첫걸음</h2>
+      <div class="rule"></div>
+      <ul class="bullets">
+        <li><b>권한 확인이 반복해서 표시된다</b> → 내용 읽고 허용 — 실습 폴더 안 읽기·쓰기가 대부분 <span class="note">폴더 밖 요청이면 멈추고 손 들기</span></li>
+        <li><b>중간에 멈췄다·꼬였다</b> → "지금 상태 요약해줘" 후 이어가기 <span class="note">새로 시작해도 파일 자산은 남아 있다</span></li>
+        <li><b>결과가 이상하다</b> → 그대로 쓰지 말고 "이 부분 근거 뭐야?" — 되묻기도 검증 습관</li>
+        <li><b>내일 아침 첫걸음</b> — ① 실제 회의 1건을 회의록 스킬로 ② 이번 주 키 발급 완료 ③ 다음 호 브리핑 병행 적용 ④ 브리프 1건 실무 투입 <span class="note">내 에이전트 기획 프롬프트·9항목 목차는 키트 '기획' 폴더에</span></li>
+      </ul>
+      <div class="callout">오늘 배포하는 <b>「소재혁신 업무 AI 도구 카탈로그」</b>(HTML) — API 21종·MCP 13종을 전부 실호출로 검증해 상태를 표기했다 업무→도구 지도 · 키 발급 절차 · 프롬프트 카드 · 보안 기준까지, 필요할 때 펼치는 참조표이다</div>
+    </section>
+
+    <section class="slide" data-sid="s77">
+      <div class="eyebrow">마무리 · 체크아웃</div>
+      <h2>체크아웃 — 아래가 확인되면 오늘은 성공이다</h2>
+      <div class="rule"></div>
+      <div class="checks">
+        <div class="check"><span class="box">✓</span><div>강의에서 만든 <b>CLAUDE.md</b>가 내 폴더에 있고, <b>스킬이 무엇인지</b> 설명할 수 있다</div></div>
+        <div class="check"><span class="box">✓</span><div><b>5인 팀</b>이 설치돼 있고, 목차 관문에서 <b>한마디 고쳐</b> 브리핑을 받아 봤다 (실습 1)</div></div>
+        <div class="check"><span class="box">✓</span><div>법령·논문 API를 호출했고, 내 키를 <b>.env에</b> 넣었다 · <b>kordoc·korean-law</b>가 동작한다 (실습 2·3)</div></div>
+        <div class="check"><span class="box">✓</span><div><b>수요조사서 40건</b>이 분류·클러스터링되어 <b>요약표 파일</b>로 남았다 (실습 4)</div></div>
+        <div class="check"><span class="box">✓</span><div><b>소부장 브리핑 초안</b>을 엑셀에서 만들고 <b>재생성 원칙</b>을 확인했다 (실습 5)</div></div>
+        <div class="check"><span class="box">✓</span><div><b>내 업무 중 무엇에 먼저 적용할지</b> 하나가 떠올랐다 — <b>무엇을 만들지</b>도 어렴풋이 보인다</div></div>
+      </div>
+    </section>
+
+    <section class="slide" data-sid="s77-2">
+      <div class="eyebrow">마무리 · 배포 자료</div>
+      <h2>오늘 가져가는 것 — 폴더 하나에 전부 들어 있다</h2>
+      <div class="rule"></div>
+      <p class="lead">슬라이드가 아니라 — <b>내일 아침에 열어서 그대로 쓰는 것</b>들이다</p>
+      <table class="tight">
+        <thead><tr><th style="width:24%">무엇</th><th style="width:46%">안에 들어 있는 것</th><th>언제 여나</th></tr></thead>
+        <tbody>
+          <tr><td class="em">AI 도구 카탈로그<br><span class="eg">HTML 한 장</span></td><td>창구 <b>8분야 지도</b> · 키 발급·설치 실무 · 보안 경계 · <b>프롬프트 카드</b> · 도입 점검표</td><td>"이 일엔 뭘 불러야 하지?" 싶을 때</td></tr>
+          <tr><td class="em">실습키트<br><span class="eg">폴더</span></td><td>실습 0~5 <b>미션카드와 샘플</b> + 심화 4종(회의록·브리핑·JCR·대시보드)</td><td>사무실에서 그대로 재현할 때</td></tr>
+          <tr><td class="em">정책연구팀 킷<br><span class="eg">이미 설치됨</span></td><td>에이전트 5인 · 스킬 6종 · 관문 2개 — <b>MIT</b>라 고쳐 쓰고 나눠 줘도 된다</td><td>팀을 내 기준으로 고칠 때</td></tr>
+        </tbody>
+      </table>
+      <ul class="bullets">
+        <li><b>지금 열어 보기</b> — <a href="참고자료_AI도구_카탈로그.html" target="_blank">참고자료_AI도구_카탈로그.html</a> <span class="note">더블클릭하면 브라우저에서 열린다 · 인터넷 없이도 열린다</span></li>
+      </ul>
+    </section>
+
+    <section class="slide cover" data-sid="s78">
+      <div class="fill"></div>
+      <div class="eyebrow">한국재료연구원 소재혁신선도본부 AI 특강</div>
+      <h1>감사합니다<br><em>Q &amp; A</em></h1>
+      <div class="accent-bar"></div>
+      <div style="margin-top:20px">
+        <div style="font-size:26px;font-weight:800;color:var(--navy)">박 주 이</div>
+        <div class="sub" style="margin-top:10px"><b>parkjui92@gmail.com</b> · github.com/parkjui92</div>
+        <div class="sub" style="margin-top:10px">오늘 배포 — 실습키트 · AI 도구 카탈로그 · policy-research-kit(MIT)</div>
+        <div class="sub" style="margin-top:6px">키트와 카탈로그 업데이트도 이 채널로 공지합니다</div>
+      </div>
+      <div class="fill"></div>
+    </section>
+
+
+  </main>
+</div>
+
+<div id="bar"></div>
+<div id="num"></div>
+<div id="notes"></div>
+<div id="overview"><h4>목차 — 클릭하면 이동 (O 로 닫기)</h4><div id="ovlist"></div></div>
+<div id="help"><div>
+  <div><kbd>←</kbd> <kbd>→</kbd> <kbd>Space</kbd> 이동</div>
+  <div><kbd>O</kbd> 목차</div>
+  <div><kbd>T</kbd> 밝게/어둡게 · <kbd>F</kbd> 전체화면</div>
+  <div><kbd>숫자</kbd>+<kbd>Enter</kbd> 해당 장으로</div>
+  <div><kbd>?</kbd> 이 도움말 닫기</div>
+</div></div>
+
+<script>
+(function(){
+  var stage=document.getElementById('stage');
+  var slides=[].slice.call(stage.querySelectorAll('.slide'));
+  var bar=document.getElementById('bar'), num=document.getElementById('num');
+  var notes=document.getElementById('notes'), overview=document.getElementById('overview');
+  var ovlist=document.getElementById('ovlist'), help=document.getElementById('help');
+  var cur=0, jump='';
+
+  window.addEventListener('wheel',function(e){
+    if(Math.abs(e.deltaX)<=Math.abs(e.deltaY)) return;
+    var el=e.target;
+    while(el&&el!==document.body){
+      if(el.scrollWidth>el.clientWidth+1){
+        var ox=getComputedStyle(el).overflowX;
+        if(ox==='auto'||ox==='scroll') return;
+      }
+      el=el.parentElement;
+    }
+    e.preventDefault();
+  },{passive:false,capture:true});
+
+  function fit(){
+    var pad = window.innerWidth<700 ? 8 : 28;
+    var k=Math.min((window.innerWidth-pad*2)/1280,(window.innerHeight-pad*2)/720);
+    stage.style.transform='scale('+k+')';
+  }
+  window.addEventListener('resize',fit); fit();
+
+  function fitSlide(s){
+    if(!s || s.classList.contains('cover') || s.classList.contains('divider')) return;
+    s.classList.remove('compact','ultra-compact');
+    if(s.scrollHeight>s.clientHeight+1) s.classList.add('compact');
+    if(s.scrollHeight>s.clientHeight+1) s.classList.add('ultra-compact');
+  }
+
+  slides.forEach(function(s,i){ s.setAttribute('data-pg', i+1); });
+
+  function render(){
+    slides.forEach(function(s,i){ s.classList.toggle('active', i===cur); });
+    fitSlide(slides[cur]);
+    bar.style.width=((cur+1)/slides.length*100)+'%';
+    num.textContent=(cur+1)+' / '+slides.length;
+    num.classList.remove('jumping');
+    var n=slides[cur].querySelector('.notes');
+    notes.innerHTML=n?('<b>발표자 노트</b><br>'+n.innerHTML):'<b>발표자 노트</b><br>—';
+    var sid=slides[cur].getAttribute('data-sid');
+    if(sid && location.hash.slice(1)!==sid) history.replaceState(null,'','#'+sid);
+    [].forEach.call(ovlist.children,function(b,i){ b.classList.toggle('cur',i===cur); });
+  }
+  function go(i){ cur=Math.max(0,Math.min(i,slides.length-1)); render(); }
+
+  slides.forEach(function(s,i){
+    var b=document.createElement('button');
+    var h=s.querySelector('h1,h2');
+    b.innerHTML='<span class="n">'+(i+1)+'</span><span>'+(h?h.textContent:'(제목 없음)')+'</span>';
+    b.addEventListener('click',function(){ go(i); overview.classList.remove('on'); });
+    ovlist.appendChild(b);
+  });
+
+  function fromHash(){
+    var sid=location.hash.slice(1); if(!sid) return false;
+    for(var i=0;i<slides.length;i++){
+      if(slides[i].getAttribute('data-sid')===sid){ cur=i; return true; }
+    }
+    return false;
+  }
+  window.addEventListener('hashchange',function(){ if(fromHash()) render(); });
+
+  document.addEventListener('keydown',function(e){
+    var t=e.target;
+    if(t && (t.isContentEditable || /INPUT|TEXTAREA|SELECT/.test(t.tagName||''))) return;
+    if(e.metaKey||e.ctrlKey||e.altKey) return;
+    var k=e.key;
+    if(k>='0'&&k<='9'){
+      jump+=k;
+      num.textContent='→ '+jump+' 쪽'; num.classList.add('jumping');
+      return;
+    }
+    if(k==='Backspace'&&jump){
+      jump=jump.slice(0,-1);
+      if(jump){ num.textContent='→ '+jump+' 쪽'; } else { render(); }
+      return;
+    }
+    if(k==='Enter'&&jump){ go(parseInt(jump,10)-1); jump=''; return; }
+    if(k==='ArrowRight'||k==='PageDown'||k===' '){ e.preventDefault(); go(cur+1); }
+    else if(k==='ArrowLeft'||k==='PageUp'){ e.preventDefault(); go(cur-1); }
+    else if(k==='Home'){ go(0); } else if(k==='End'){ go(slides.length-1); }
+    else if(k==='o'||k==='O'||k==='ㅐ'){ overview.classList.toggle('on'); }
+    else if(k==='t'||k==='T'||k==='ㅅ'){
+      var d=document.documentElement;
+      d.setAttribute('data-theme', d.getAttribute('data-theme')==='dark'?'light':'dark');
+    }
+    else if(k==='f'||k==='F'||k==='ㄹ'){
+      if(document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen();
+    }
+    else if(k==='?'||k==='/'){ help.classList.toggle('on'); }
+    else if(k==='Escape'){ overview.classList.remove('on'); help.classList.remove('on'); }
+    if(jump){ jump=''; render(); }
+  });
+
+  overview.addEventListener('click',function(e){ if(e.target===overview) overview.classList.remove('on'); });
+  help.addEventListener('click',function(){ help.classList.remove('on'); });
+
+  fromHash();
+  render();
+})();
+</script>
+<script>
+document.addEventListener('click',function(e){
+  var el=e.target.closest('.prompt'); if(!el) return;
+  var t=el.innerText.replace(/\s+$/,'');
+  function ok(){ el.classList.add('copied'); setTimeout(function(){el.classList.remove('copied')},1400); }
+  function legacy(){
+    var ta=document.createElement('textarea'); ta.value=t; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{ if(document.execCommand('copy')) ok(); }catch(err){}
+    document.body.removeChild(ta);
+  }
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(ok).catch(legacy);
+  } else legacy();
+});
+</script>
+</body>
+</html>
