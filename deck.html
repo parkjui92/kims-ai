@@ -1091,27 +1091,6 @@ thead th b{color:#fff}
       <div class="callout">사람이 한 일은 요청 한 줄(1)과 보류 6건 확정(5)뿐 — 나머지는 부품이 돌았다 이것이 2부 실습 4에서 여러분이 직접 할 일이다</div>
     </section>
 
-    <section class="slide" data-sid="r5">
-      <div class="eyebrow">연구실 · CLAUDE.md</div>
-      <h2>CLAUDE.md에는 무엇을 적어야 하는가</h2>
-      <div class="rule"></div>
-      <p class="lead">매 세션 반복하던 설명을 없애는 파일 — 프로젝트의 업무 매뉴얼이다</p>
-      <table>
-        <thead><tr><th style="width:20%">적을 것</th><th style="width:44%">우리 업무 예시</th><th>없으면</th></tr></thead>
-        <tbody>
-          <tr><td class="em">목적</td><td>"이 폴더는 월간 소부장 브리핑 제작용이다"</td><td>매번 맥락부터 설명</td></tr>
-          <tr><td class="em">자료 위치</td><td>"원본 엑셀은 raw/, 산출물은 out/에 만든다"</td><td>엉뚱한 파일을 건드림</td></tr>
-          <tr><td class="em">금지사항</td><td>"원본은 절대 수정하지 않는다 — 복사본으로 작업"</td><td>원본 훼손 사고</td></tr>
-          <tr><td class="em">출력 형식</td><td>"개조식·~다 종결 · 표는 연번 포함"</td><td>사람마다 다른 결과물</td></tr>
-          <tr><td class="em">검증 방법</td><td>"엑셀 행수와 기사 수가 같은지 세어서 보고"</td><td>틀린 걸 모른 채 납품</td></tr>
-        </tbody>
-      </table>
-      <div class="callout">원칙 둘 — 프로젝트 <b>고유 규칙만</b> 적고("쓰레기로 채울 바엔 비워 두라"), 한 번에 완성하지 말고 실수가 날 때마다 한 줄씩 늘린다</div>
-      <div class="foot">
-        <div class="fi"><span class="fm">참고</span><span class="fd">도구마다 파일 이름만 다르다 — Claude Code는 <b>CLAUDE.md</b>, OpenAI Codex 등은 <b>AGENTS.md</b>를 읽는다. <b>내용과 원리는 같으므로</b> 한 번 써 두면 다른 도구로 옮길 때도 그대로 쓴다</span></div>
-      </div>
-    </section>
-
     <section class="slide" data-sid="r6">
       <div class="eyebrow">연구실 · 부품 지도</div>
       <h2>부품 몇 가지만 알면 나만의 AI 팀을 조립할 수 있다</h2>
@@ -1133,58 +1112,25 @@ thead th b{color:#fff}
       </div>
     </section>
 
-    <section class="slide" data-sid="r6-2">
-      <div class="eyebrow">연구실 · 부품의 연결</div>
-      <h2>따로 배운 부품들이 실제로는 한 줄로 이어져 돈다</h2>
+    <section class="slide" data-sid="r5">
+      <div class="eyebrow">연구실 · CLAUDE.md</div>
+      <h2>CLAUDE.md에는 무엇을 적어야 하는가</h2>
       <div class="rule"></div>
-      <div class="flow">
-        <div class="step"><b>내 한마디</b>"소부장 브리핑 정리해줘"</div><span class="arrow">→</span>
-        <div class="step"><b>CLAUDE.md</b>늘 지킬 규칙 — 서식·말투·금지</div><span class="arrow">→</span>
-        <div class="step"><b>스킬 · 명령어</b>절차를 꺼낸다</div><span class="arrow">→</span>
-        <div class="step"><b>에이전트 팀</b>쪼개서 위임 — 조사·집필·검수</div><span class="arrow">→</span>
-        <div class="step"><b>MCP · API</b>원자료를 집는다 — NTIS·법제처</div><span class="arrow">→</span>
-        <div class="step gate"><b>훅 · 검증자</b>통과한 것만 — 출처·수치 대조</div><span class="arrow">→</span>
-        <div class="step hi"><b>산출물</b>표 · 보고서 · .hwpx</div>
+      <p class="lead">매 세션 반복하던 설명을 없애는 파일 — 프로젝트의 업무 매뉴얼이다</p>
+      <table>
+        <thead><tr><th style="width:20%">적을 것</th><th style="width:44%">우리 업무 예시</th><th>없으면</th></tr></thead>
+        <tbody>
+          <tr><td class="em">목적</td><td>"이 폴더는 월간 소부장 브리핑 제작용이다"</td><td>매번 맥락부터 설명</td></tr>
+          <tr><td class="em">자료 위치</td><td>"원본 엑셀은 raw/, 산출물은 out/에 만든다"</td><td>엉뚱한 파일을 건드림</td></tr>
+          <tr><td class="em">금지사항</td><td>"원본은 절대 수정하지 않는다 — 복사본으로 작업"</td><td>원본 훼손 사고</td></tr>
+          <tr><td class="em">출력 형식</td><td>"개조식·~다 종결 · 표는 연번 포함"</td><td>사람마다 다른 결과물</td></tr>
+          <tr><td class="em">검증 방법</td><td>"엑셀 행수와 기사 수가 같은지 세어서 보고"</td><td>틀린 걸 모른 채 납품</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">원칙 둘 — 프로젝트 <b>고유 규칙만</b> 적고("쓰레기로 채울 바엔 비워 두라"), 한 번에 완성하지 말고 실수가 날 때마다 한 줄씩 늘린다</div>
+      <div class="foot">
+        <div class="fi"><span class="fm">참고</span><span class="fd">도구마다 파일 이름만 다르다 — Claude Code는 <b>CLAUDE.md</b>, OpenAI Codex 등은 <b>AGENTS.md</b>를 읽는다. <b>내용과 원리는 같으므로</b> 한 번 써 두면 다른 도구로 옮길 때도 그대로 쓴다</span></div>
       </div>
-      <ul class="bullets">
-        <li><b>규칙·절차는 한 번 써 두면 자산</b> — CLAUDE.md와 스킬은 다음 요청에도 그대로 다시 쓰인다</li>
-        <li><b>손발이 붙어야 오늘자 수치</b> — MCP·API가 없으면 학습된 기억으로 답한다</li>
-        <li><b>검증은 끝이 아니라 공정 안</b> — 훅은 조건이 부르고, 검증자는 독립으로 판정한다</li>
-      </ul>
-      <div class="callout">부품 하나하나가 아니라 <b>이 한 줄 전체가 '판'(하네스)</b>이다 — 같은 모델이라도 판이 다르면 결과가 갈린다</div>
-      <div class="src"><b>하네스 엔지니어링</b> · 말(프롬프트)을 다듬는 대신 <b>일이 놓이는 판</b>을 설계하는 것 — 무엇을 늘 지킬지(규칙) · 어떤 절차로 할지(스킬) · 무엇을 집을 수 있는지(도구) · 무엇을 통과해야 하는지(검증)를 미리 짜 둔다. 말은 매번 새로 하지만 <b>판은 한 번 짜면 남는다</b> — 앞서 본 용어의 진화에서 '단위: 판'에 해당하는 층이다</div>
-    </section>
-
-    <section class="slide" data-sid="r6-3">
-      <div class="eyebrow">연구실 · 하루가 도는 법</div>
-      <h2>제 조교 Research Bot은 이렇게 일합니다</h2>
-      <div class="rule"></div>
-      <p class="lead">내가 <b>던지면</b> 리서치봇이 <b>밤새 조사하고</b>, 나는 아침에 <b>남길 것만 고른다</b></p>
-      <div class="korch">
-        <span class="ktag">오케스트레이터</span>
-        <span class="kcap">Research Bot (OpenClaw 게이트웨이) — 요청을 분해해 <b>클로드 코드 · 캘린더 · 위키</b>에 라우팅</span>
-      </div>
-      <div class="kflow">
-        <div class="kstep dk"><span class="kl">낮 · 이동 중</span><span class="kb">메모 · 회의록 던지기</span><span class="ks">메신저 / Tiro</span></div>
-        <span class="karr">→</span>
-        <div class="kstep on"><span class="kl">분류</span><span class="kb">할 일 vs 알 거리</span><span class="ks">triage</span></div>
-        <span class="karr">→</span>
-        <div class="kstep on"><span class="kl">밤새</span><span class="kb">근거 조사 · 캘린더 등록</span><span class="ks">클로드 코드에 위임</span></div>
-        <span class="karr">→</span>
-        <div class="kstep dk"><span class="kl">아침</span><span class="kb">브리핑을 읽는다</span><span class="ks">밤새 한 일 보고</span></div>
-        <span class="karr">→</span>
-        <div class="kstep user"><span class="kl">★</span><span class="kb">위키에 남길 것 고르기</span><span class="ks">★ 사용자 컨펌</span></div>
-        <span class="karr">→</span>
-        <div class="kstep chk"><span class="kl">✓</span><span class="kb">적재 · 자가 점검</span><span class="ks">wiki ingest</span></div>
-      </div>
-      <div class="grid-4">
-        <div class="card"><h3>① 조교는 OpenClaw, 일꾼은 클로드</h3><p>메신저로 받은 말을 OpenClaw가 받아 — <b>실제 작업은 클로드 코드에</b> 시킨다</p></div>
-        <div class="card"><h3>② 밤에 일하고 아침에 보고</h3><p>책상 앞이 아니어도 던져 두면 — 자는 동안 조사가 끝나 있고, <b>브리핑을 읽는 것으로</b> 하루가 시작된다</p></div>
-        <div class="card"><h3>③ 위키에 남길 것은 내가 고른다</h3><p>브리핑을 보고 <b>남길 것만 컨펌</b>한다 — 나머지는 버린다 — 그래서 검증된 것만 쌓인다</p></div>
-        <div class="card accent"><h3>④ 복리</h3><p>쌓일수록 <b>나를 더 잘 아는 위키</b>가 되고, 다음 보고서의 근거가 된다</p></div>
-      </div>
-      <div class="callout">자동화된 구간보다 중요한 건 <b>★ 하나</b> — 무엇을 남길지는 끝까지 <b>사람이 정한다</b></div>
-      <div class="src"><b>루프 엔지니어링</b> · 한 번 시켜 답을 받는 대신 <b>계획 → 실행 → 점검 → 수정</b>이 스스로 돌게 만드는 것 — 사람은 매 단계를 시키지 않고 <b>돌 조건과 멈출 지점</b>만 정한다(위 흐름의 ★가 그 멈출 지점) &nbsp;·&nbsp; <b>OpenClaw</b>는 메신저와 AI를 잇는 오픈소스 게이트웨이(코어 MIT, 2025.11), Anthropic의 <b>Claude Code Channels</b>로도 같은 구조를 만들 수 있다</div>
     </section>
 
     <section class="slide" data-sid="r7">
@@ -1213,6 +1159,31 @@ thead th b{color:#fff}
       <div class="callout">마지막 줄이 핵심이다 — AI가 <b>스스로 알아낼 수 있는 것</b>(폴더 구조 등)을 적으면 비용만 늘고 성공률은 떨어진다</div>
     </section>
 
+    <section class="slide" data-sid="r5-3">
+      <div class="eyebrow">연구실 · 부품 ② 스킬</div>
+      <h2>스킬 — 반복하는 절차를 파일 한 장으로 굳힌다</h2>
+      <div class="rule"></div>
+      <p class="lead">CLAUDE.md가 <b>늘 지킬 규칙</b>이라면, 스킬은 <b>부를 때 꺼내 쓰는 절차서</b>다</p>
+      <table class="tight">
+        <thead><tr><th style="width:20%">견줘 보면</th><th style="width:38%">CLAUDE.md</th><th>스킬</th></tr></thead>
+        <tbody>
+          <tr><td class="em">언제 읽히나</td><td><b>항상</b> — 무엇을 시키든 먼저 읽힌다</td><td><b>부를 때만</b> — 그 작업일 때 꺼내진다</td></tr>
+          <tr><td class="em">무엇을 적나</td><td>늘 지킬 규칙 · 금지 · 말투</td><td>이 작업의 <b>순서 · 출력 항목 · 판단 기준</b></td></tr>
+          <tr><td class="em">늘어나는 방식</td><td>아쉬울 때 <b>한 줄씩</b></td><td>업무 하나에 <b>파일 한 장씩</b></td></tr>
+        </tbody>
+      </table>
+      <div class="cols" style="align-items:flex-start">
+        <div class="card"><h3>스킬로 만들 만한가 — 두 가지만 묻는다</h3>
+          <ul class="bullets tight" style="margin-top:2px;gap:7px">
+            <li><b>반복되는가?</b> → 절차를 파일로 굳힌다</li>
+            <li><b>틀리면 큰일 나는가?</b> → 검증 규칙을 함께 넣는다</li>
+          </ul></div>
+        <div class="card accent"><h3>그래서 후보는 이런 것들</h3>
+          <p>회의 개최 계획(안) · 회의록 · 검토의견서 · 결과보고 · 보도자료 · 공고문 검토 — <b>틀이 있는 문서는 전부 후보</b>다</p></div>
+      </div>
+      <div class="callout">내 판단 기준을 <b>말로 설명할 수 있으면</b> — 그건 이미 스킬이다. 남은 일은 그 말을 파일에 옮겨 적는 것뿐이다</div>
+    </section>
+
     <section class="slide" data-sid="r7-2">
       <div class="eyebrow">연구실 · 해보기 ②</div>
       <h2><span class="hands">★ 해보기</span> — 스킬 하나를 만들고, 열어서 확인한다</h2>
@@ -1230,47 +1201,6 @@ thead th b{color:#fff}
         </tbody>
       </table>
       <div class="callout">읽을 수 있으면 <b>고칠 수 있다</b> — 반복되고 · 틀이 있고 · 기준을 말로 설명할 수 있으면 <b>스킬 대상</b>이다</div>
-    </section>
-
-    <section class="slide" data-sid="r7-3">
-      <div class="eyebrow">연구실 · 해보기 ③</div>
-      <h2><span class="hands">★ 해보기</span> — API에 직접 물어본다</h2>
-      <div class="rule"></div>
-      <p class="lead">주소를 외울 필요가 없다 — <b>필요한 것을 말하면</b> 창구를 찾아 호출한다</p>
-      <div class="prompt">국가법령정보 공개 API로 <span class="w">소재·부품·장비</span> 관련 법령을 찾아줘.
-법령명·소관부처·시행일을 표로 정리하고 원문 링크도 같이 줘.
-<span class="dim">(인증키는 시연용 OC=test를 쓰면 된다)</span></div>
-      <div class="prompt">OpenAlex API로 <span class="w">전고체 배터리</span> 분야 최근 3년 논문 수를 연도별로 정리해줘.
-<span class="w">몇 건을 근거로 집계했는지</span>도 함께 적어줘.</div>
-      <ul class="bullets">
-        <li><b>✅ 이렇게 나온다</b> — 법령이 표로 정리되고 원문 링크가 붙는다 · 논문 수가 연도별로 집계된다</li>
-        <li><b>학습된 기억이 아니라 오늘자 원천</b>이다 — 시행일·개정 여부가 실제 값으로 온다</li>
-      </ul>
-      <div class="callout">이 창구들이 앞서 본 <b>조사관 에이전트</b>가 쓰는 손발이다 — 이제 여러분도 같은 것을 쥐었다</div>
-    </section>
-
-    <section class="slide" data-sid="r7-6">
-      <div class="eyebrow">연구실 · 해보기 ④</div>
-      <h2><span class="hands">★ 해보기</span> — 내 첫 루프 걸기</h2>
-      <div class="rule"></div>
-      <p class="lead">한 번 시키는 것에서 <b>알아서 도는 것</b>으로 — 아침에 켜면 <em>어젯밤 결과가 와 있다</em></p>
-      <div class="prompt">매주 월요일 아침 8시에 — <span class="w">소재·부품·장비 관련 새 공고와 법령 개정</span>을 조사해서
-<span class="w">briefing/ 폴더에 날짜별 md 파일</span>로 저장해줘.
-확인 못 한 건 <span class="ok">[출처 미확인]</span>으로 남기고, <span class="w">메일이나 메신저로 보내지는 말고</span> 파일로만 남겨줘.
-<span class="dim">→ 슬래시 명령으로도 된다: /schedule</span></div>
-      <table class="tight">
-        <thead><tr><th style="width:38%">루프는 혼자 돈다 — 그래서</th><th>프롬프트에 반드시 적을 것</th></tr></thead>
-        <tbody>
-          <tr><td class="em">다음 실행은 <b>오늘 대화를 기억하지 못한다</b></td><td>무엇을 · 어디에 · 어떤 형식으로를 <b>한 번에 다</b> 적는다</td></tr>
-          <tr><td class="em">화면에만 뜬 결과는 사라진다</td><td>"<b>파일로 저장해줘</b>" — 폴더와 파일명까지 지정한다</td></tr>
-          <tr><td class="em">되돌릴 수 없는 일은 사람이 한다</td><td>"<b>보내지 말고 초안만</b>" — 발송·게시·삭제는 시키지 않는다</td></tr>
-        </tbody>
-      </table>
-      <ul class="bullets">
-        <li><b>✅ 성공 판정</b> — <span class="cmd">예약된 작업 목록 보여줘</span>라고 물으면 방금 건 루프와 <b>다음 실행 시각</b>이 나온다</li>
-        <li>앱이 꺼져 있던 시각은 건너뛰지 않는다 — <b>다음에 켤 때</b> 실행된다</li>
-      </ul>
-      <div class="callout">루프의 값어치는 '자동'이 아니라 — <b>내가 잠든 사이에도 내 규칙이 지켜진다</b>는 데 있다</div>
     </section>
 
     <section class="slide" data-sid="r8-0">
@@ -1295,6 +1225,7 @@ thead th b{color:#fff}
       <div class="eyebrow">연구실 · 외부 연동</div>
       <h2>외부 연동 — AI가 직접 두드리는 자료 창구(API)</h2>
       <div class="rule"></div>
+      <p class="lead">제 조사관들은 이 창구를 <b>직접 호출</b>한다 — 학습된 기억이 아니라 <em>오늘자 원천</em>이다</p>
       <table>
         <thead><tr><th style="width:11%">분야</th><th style="width:31%">창구</th><th>무엇이 나오나</th><th style="width:16%">키</th></tr></thead>
         <tbody>
@@ -1308,28 +1239,23 @@ thead th b{color:#fff}
           <tr><td class="em">웹 검색</td><td>Serper · SerpAPI (SERP)</td><td>검색 결과를 데이터로 — <b>국가·언어 지정</b></td><td>무료 한도 후 유료</td></tr>
         </tbody>
       </table>
-      <ul class="bullets">
-        <li>제 조사관들은 이 창구를 <b>직접 호출</b>한다 — 학습된 기억이 아니라 오늘자 원천</li>
-        <li>해외 동향은 <b>그 나라 말로 물어야</b> 나온다 — 일본은 일본어로, 독일은 독일어로 찾아 온다</li>
-      </ul>
     </section>
 
-    <section class="slide" data-sid="r8-2">
-      <div class="eyebrow">연구실 · 경계</div>
-      <h2>밖으로 나가면 안 되는 자료는? — 내 컴퓨터 안의 모델</h2>
+    <section class="slide" data-sid="r7-3">
+      <div class="eyebrow">연구실 · 해보기 ③</div>
+      <h2><span class="hands">★ 해보기</span> — API에 직접 물어본다</h2>
       <div class="rule"></div>
-      <p class="lead">연구자료 중에는 <b>API로 올리면 안 되는 것</b>이 있다 — 그래서 <em>로컬 모델을 한 대 띄워 뒀다</em></p>
-      <table>
-        <thead><tr><th style="width:18%">항목</th><th>구성</th></tr></thead>
-        <tbody>
-          <tr><td class="em">실행 엔진</td><td><b>Ollama 0.32.5</b> — 맥 앱으로 설치, 명령 한 줄로 모델 내려받기</td></tr>
-          <tr><td class="em">모델</td><td><b>gemma3:12b</b> — 8.1GB, 구글이 공개한 <b>오픈 가중치</b> 모델</td></tr>
-          <tr><td class="em">주소</td><td><span class="cmd">localhost:11434</span> — <b>127.0.0.1 전용</b>으로 묶어 외부에서 접근 불가</td></tr>
-          <tr><td class="em">자동 시작</td><td>LaunchAgent 등록 — 재부팅해도 알아서 뜬다</td></tr>
-        </tbody>
-      </table>
-      <div class="callout">핵심은 성능이 아니라 <b>경계</b>다 — 대외비 초안·미공개 데이터·개인정보가 섞인 자료를 <b>밖으로 내보내지 않고</b> 1차 처리할 수 있다</div>
-      <div class="src"><b>오픈 가중치(open-weight) 모델</b> · 모델 파일을 직접 내려받아 내 기기에서 돌리는 모델 — 대화가 회사 서버로 가지 않는다. 설치는 앱 하나 + <span class="cmd">ollama pull gemma3:12b</span> 한 줄</div>
+      <p class="lead">주소를 외울 필요가 없다 — <b>필요한 것을 말하면</b> 창구를 찾아 호출한다</p>
+      <div class="prompt">국가법령정보 공개 API로 <span class="w">소재·부품·장비</span> 관련 법령을 찾아줘.
+법령명·소관부처·시행일을 표로 정리하고 원문 링크도 같이 줘.
+<span class="dim">(인증키는 시연용 OC=test를 쓰면 된다)</span></div>
+      <div class="prompt">OpenAlex API로 <span class="w">전고체 배터리</span> 분야 최근 3년 논문 수를 연도별로 정리해줘.
+<span class="w">몇 건을 근거로 집계했는지</span>도 함께 적어줘.</div>
+      <ul class="bullets">
+        <li><b>✅ 이렇게 나온다</b> — 법령이 표로 정리되고 원문 링크가 붙는다 · 논문 수가 연도별로 집계된다</li>
+        <li><b>학습된 기억이 아니라 오늘자 원천</b>이다 — 시행일·개정 여부가 실제 값으로 온다</li>
+      </ul>
+      <div class="callout">이 창구들이 앞서 본 <b>조사관 에이전트</b>가 쓰는 손발이다 — 이제 여러분도 같은 것을 쥐었다</div>
     </section>
 
     <section class="slide" data-sid="r7-4">
@@ -1388,6 +1314,102 @@ thead th b{color:#fff}
         </tbody>
       </table>
       <div class="callout warn">회의 녹취는 민감 자료다 — <b>규정 확인 전 비공개 회의는 반입하지 않는다</b>. 오늘 실습은 가상 녹취로만 진행한다</div>
+    </section>
+
+    <section class="slide" data-sid="r6-2">
+      <div class="eyebrow">연구실 · 부품의 연결</div>
+      <h2>따로 배운 부품들이 실제로는 한 줄로 이어져 돈다</h2>
+      <div class="rule"></div>
+      <div class="flow">
+        <div class="step"><b>내 한마디</b>"소부장 브리핑 정리해줘"</div><span class="arrow">→</span>
+        <div class="step"><b>CLAUDE.md</b>늘 지킬 규칙 — 서식·말투·금지</div><span class="arrow">→</span>
+        <div class="step"><b>스킬 · 명령어</b>절차를 꺼낸다</div><span class="arrow">→</span>
+        <div class="step"><b>에이전트 팀</b>쪼개서 위임 — 조사·집필·검수</div><span class="arrow">→</span>
+        <div class="step"><b>MCP · API</b>원자료를 집는다 — NTIS·법제처</div><span class="arrow">→</span>
+        <div class="step gate"><b>훅 · 검증자</b>통과한 것만 — 출처·수치 대조</div><span class="arrow">→</span>
+        <div class="step hi"><b>산출물</b>표 · 보고서 · .hwpx</div>
+      </div>
+      <ul class="bullets">
+        <li><b>규칙·절차는 한 번 써 두면 자산</b> — CLAUDE.md와 스킬은 다음 요청에도 그대로 다시 쓰인다</li>
+        <li><b>손발이 붙어야 오늘자 수치</b> — MCP·API가 없으면 학습된 기억으로 답한다</li>
+        <li><b>검증은 끝이 아니라 공정 안</b> — 훅은 조건이 부르고, 검증자는 독립으로 판정한다</li>
+      </ul>
+      <div class="callout">부품 하나하나가 아니라 <b>이 한 줄 전체가 '판'(하네스)</b>이다 — 같은 모델이라도 판이 다르면 결과가 갈린다</div>
+      <div class="src"><b>하네스 엔지니어링</b> · 말(프롬프트)을 다듬는 대신 <b>일이 놓이는 판</b>을 설계하는 것 — 무엇을 늘 지킬지(규칙) · 어떤 절차로 할지(스킬) · 무엇을 집을 수 있는지(도구) · 무엇을 통과해야 하는지(검증)를 미리 짜 둔다. 말은 매번 새로 하지만 <b>판은 한 번 짜면 남는다</b> — 앞서 본 용어의 진화에서 '단위: 판'에 해당하는 층이다</div>
+    </section>
+
+    <section class="slide" data-sid="r6-3">
+      <div class="eyebrow">연구실 · 하루가 도는 법</div>
+      <h2>제 조교 Research Bot은 이렇게 일합니다</h2>
+      <div class="rule"></div>
+      <p class="lead">내가 <b>던지면</b> 리서치봇이 <b>밤새 조사하고</b>, 나는 아침에 <b>남길 것만 고른다</b></p>
+      <div class="korch">
+        <span class="ktag">오케스트레이터</span>
+        <span class="kcap">Research Bot (OpenClaw 게이트웨이) — 요청을 분해해 <b>클로드 코드 · 캘린더 · 위키</b>에 라우팅</span>
+      </div>
+      <div class="kflow">
+        <div class="kstep dk"><span class="kl">낮 · 이동 중</span><span class="kb">메모 · 회의록 던지기</span><span class="ks">메신저 / Tiro</span></div>
+        <span class="karr">→</span>
+        <div class="kstep on"><span class="kl">분류</span><span class="kb">할 일 vs 알 거리</span><span class="ks">triage</span></div>
+        <span class="karr">→</span>
+        <div class="kstep on"><span class="kl">밤새</span><span class="kb">근거 조사 · 캘린더 등록</span><span class="ks">클로드 코드에 위임</span></div>
+        <span class="karr">→</span>
+        <div class="kstep dk"><span class="kl">아침</span><span class="kb">브리핑을 읽는다</span><span class="ks">밤새 한 일 보고</span></div>
+        <span class="karr">→</span>
+        <div class="kstep user"><span class="kl">★</span><span class="kb">위키에 남길 것 고르기</span><span class="ks">★ 사용자 컨펌</span></div>
+        <span class="karr">→</span>
+        <div class="kstep chk"><span class="kl">✓</span><span class="kb">적재 · 자가 점검</span><span class="ks">wiki ingest</span></div>
+      </div>
+      <div class="grid-4">
+        <div class="card"><h3>① 조교는 OpenClaw, 일꾼은 클로드</h3><p>메신저로 받은 말을 OpenClaw가 받아 — <b>실제 작업은 클로드 코드에</b> 시킨다</p></div>
+        <div class="card"><h3>② 밤에 일하고 아침에 보고</h3><p>책상 앞이 아니어도 던져 두면 — 자는 동안 조사가 끝나 있고, <b>브리핑을 읽는 것으로</b> 하루가 시작된다</p></div>
+        <div class="card"><h3>③ 위키에 남길 것은 내가 고른다</h3><p>브리핑을 보고 <b>남길 것만 컨펌</b>한다 — 나머지는 버린다 — 그래서 검증된 것만 쌓인다</p></div>
+        <div class="card accent"><h3>④ 복리</h3><p>쌓일수록 <b>나를 더 잘 아는 위키</b>가 되고, 다음 보고서의 근거가 된다</p></div>
+      </div>
+      <div class="callout">자동화된 구간보다 중요한 건 <b>★ 하나</b> — 무엇을 남길지는 끝까지 <b>사람이 정한다</b></div>
+      <div class="src"><b>루프 엔지니어링</b> · 한 번 시켜 답을 받는 대신 <b>계획 → 실행 → 점검 → 수정</b>이 스스로 돌게 만드는 것 — 사람은 매 단계를 시키지 않고 <b>돌 조건과 멈출 지점</b>만 정한다(위 흐름의 ★가 그 멈출 지점) &nbsp;·&nbsp; <b>OpenClaw</b>는 메신저와 AI를 잇는 오픈소스 게이트웨이(코어 MIT, 2025.11), Anthropic의 <b>Claude Code Channels</b>로도 같은 구조를 만들 수 있다</div>
+    </section>
+
+    <section class="slide" data-sid="r7-6">
+      <div class="eyebrow">연구실 · 해보기 ④</div>
+      <h2><span class="hands">★ 해보기</span> — 내 첫 루프 걸기</h2>
+      <div class="rule"></div>
+      <p class="lead">한 번 시키는 것에서 <b>알아서 도는 것</b>으로 — 아침에 켜면 <em>어젯밤 결과가 와 있다</em></p>
+      <div class="prompt">매주 월요일 아침 8시에 — <span class="w">소재·부품·장비 관련 새 공고와 법령 개정</span>을 조사해서
+<span class="w">briefing/ 폴더에 날짜별 md 파일</span>로 저장해줘.
+확인 못 한 건 <span class="ok">[출처 미확인]</span>으로 남기고, <span class="w">메일이나 메신저로 보내지는 말고</span> 파일로만 남겨줘.
+<span class="dim">→ 슬래시 명령으로도 된다: /schedule</span></div>
+      <table class="tight">
+        <thead><tr><th style="width:38%">루프는 혼자 돈다 — 그래서</th><th>프롬프트에 반드시 적을 것</th></tr></thead>
+        <tbody>
+          <tr><td class="em">다음 실행은 <b>오늘 대화를 기억하지 못한다</b></td><td>무엇을 · 어디에 · 어떤 형식으로를 <b>한 번에 다</b> 적는다</td></tr>
+          <tr><td class="em">화면에만 뜬 결과는 사라진다</td><td>"<b>파일로 저장해줘</b>" — 폴더와 파일명까지 지정한다</td></tr>
+          <tr><td class="em">되돌릴 수 없는 일은 사람이 한다</td><td>"<b>보내지 말고 초안만</b>" — 발송·게시·삭제는 시키지 않는다</td></tr>
+        </tbody>
+      </table>
+      <ul class="bullets">
+        <li><b>✅ 성공 판정</b> — <span class="cmd">예약된 작업 목록 보여줘</span>라고 물으면 방금 건 루프와 <b>다음 실행 시각</b>이 나온다</li>
+        <li>앱이 꺼져 있던 시각은 건너뛰지 않는다 — <b>다음에 켤 때</b> 실행된다</li>
+      </ul>
+      <div class="callout">루프의 값어치는 '자동'이 아니라 — <b>내가 잠든 사이에도 내 규칙이 지켜진다</b>는 데 있다</div>
+    </section>
+
+    <section class="slide" data-sid="r8-2">
+      <div class="eyebrow">연구실 · 경계</div>
+      <h2>밖으로 나가면 안 되는 자료는? — 내 컴퓨터 안의 모델</h2>
+      <div class="rule"></div>
+      <p class="lead">연구자료 중에는 <b>API로 올리면 안 되는 것</b>이 있다 — 그래서 <em>로컬 모델을 한 대 띄워 뒀다</em></p>
+      <table>
+        <thead><tr><th style="width:18%">항목</th><th>구성</th></tr></thead>
+        <tbody>
+          <tr><td class="em">실행 엔진</td><td><b>Ollama 0.32.5</b> — 맥 앱으로 설치, 명령 한 줄로 모델 내려받기</td></tr>
+          <tr><td class="em">모델</td><td><b>gemma3:12b</b> — 8.1GB, 구글이 공개한 <b>오픈 가중치</b> 모델</td></tr>
+          <tr><td class="em">주소</td><td><span class="cmd">localhost:11434</span> — <b>127.0.0.1 전용</b>으로 묶어 외부에서 접근 불가</td></tr>
+          <tr><td class="em">자동 시작</td><td>LaunchAgent 등록 — 재부팅해도 알아서 뜬다</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">핵심은 성능이 아니라 <b>경계</b>다 — 대외비 초안·미공개 데이터·개인정보가 섞인 자료를 <b>밖으로 내보내지 않고</b> 1차 처리할 수 있다</div>
+      <div class="src"><b>오픈 가중치(open-weight) 모델</b> · 모델 파일을 직접 내려받아 내 기기에서 돌리는 모델 — 대화가 회사 서버로 가지 않는다. 설치는 앱 하나 + <span class="cmd">ollama pull gemma3:12b</span> 한 줄</div>
     </section>
 
     <section class="slide" data-sid="r9">
