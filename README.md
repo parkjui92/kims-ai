@@ -6,7 +6,7 @@
 
 ## ▶ [ 강 의 자 료 　 보 기 ](https://parkjui92.github.io/kims-ai/deck.html)
 
-슬라이드 102장 — 클릭하면 브라우저에서 바로 열립니다 (← → 키로 넘김)
+슬라이드 103장 — 클릭하면 브라우저에서 바로 열립니다 (← → 키로 넘김)
 
 ## ▶ [ A I 　 도 구 　 카 탈 로 그 　 보 기 ](https://parkjui92.github.io/kims-ai/참고자료_AI도구_카탈로그.html)
 
