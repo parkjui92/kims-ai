@@ -12,6 +12,10 @@
 
 업무별 창구 지도 · 키 발급과 설치 실무 · 보안 경계 · 프롬프트 카드
 
+## ▼ [ 강 의 자 료 　 P D F 　 내 려 받 기 ](https://github.com/parkjui92/kims-ai/raw/main/강의자료_재료연2차.pdf)
+
+103쪽 · 6.7MB — 인쇄하거나 오프라인에서 볼 때 쓰십시오
+
 ## ▼ [ 실 습 키 트 　 내 려 받 기 ](https://github.com/parkjui92/kims-ai/archive/refs/heads/main.zip)
 
 ZIP으로 전부 받습니다 — 미션카드·샘플 자료·스킬 원본이 들어 있습니다
